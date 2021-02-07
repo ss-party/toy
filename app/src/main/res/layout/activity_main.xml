@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/root_layout"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/editText"
+        android:textStyle="normal"
+        android:textSize="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:ems="10"
+        android:inputType="textMultiLine|textNoSuggestions"
+        android:gravity="top|start"
+        android:background="@null"
+        android:textCursorDrawable="@drawable/text_cursor"
+        app:layout_constraintBottom_toTopOf="@id/tab"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="0dp">
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/plus"
+            android:onClick="onPlusIconClick" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
