@@ -7,40 +7,49 @@ class Sheet {
     private var content: String? = null
     private var id: Int? = null
     private var textView: TextView? = null
+    private var textSize: Float? = null
 
-    constructor(id:Int, name: String?, content: String?, textView :TextView?) {
+    constructor(id: Int, name: String?, content: String?, textView: TextView?, textSize: Float?) {
         this.id = id
         this.name = name
         this.content = content
         this.textView = textView
+        this.textSize = textSize
     }
 
-    fun getId():Int? {
+    fun getId(): Int? {
         return id
     }
 
-    fun getName():String? {
+    fun getName(): String? {
         return name
     }
 
-    fun getContent():String? {
+    fun getContent(): String? {
         return content
     }
 
-    fun setText(text:String) {
+    fun setText(text: String) {
         setContent(text)
     }
 
-    fun setContent(text:String) {
+    fun setContent(text: String) {
         this.content = text
     }
 
-    fun getTextView():TextView? {
+    fun getTextView(): TextView? {
         return this.textView
     }
 
-    fun setName(text:String) {
+    fun setName(text: String) {
         this.name = text
     }
 
+    fun getTextSize(): Float? {
+        return this.textSize
+    }
+
+    fun setTextSize(size:Float) {
+        this.textSize = size
+    }
 }
