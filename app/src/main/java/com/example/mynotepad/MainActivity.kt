@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProviders
 import com.example.mynotepad.PreferenceManager.setFloat
 import com.example.mynotepad.PreferenceManager.setInt
 import com.example.mynotepad.PreferenceManager.setString
@@ -20,72 +21,79 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private var tts: TextToSpeech? = null
-    private var sheetCount: Int = 0
-    private var sheetSelectionTab: LinearLayout? = null
-    private var sheets:ArrayList<Sheet> = ArrayList<Sheet>()
-    private var currentSheetId:Int = 0
-    private var currentTextView:TextView? = null
-    private var sheetIdCount:Int = 0
-    private var currentTextSize:Float = 10.0f
+    private var viewModel: MainViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-//        Toast.makeText(this, "dpi = " + this.resources.displayMetrics.densityDpi, Toast.LENGTH_SHORT).show()
+        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+//        Toast.makeText(this, "isFirstStart = " + viewModel?.isFisrtStart , Toast.LENGTH_SHORT).show()
+        if (viewModel?.isFisrtStart == true) {
+            viewModel?.sheetSelectionTab = findViewById(R.id.tabInner)
 
+            viewModel?.isFisrtStart = false
+            viewModel?.sheetCount = PreferenceManager.getInt(this, "sheetCount")
+            viewModel?.sheetIdCount = PreferenceManager.getInt(this, "sheetIdCount")
+            if (viewModel?.sheetCount!! > 0) {
+                for (i in 1..viewModel?.sheetCount!!) {
+                    val sheetNameKey = "sheetName$i"
+                    val sheetContentKey = "sheetContent$i"
+                    val sheetIdKey = "sheetId$i"
+                    val sheetTextSizeKey = "sheetTextSize$i"
+                    var sheetName = PreferenceManager.getString(this, sheetNameKey)
+                    var sheetContent = PreferenceManager.getString(this, sheetContentKey)
+                    var sheetId:String? = PreferenceManager.getString(this, sheetIdKey)
+                    var sheetTextSize:Float? = PreferenceManager.getFloat(this, sheetTextSizeKey)
+                    if (sheetTextSize == -1.0f) {
+                        sheetTextSize = 10.0f
+                    }
+                    if (sheetId != null) {
+                        val textView = TabTextView(applicationContext);
+                        viewModel?.sheets?.add(Sheet(sheetId!!.toInt(), sheetName, sheetContent, textView, sheetTextSize))
+                        val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                        textView.layoutParams = params
+                        textView.text = sheetName
+                        textView.id = sheetId!!.toInt()
+                        textView.setBackgroundColor(resources.getColor(R.color.colorDeactivatedSheet))
+                        textView.setOnClickListener {
+                            switch(it)
+                        }
+                        addShowingSheet(textView)
+                    }
+                }
+                viewModel?.currentTextView = viewModel?.sheets?.get(0)?.getTextView()
+                if (viewModel?.currentTextView != null) {
+                    viewModel?.currentSheetId = viewModel?.currentTextView!!.id
+                    viewModel?.currentTextView!!.setBackgroundColor(resources.getColor(R.color.colorActivatedSheet))
+                    editText.setText(viewModel?.sheets?.get(0)?.getContent())
+                    viewModel?.currentTextSize = viewModel?.sheets?.get(0)?.getTextSize()!!
+                    editText.textSize = viewModel?.currentTextSize!!
+                }
+
+            } else {
+                Toast.makeText(this, "저장된 데이터가 없습니다.", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            editText.textSize = viewModel?.currentTextSize!!
+            viewModel?.sheetSelectionTab = findViewById(R.id.tabInner) // view의 id는 id를 숫자로 바꾼 것일 뿐. id가 같다고 같은 뷰가 아니다.
+            // 이것은 좌우 전환이 되면서 새로만들어진 뷰일 것이다.
+            viewModel?.sheetSelectionTab?.removeAllViews()
+            for (i in 1..viewModel?.sheetCount!!) {
+                val textView = viewModel?.sheets?.get(i-1)?.getTextView();
+                textView?.setOnClickListener {
+                    switch(it)
+                }
+                if (textView != null) {
+                    addShowingSheet(textView)
+                }
+            }
+        }
         val t:ThreadA = ThreadA()
         initTTS();
         var speed = 1.0f
         var pitch = 1.0f
-        sheetCount = PreferenceManager.getInt(this, "sheetCount")
-        sheetIdCount = PreferenceManager.getInt(this, "sheetIdCount")
-        sheetSelectionTab = findViewById(R.id.tab)
-        if (sheetIdCount == 0) {
-            sheetIdCount = 15
-        }
-
-        if (sheetCount > 0) {
-            for (i in 1..sheetCount) {
-                val sheetNameKey = "sheetName$i"
-                val sheetContentKey = "sheetContent$i"
-                val sheetIdKey = "sheetId$i"
-                val sheetTextSizeKey = "sheetTextSize$i"
-                var sheetName = PreferenceManager.getString(this, sheetNameKey)
-                var sheetContent = PreferenceManager.getString(this, sheetContentKey)
-                var sheetId:String? = PreferenceManager.getString(this, sheetIdKey)
-                var sheetTextSize:Float? = PreferenceManager.getFloat(this, sheetTextSizeKey)
-
-                if (sheetTextSize == -1.0f) {
-                    sheetTextSize = 10.0f
-                }
-                if (sheetId != null) {
-                    val textView = TextView(applicationContext);
-                    sheets.add(Sheet(sheetId!!.toInt(), sheetName, sheetContent, textView, sheetTextSize))
-                    val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                    textView.layoutParams = params
-                    textView.text = sheetName
-                    textView.id = sheetId!!.toInt()
-                    textView.background = getDrawable(R.drawable.edge)
-                    textView.setOnClickListener {
-                        switch(it)
-                    }
-                    addShowingSheet(textView)
-                }
-            }
-            currentTextView = sheets[0].getTextView()
-            if (currentTextView != null) {
-                currentSheetId = currentTextView!!.id
-                currentTextView!!.setBackgroundColor(resources.getColor(R.color.colorAccent))
-                editText.setText(sheets[0].getContent())
-                currentTextSize = sheets[0].getTextSize()!!
-                editText.textSize = currentTextSize
-            }
-
-        } else {
-            Toast.makeText(this, "저장된 데이터가 없습니다.", Toast.LENGTH_SHORT).show()
-//            } else {
-//                editText.setText(text)
-//            }
+        if (viewModel?.sheetIdCount == 0) {
+            viewModel?.sheetIdCount = 15
         }
 
         val editText: EditText? = findViewById(R.id.editText)
@@ -108,13 +116,13 @@ class MainActivity : AppCompatActivity() {
                     }
                     KeyEvent.KEYCODE_PLUS -> if (event?.isShiftPressed == true) {
                         Toast.makeText(v?.context, "plus pressed", Toast.LENGTH_SHORT).show()
-                        currentTextSize ++;
-                        editText.textSize  = currentTextSize
+                        viewModel?.currentTextSize = viewModel?.currentTextSize!! + 1;
+                        editText.textSize  = viewModel?.currentTextSize!!
                     }
                     KeyEvent.KEYCODE_MINUS -> if (event?.isShiftPressed == true) {
                         Toast.makeText(v?.context, "minus pressed", Toast.LENGTH_SHORT).show()
-                        currentTextSize --;
-                        editText.textSize = currentTextSize
+                        viewModel?.currentTextSize = viewModel?.currentTextSize!! - 1;
+                        editText.textSize = viewModel?.currentTextSize!!
                     }
 
                     KeyEvent.KEYCODE_F5 -> {
@@ -147,30 +155,32 @@ class MainActivity : AppCompatActivity() {
 
     private fun switch(it:View) {
         val view = it as TextView
-        if (view.id == currentSheetId) {
+        // Toast.makeText(this, "id = " + view.id, Toast.LENGTH_SHORT).show()
+        if (view.id == viewModel?.currentSheetId) {
             return
         }
 
-        val existTextView = currentTextView
-        val existSheetId = currentSheetId
-        val existTextSize = currentTextSize
+        val existTextView = viewModel?.currentTextView
+        val existSheetId = viewModel?.currentSheetId
+        val existTextSize = viewModel?.currentTextSize!!
         // save editing content in memory
-        for (i in 1..sheets.size) {
-            if (existSheetId == sheets[i-1].getId()) {
-                sheets[i-1].setContent(editText.text.toString())
-                sheets[i-1].setTextSize(existTextSize)
+        for (i in 1..viewModel?.sheets!!.size) {
+            if (existSheetId == viewModel?.sheets?.get(i-1)?.getId()) {
+                viewModel?.sheets?.get(i-1)?.setContent(editText.text.toString())
+                viewModel?.sheets?.get(i-1)?.setTextSize(existTextSize)
                 break
             }
         }
 
-        currentSheetId = view.id
-        currentTextView = view
-        currentTextSize = getTextSizeById(view.id)
+        viewModel?.currentSheetId = view.id
+        viewModel?.currentTextView = view
+        viewModel?.currentTextSize = getTextSizeById(view.id)
         editText.setText(getContentById(view.id))
 
-        editText.textSize = currentTextSize
-        existTextView?.background = getDrawable(R.drawable.edge)
-        view.setBackgroundColor(resources.getColor(R.color.colorAccent))
+        editText.textSize = viewModel?.currentTextSize!!
+//        existTextView?.background = getDrawable(R.drawable.edge)
+        existTextView?.setBackgroundColor(resources.getColor(R.color.colorDeactivatedSheet))
+        view.setBackgroundColor(resources.getColor(R.color.colorActivatedSheet))
     }
 
     private fun findInput() {
@@ -195,18 +205,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getContentById(id: Int):String {
-        for (i in 1..sheets.size) {
-            if (sheets[i-1].getId() == id) {
-                return sheets[i-1].getContent()!!
+        for (i in 1..viewModel?.sheets!!.size) {
+            if (viewModel?.sheets?.get(i-1)?.getId() == id) {
+                return viewModel?.sheets?.get(i-1)?.getContent()!!
             }
         }
         return "error"
     }
 
     private fun getTextSizeById(id: Int):Float {
-        for (i in 1..sheets.size) {
-            if (sheets[i-1].getId() == id) {
-                return sheets[i-1].getTextSize()!!
+        for (i in 1..viewModel?.sheets!!.size) {
+            if (viewModel?.sheets?.get(i-1)?.getId() == id) {
+                return viewModel?.sheets?.get(i-1)?.getTextSize()!!
             }
         }
         return 10.0f
@@ -231,10 +241,10 @@ class MainActivity : AppCompatActivity() {
                 val view = inflater.inflate(R.layout.dialog, root_layout, false)
                 ad.setView(view) // 메시지
                 view.dialogConfirmBtn.setOnClickListener {
-                    for (i in 1..sheets.size) {
-                        if (currentTextView?.id == sheets[i-1].getId()) {
-                            sheets[i-1].getTextView()?.text = view.dialogEditBox.text
-                            sheets[i-1].setName(view.dialogEditBox.text.toString())
+                    for (i in 1..viewModel?.sheets!!.size) {
+                        if (viewModel?.currentTextView?.id == viewModel?.sheets?.get(i-1)?.getId()) {
+                            viewModel?.sheets?.get(i-1)?.getTextView()?.text = view.dialogEditBox.text
+                            viewModel?.sheets?.get(i-1)?.setName(view.dialogEditBox.text.toString())
                             break
                         }
                     }
@@ -251,10 +261,12 @@ class MainActivity : AppCompatActivity() {
 //                }
             }
             R.id.menuTextSizeIncreaseBtn-> {
-                editText.textSize = ++ currentTextSize
+                viewModel?.currentTextSize = viewModel?.currentTextSize!! + 1
+                editText.textSize = viewModel?.currentTextSize!!
             }
             R.id.menuTextSizeDecreaseBtn-> {
-                editText.textSize = -- currentTextSize
+                viewModel?.currentTextSize = viewModel?.currentTextSize!! - 1
+                editText.textSize = viewModel?.currentTextSize!!
             }
         }
         return super.onOptionsItemSelected(item)
@@ -302,45 +314,50 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onPlusIconClick(view: View) {
-        val textView = TextView(applicationContext);
-        val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        val textView = TabTextView(applicationContext);
+        val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         textView.layoutParams = params
         textView.text = "newSheet"
-        textView.id = ++sheetIdCount
-        textView.background = getDrawable(R.drawable.edge)
+        textView.id = (viewModel?.sheetIdCount!!)
+//        textView.background = getDrawable(R.drawable.edge)
+        textView.setBackgroundColor(resources.getColor(R.color.colorActivatedSheet))
+//        textView.typeface = resources.getFont(R.font.whj000f0cb5)
         textView.setOnClickListener {
             switch(it)
         }
-        sheets.add(Sheet(sheetIdCount, "newSheet", "", textView, 10.0f))
-        currentTextSize = 10.0f
+        viewModel?.sheets?.add(Sheet(viewModel?.sheetIdCount!!, "newSheet", "", textView, 10.0f))
+        viewModel?.currentTextSize = 10.0f
         addShowingSheet(textView)
     }
 
     private fun addShowingSheet(view: View) {
-        sheetSelectionTab?.addView(view)
+        if (view.parent != null) {
+            ((view.parent) as ViewGroup).removeView(view)
+        }
+        viewModel?.sheetSelectionTab?.addView(view)
     }
 
     private fun save() {
-        for (i in 1..sheets.size) {
-            if (sheets[i-1].getId() == currentTextView?.id) {
-                sheets[i-1].setText(editText.text.toString())
-                sheets[i-1].setTextSize(currentTextSize)
+        for (i in 1..viewModel?.sheets!!.size) {
+            if (viewModel?.sheets?.get(i-1)?.getId() == viewModel?.currentTextView?.id) {
+                viewModel?.sheets?.get(i-1)?.setText(editText.text.toString())
+                viewModel?.sheets?.get(i-1)?.setTextSize(viewModel?.currentTextSize!!)
             }
         }
 
-        for (i in 1..sheets.size) {
+        for (i in 1..viewModel?.sheets!!.size) {
             val sheetNameKey = "sheetName$i"
             val sheetContentKey = "sheetContent$i"
             val sheetIdKey = "sheetId$i"
             val sheetTextSizeKey = "sheetTextSize$i"
 
-            setString(this, sheetNameKey, sheets[i-1].getName())
-            setString(this, sheetContentKey, sheets[i-1].getContent())
-            setString(this, sheetIdKey, sheets[i-1].getId().toString())
-            setFloat(this, sheetTextSizeKey, sheets[i-1].getTextSize()!!)
+            setString(this, sheetNameKey, viewModel?.sheets?.get(i-1)?.getName())
+            setString(this, sheetContentKey, viewModel?.sheets?.get(i-1)?.getContent())
+            setString(this, sheetIdKey, viewModel?.sheets?.get(i-1)?.getId().toString())
+            setFloat(this, sheetTextSizeKey, viewModel?.sheets?.get(i-1)?.getTextSize()!!)
         }
-        setInt(this, "sheetCount", sheets.size)
-        setInt(this, "sheetIdCount", sheetIdCount)
+        setInt(this, "sheetCount", viewModel?.sheets!!.size)
+        setInt(this, "sheetIdCount", viewModel?.sheetIdCount!!)
         Toast.makeText(this, "saved", Toast.LENGTH_SHORT).show()
     }
 }

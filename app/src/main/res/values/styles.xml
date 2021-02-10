@@ -7,6 +7,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="titleTextColor">@color/colorBlack</item>
         <item name="android:windowLightStatusBar">@color/colorBlack</item>
+        <item name="fontFamily">@font/whj000f0cb5</item>
     </style>
 
 </resources>

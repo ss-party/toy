@@ -18,21 +18,33 @@
         android:gravity="top|start"
         android:background="@null"
         android:textCursorDrawable="@drawable/text_cursor"
-        app:layout_constraintBottom_toTopOf="@id/tab"
+        app:layout_constraintBottom_toTopOf="@id/tabOuter"
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:id="@+id/tab"
+        android:id="@+id/tabOuter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="0dp">
-
+        android:background="@color/colorDeactivatedSheet"
+        app:layout_constraintBottom_toBottomOf="parent">
         <ImageButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:background="@drawable/plus"
             android:onClick="onPlusIconClick" />
+        <HorizontalScrollView
+            android:id="@+id/tabScroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/tabInner"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:orientation="horizontal"
+                android:overScrollMode="always"
+                tools:layout_editor_absoluteX="0dp">
+            </LinearLayout>
+        </HorizontalScrollView>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
