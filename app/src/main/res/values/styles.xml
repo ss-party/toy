@@ -8,6 +8,7 @@
         <item name="titleTextColor">@color/colorBlack</item>
         <item name="android:windowLightStatusBar">@color/colorBlack</item>
         <item name="fontFamily">@font/whj000f0cb5</item>
+        <item name="android:colorEdgeEffect">#FFAEC9</item>
     </style>
 
 </resources>

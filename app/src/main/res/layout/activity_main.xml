@@ -7,19 +7,32 @@
     android:id="@+id/root_layout"
     tools:context=".MainActivity">
 
-    <EditText
-        android:id="@+id/editText"
-        android:textStyle="normal"
-        android:textSize="5dp"
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:ems="10"
-        android:inputType="textMultiLine|textNoSuggestions"
-        android:gravity="top|start"
-        android:background="@null"
-        android:textCursorDrawable="@drawable/text_cursor"
+        android:overScrollMode="ifContentScrolls"
         app:layout_constraintBottom_toTopOf="@id/tabOuter"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+        <EditText
+
+            android:id="@+id/editText"
+            android:textStyle="normal"
+            android:textSize="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingVertical="10dp"
+            android:paddingHorizontal="20dp"
+            android:ems="10"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:gravity="top|start"
+            android:background="@null"
+            android:lineSpacingExtra="5dp"
+            android:textCursorDrawable="@drawable/text_cursor"
+            android:nestedScrollingEnabled="false"
+            app:layout_constraintBottom_toTopOf="@id/tabOuter"
+            app:layout_constraintTop_toTopOf="parent" />
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/tabOuter"

@@ -23,13 +23,9 @@ object PreferenceManager {
     }
 
     /**
-     *
      * String 값 저장
-     *
      * @param context
-     *
      * @param key
-     *
      * @param value
      */
     fun setString(
@@ -45,13 +41,9 @@ object PreferenceManager {
     }
 
     /**
-     *
      * boolean 값 저장
-     *
      * @param context
-     *
      * @param key
-     *
      * @param value
      */
     fun setBoolean(
@@ -67,13 +59,9 @@ object PreferenceManager {
     }
 
     /**
-     *
      * int 값 저장
-     *
      * @param context
-     *
      * @param key
-     *
      * @param value
      */
     fun setInt(context: Context, key: String?, value: Int) {
@@ -85,13 +73,9 @@ object PreferenceManager {
     }
 
     /**
-     *
      * long 값 저장
-     *
      * @param context
-     *
      * @param key
-     *
      * @param value
      */
     fun setLong(
@@ -107,13 +91,9 @@ object PreferenceManager {
     }
 
     /**
-     *
      * float 값 저장
-     *
      * @param context
-     *
      * @param key
-     *
      * @param value
      */
     fun setFloat(
@@ -129,13 +109,9 @@ object PreferenceManager {
     }
 
     /**
-     *
      * String 값 로드
-     *
      * @param context
-     *
      * @param key
-     *
      * @return
      */
     fun getString(context: Context, key: String?): String? {
@@ -145,13 +121,9 @@ object PreferenceManager {
     }
 
     /**
-     *
      * boolean 값 로드
-     *
      * @param context
-     *
      * @param key
-     *
      * @return
      */
     fun getBoolean(context: Context, key: String?): Boolean {
@@ -161,13 +133,9 @@ object PreferenceManager {
     }
 
     /**
-     *
      * int 값 로드
-     *
      * @param context
-     *
      * @param key
-     *
      * @return
      */
     fun getInt(context: Context, key: String?): Int {
@@ -177,13 +145,9 @@ object PreferenceManager {
     }
 
     /**
-     *
      * long 값 로드
-     *
      * @param context
-     *
      * @param key
-     *
      * @return
      */
     fun getLong(context: Context, key: String?): Long {
@@ -193,13 +157,9 @@ object PreferenceManager {
     }
 
     /**
-     *
      * float 값 로드
-     *
      * @param context
-     *
      * @param key
-     *
      * @return
      */
     fun getFloat(context: Context, key: String?): Float {
@@ -209,11 +169,8 @@ object PreferenceManager {
     }
 
     /**
-     *
      * 키 값 삭제
-     *
      * @param context
-     *
      * @param key
      */
     fun removeKey(context: Context, key: String?) {
@@ -225,9 +182,7 @@ object PreferenceManager {
     }
 
     /**
-     *
      * 모든 저장 데이터 삭제
-     *
      * @param context
      */
     fun clear(context: Context) {

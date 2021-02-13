@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity() {
                         findNext();
                     }
                     KeyEvent.KEYCODE_F2 -> {
-                        Toast.makeText(v?.context, "saved", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(v?.context, "F2 saved", Toast.LENGTH_SHORT).show()
                         save();
                     }
                     KeyEvent.KEYCODE_PLUS -> if (event?.isShiftPressed == true) {
@@ -270,6 +270,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        save()
     }
 
     override fun onDestroy() {
