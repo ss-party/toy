@@ -97,6 +97,31 @@ class MainActivity : AppCompatActivity() {
         }
 
         val editText: EditText? = findViewById(R.id.editText)
+        editText?.setOnTouchListener(object: OnSwipeTouchListener(this@MainActivity){
+//            override fun onSwipeTop() {
+//                Toast.makeText(this@MainActivity, "top", Toast.LENGTH_SHORT).show()
+//            }
+
+            override fun onSwipeRight() {
+                val prevView = viewModel?.findPrevView()
+                if (prevView != null) {
+                    switch(prevView)
+                }
+//                Toast.makeText(this@MainActivity, "right", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onSwipeLeft() {
+                val nextView = viewModel?.findNextView()
+                if (nextView != null) {
+                    switch(nextView)
+                }
+//                Toast.makeText(this@MainActivity, "left", Toast.LENGTH_SHORT).show()
+            }
+
+//            override fun onSwipeBottom() {
+//                Toast.makeText(this@MainActivity, "bottom", Toast.LENGTH_SHORT).show()
+//            }
+        })
         editText?.setOnKeyListener { v, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN) {
                 when (keyCode) {

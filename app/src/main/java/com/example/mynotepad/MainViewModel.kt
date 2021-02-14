@@ -21,4 +21,22 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun putViewModel_LocalValue(str: String?) {
         viewModel_LocalValue = str
     }
+
+    fun findNextView():TextView? {
+        for (i in 0 until sheets.size-1) {
+            if (sheets[i].getId() == currentSheetId) {
+                return sheets[i+1].getTextView()!!
+            }
+        }
+        return null
+    }
+
+    fun findPrevView():TextView? {
+        for (i in 1 until sheets.size) {
+            if (sheets[i].getId() == currentSheetId) {
+                return sheets[i-1].getTextView()!!
+            }
+        }
+        return null
+    }
 }

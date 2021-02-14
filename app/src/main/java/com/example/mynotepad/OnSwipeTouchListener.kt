@@ -12,7 +12,6 @@ import android.view.View.OnTouchListener
 // ScrollView에서 지원함.
 open class OnSwipeTouchListener(ctx: Context) : OnTouchListener {
     private val gestureDetector: GestureDetector
-    private var a = 1
 
     init {
         gestureDetector = GestureDetector(ctx, GestureListener())
@@ -24,25 +23,25 @@ open class OnSwipeTouchListener(ctx: Context) : OnTouchListener {
 
     private inner class GestureListener : SimpleOnGestureListener() {
 
-        private val SWIPE_THRESHOLD = 100
-        private val SWIPE_VELOCITY_THRESHOLD = 100
+        private val SWIPE_THRESHOLD = 50
+        private val SWIPE_VELOCITY_THRESHOLD = 50
 
-//        override fun onDown(e: MotionEvent): Boolean {
-//            return super.onDown(e)
-//        }
+        override fun onDown(e: MotionEvent): Boolean {
+            return super.onDown(e)
+        }
 
-        override fun onFling(
+        override fun onScroll(
             e1: MotionEvent,
             e2: MotionEvent,
-            velocityX: Float,
-            velocityY: Float
+            distanceX: Float,
+            distanceY: Float
         ): Boolean {
             var result = false
             try {
                 val diffY = e2.y - e1.y
                 val diffX = e2.x - e1.x
                 if (Math.abs(diffX) > Math.abs(diffY)) {
-                    if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(distanceX) > SWIPE_VELOCITY_THRESHOLD) {
                         if (diffX > 0) {
                             onSwipeRight()
                         } else {
@@ -50,7 +49,7 @@ open class OnSwipeTouchListener(ctx: Context) : OnTouchListener {
                         }
                     }
                     result = true
-                } else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                } else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(distanceY) > SWIPE_VELOCITY_THRESHOLD) {
                     if (diffY > 0) {
                         onSwipeBottom()
                     } else {
