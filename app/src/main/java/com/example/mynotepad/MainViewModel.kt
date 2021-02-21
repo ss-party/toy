@@ -18,8 +18,7 @@ import java.util.*
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val TAG = "kongyi123/MainViewModel"
     var currentSheetId:Int = 0
-    var currentTextView: TextView? = null
-    var currentOrder: Int = 0
+    var currentTabTextView: TextView? = null
     var isFisrtStart = true
     var viewModel_LocalValue: String? = null
         private set
@@ -27,10 +26,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     var sheetIdCount:Int = 0
     var sheets: ArrayList<Sheet> = ArrayList<Sheet>()
     var sheetSelectionTab: LinearLayout? = null
-    var currentContentTextSize:Float = 10.0f
     var adapterViewPager: FragmentPagerAdapter? = null
     val sheetOrder: MutableMap<View, Int> = mutableMapOf<View, Int>()
     var vpPager:ViewPager? = null
+    var currentTabPosition:Int = 0
 
     fun getTextSizeById(id: Int):Float {
         for (i in 1..sheets!!.size) {
@@ -39,6 +38,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
         return 10.0f
+    }
+
+    fun contentTextSizeIncrease() {
+        val currentContentTextSize = adapterSheetFragmentArray!![currentTabPosition!!].textSize!! + 1
+        adapterSheetFragmentArray!![currentTabPosition!!].textSize = currentContentTextSize
+        adapterSheetFragmentArray!![currentTabPosition!!].editText?.textSize = currentContentTextSize!!
+//        sheets?.get(currentTabPosition).setTextSize(currentContentTextSize)
+    }
+
+    fun contentTextSizeDecrease() {
+        val currentContentTextSize = adapterSheetFragmentArray!![currentTabPosition!!].textSize!! - 1
+        adapterSheetFragmentArray!![currentTabPosition!!].textSize = currentContentTextSize
+        adapterSheetFragmentArray!![currentTabPosition!!].editText?.textSize = currentContentTextSize!!
+//        sheets?.get(currentTabPosition).setTextSize(currentContentTextSize)
     }
 
     fun addNewSheet(context: Context, vpPager: ViewPager, switchFocusSheetInTab: (View) -> Unit, addShowingSheet: (TextView) -> Unit) {
@@ -57,7 +70,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
         sheets?.add(Sheet(sheetIdCount!!, "newSheet", "new", textView, 10.0f))
-        currentContentTextSize = 10.0f
         addShowingSheet(textView)
 //        adapterViewPager?.getItem()
         sheetOrder?.set(textView, sheetIdCount-1)
@@ -88,6 +100,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             sheetFragment.initialize(sheets[position].getContent()!!, sheets[position].getTextSize()!!)
             Log.d("kongyi123", " get Text size = " + sheets[position].getTextSize())
             adapterSheetFragmentArray.add(sheetFragment)
+//            currentContentTextSize = sheets[position].getTextSize()!!
             return sheetFragment
         }
 

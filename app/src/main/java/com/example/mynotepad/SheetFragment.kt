@@ -25,10 +25,7 @@ class SheetFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
         editText = view.findViewById(R.id.editText)
         editText?.setText("$content")
-        if (textSize != null) {
-            editText?.textSize = textSize!!
-            viewModel?.currentContentTextSize = textSize!!
-        }
+        if (textSize != null) editText?.textSize = textSize!!
         return view
     }
 

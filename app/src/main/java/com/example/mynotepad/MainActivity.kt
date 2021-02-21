@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity() {
                     switchFocusSheetInTab(viewModel?.sheets?.get(position)?.getTextView() as View)
                     //(viewModel?.adapterViewPager as MainViewModel.MyPagerAdapter).adapterSheetFragmentArray[position].textSize = viewModel!!.sheets[position].getTextSize()
                 }
+                viewModel?.currentTabPosition = position
             }
         })
         initializeHotKey()
@@ -67,28 +68,8 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Log.d("kongyi123", "onOptionsItemSelected")
         when(item.itemId) {
-            R.id.menuSaveOptionBtn->{
-                save();
-            }
-            R.id.menuEditSheetNameBtn->{
-                val dlg: AlertDialog.Builder = AlertDialog.Builder(this@MainActivity)
-                val ad:AlertDialog = dlg.create()
-                ad.setTitle("Edit Name") //제목
-                val inflater: LayoutInflater = LayoutInflater.from(applicationContext)
-                val view = inflater.inflate(R.layout.dialog, root_layout, false)
-                ad.setView(view) // 메시지
-                view.dialogConfirmBtn.setOnClickListener {
-                    for (i in 1..viewModel?.sheets!!.size) {
-                        if (viewModel?.currentTextView?.id == viewModel?.sheets?.get(i-1)?.getId()) {
-                            viewModel?.sheets?.get(i-1)?.getTextView()?.text = view.dialogEditBox.text
-                            viewModel?.sheets?.get(i-1)?.setName(view.dialogEditBox.text.toString())
-                            break
-                        }
-                    }
-                    ad.dismiss()
-                }
-                ad.show()
-            }
+            R.id.menuSaveOptionBtn-> save();
+            R.id.menuEditSheetNameBtn-> makeDialogAndSetNewSheetName()
             R.id.menuDeleteSheetBtn->{
 //                for (i in 1..sheets.size) {
 //                    if (currentSheetId == sheets[i-1].getId()) {
@@ -97,20 +78,8 @@ class MainActivity : AppCompatActivity() {
 //                    }
 //                }
             }
-            R.id.menuTextSizeIncreaseBtn-> {
-                viewModel?.currentContentTextSize = viewModel?.currentContentTextSize!! + 1
-//                vpPager.adapter.get
-//                viewModel?.currentContentTextSize.textSize = viewModel?.currentTextSize!!
-//                editText.textSize = viewModel?.currentTextSize!!
-//                (viewModel?.adapterViewPager as MainViewModel.MyPagerAdapter).adapterSheetFragmentArray[viewModel?.currentOrder!!-1].editText?.textSize =
-//                    (viewModel?.adapterViewPager as MainViewModel.MyPagerAdapter).adapterSheetFragmentArray[viewModel?.currentOrder!!-1].editText?.textSize!! + 1
-
-            }
-            R.id.menuTextSizeDecreaseBtn-> {
-                viewModel?.currentContentTextSize = viewModel?.currentContentTextSize!! - 1
-                viewModel?.currentTextView?.textSize = viewModel?.currentContentTextSize!!
-//                editText.textSize = viewModel?.currentTextSize!!
-            }
+            R.id.menuTextSizeIncreaseBtn-> viewModel?.contentTextSizeIncrease()
+            R.id.menuTextSizeDecreaseBtn-> viewModel?.contentTextSizeDecrease()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -125,6 +94,28 @@ class MainActivity : AppCompatActivity() {
         tts?.close()
     }
 
+    private fun makeDialogAndSetNewSheetName() {
+        // make Dialog
+        val dlg: AlertDialog.Builder = AlertDialog.Builder(this@MainActivity)
+        val ad: AlertDialog = dlg.create()
+        ad.setTitle("Edit Name") //제목
+        val inflater: LayoutInflater = LayoutInflater.from(applicationContext)
+        val view = inflater.inflate(R.layout.dialog, root_layout, false)
+        ad.setView(view) // 메시지
+        // set New Sheet Name if the confirm button is clicked.
+        view.dialogConfirmBtn.setOnClickListener {
+            for (i in 1..viewModel?.sheets!!.size) {
+                if (viewModel?.currentTabTextView?.id == viewModel?.sheets?.get(i - 1)?.getId()) {
+                    viewModel?.sheets?.get(i - 1)?.getTextView()?.text = view.dialogEditBox.text
+                    viewModel?.sheets?.get(i - 1)?.setName(view.dialogEditBox.text.toString())
+                    break
+                }
+            }
+            ad.dismiss()
+        }
+        ad.show()
+    }
+
     fun onPlusIconClick(view: View) {
         viewModel?.addNewSheet(applicationContext, viewModel?.vpPager!!, ::switchFocusSheetInTab, ::addShowingSheetInTab)
     }
@@ -136,10 +127,9 @@ class MainActivity : AppCompatActivity() {
         if (view.id == viewModel?.currentSheetId) {
             return
         }
-        val existTextView = viewModel?.currentTextView
+        val existTextView = viewModel?.currentTabTextView
         viewModel?.currentSheetId = view.id
-        viewModel?.currentTextView = view
-        viewModel?.currentContentTextSize = viewModel?.getTextSizeById(view.id)!!
+        viewModel?.currentTabTextView = view
         existTextView?.setBackgroundColor(resources.getColor(R.color.colorDeactivatedSheet))
         view.setBackgroundColor(resources.getColor(R.color.colorActivatedSheet))
         Log.d("kongyi123","id = " + viewModel?.currentSheetId + " / sheet id count = " + viewModel?.sheetIdCount!! )
@@ -269,7 +259,6 @@ class MainActivity : AppCompatActivity() {
         viewModel?.isFisrtStart = false
         viewModel?.sheetCount = PreferenceManager.getInt(this, "sheetCount")
         viewModel?.sheetIdCount = PreferenceManager.getInt(this, "sheetIdCount")
-        viewModel?.currentOrder = 0
         if (viewModel?.sheetCount!! > 0) {
             for (i in 1..viewModel?.sheetCount!!) {
                 val sheetNameKey = "sheetName$i"
@@ -297,16 +286,16 @@ class MainActivity : AppCompatActivity() {
                         viewModel?.sheetOrder?.get(it as View)?.let { it1 ->
 //                                Toast.makeText(this, "it1 = " + it1, Toast.LENGTH_SHORT).show()
                             viewModel?.vpPager?.setCurrentItem(it1, true)
+                            viewModel?.currentTabPosition = viewModel?.sheetOrder?.get(it as View)!!
                         }
                     }
                     addShowingSheetInTab(textView)
                 }
             }
-            viewModel?.currentTextView = viewModel?.sheets?.get(0)?.getTextView()
-            if (viewModel?.currentTextView != null) {
-                viewModel?.currentSheetId = viewModel?.currentTextView!!.id
-                viewModel?.currentTextView!!.setBackgroundColor(resources.getColor(R.color.colorActivatedSheet))
-                viewModel?.currentContentTextSize = viewModel?.sheets?.get(0)?.getTextSize()!!
+            viewModel?.currentTabTextView = viewModel?.sheets?.get(0)?.getTextView()
+            if (viewModel?.currentTabTextView != null) {
+                viewModel?.currentSheetId = viewModel?.currentTabTextView!!.id
+                viewModel?.currentTabTextView!!.setBackgroundColor(resources.getColor(R.color.colorActivatedSheet))
             }
             viewModel?.initViewPager(viewModel?.vpPager!!, supportFragmentManager)
 
@@ -330,16 +319,12 @@ class MainActivity : AppCompatActivity() {
                 switchFocusSheetInTab(it)
                 viewModel?.sheetOrder?.get(it as View)?.let { it1 -> // view - order match.
                     viewModel?.vpPager?.setCurrentItem(it1, true)
+                    viewModel?.currentTabPosition = viewModel?.sheetOrder?.get(it1 as View)!!
                 }
             }
             if (textView != null) {
                 addShowingSheetInTab(textView)
             }
-
-
-//                Log.d("kongyi123", "aa = " + (viewModel?.adapterViewPager as MainViewModel.MyPagerAdapter).adapterSheetFragmentArray[i-1].editText?.text.toString())
-//                (viewModel?.adapterViewPager as MainViewModel.MyPagerAdapter).adapterSheetFragmentArray[i-1].textSize = viewModel!!.sheets[i-1].getTextSize()
-//                viewModel?.adapterViewPager?.notifyDataSetChanged()
         }
         viewModel?.initViewPager(viewModel?.vpPager!!, supportFragmentManager)
     }
