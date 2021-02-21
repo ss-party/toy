@@ -8,29 +8,12 @@
     android:id="@+id/root_layout"
     tools:context=".MainActivity">
 
-    <ScrollView
-        android:id="@+id/scrollView"
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vpPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:fillViewport="true"
-        android:layout_weight="1"
-        android:overScrollMode="ifContentScrolls">
-        <EditText
-            android:id="@+id/editText"
-            android:textStyle="normal"
-            android:textSize="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="600dp"
-            android:paddingVertical="10dp"
-            android:paddingHorizontal="20dp"
-            android:ems="10"
-            android:inputType="textMultiLine|textNoSuggestions"
-            android:gravity="top|start"
-            android:background="@null"
-            android:lineSpacingExtra="5dp"
-            android:textCursorDrawable="@drawable/text_cursor"
-            android:nestedScrollingEnabled="false"/>
-    </ScrollView>
+        android:layout_weight="1"/>
+
     <LinearLayout
         android:id="@+id/tabOuter"
         android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package com.example.mynotepad
+package com.example.mynotepad.Utils
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -117,7 +117,9 @@ object PreferenceManager {
     fun getString(context: Context, key: String?): String? {
         val prefs =
             getPreferences(context)
-        return prefs.getString(key, DEFAULT_VALUE_STRING)
+        return prefs.getString(key,
+            DEFAULT_VALUE_STRING
+        )
     }
 
     /**
@@ -129,7 +131,9 @@ object PreferenceManager {
     fun getBoolean(context: Context, key: String?): Boolean {
         val prefs =
             getPreferences(context)
-        return prefs.getBoolean(key, DEFAULT_VALUE_BOOLEAN)
+        return prefs.getBoolean(key,
+            DEFAULT_VALUE_BOOLEAN
+        )
     }
 
     /**
@@ -141,7 +145,9 @@ object PreferenceManager {
     fun getInt(context: Context, key: String?): Int {
         val prefs =
             getPreferences(context)
-        return prefs.getInt(key, DEFAULT_VALUE_INT)
+        return prefs.getInt(key,
+            DEFAULT_VALUE_INT
+        )
     }
 
     /**
@@ -153,7 +159,9 @@ object PreferenceManager {
     fun getLong(context: Context, key: String?): Long {
         val prefs =
             getPreferences(context)
-        return prefs.getLong(key, DEFAULT_VALUE_LONG)
+        return prefs.getLong(key,
+            DEFAULT_VALUE_LONG
+        )
     }
 
     /**
@@ -165,7 +173,9 @@ object PreferenceManager {
     fun getFloat(context: Context, key: String?): Float {
         val prefs =
             getPreferences(context)
-        return prefs.getFloat(key, DEFAULT_VALUE_FLOAT)
+        return prefs.getFloat(key,
+            DEFAULT_VALUE_FLOAT
+        )
     }
 
     /**
