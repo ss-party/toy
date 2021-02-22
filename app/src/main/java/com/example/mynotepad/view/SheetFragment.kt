@@ -1,4 +1,4 @@
-package com.example.mynotepad
+package com.example.mynotepad.view
 
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.mynotepad.activity.MainViewModel
+import com.example.mynotepad.R
 
 
 class SheetFragment : Fragment() {
@@ -16,7 +18,7 @@ class SheetFragment : Fragment() {
     var content: String? = null
     var textSize: Float? = null
     var editText:EditText? = null
-    private var viewModel:MainViewModel? = null
+    private var viewModel: MainViewModel? = null
 
     // Inflate the view for the fragment based on layout XML
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

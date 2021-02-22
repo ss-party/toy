@@ -1,4 +1,4 @@
-package com.example.mynotepad
+package com.example.mynotepad.data
 
 import android.widget.TextView
 

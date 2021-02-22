@@ -1,0 +1,262 @@
+package com.example.mynotepad.activity
+
+import android.app.Application
+import android.content.Context
+import android.util.Log
+import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.lifecycle.AndroidViewModel
+import androidx.viewpager.widget.ViewPager
+import com.example.mynotepad.R
+import com.example.mynotepad.data.DataManager
+import com.example.mynotepad.data.Sheet
+import com.example.mynotepad.utility.PreferenceManager
+import com.example.mynotepad.view.SheetFragment
+import com.example.mynotepad.view.TabTextView
+import java.util.*
+
+class MainViewModel(application: Application) : AndroidViewModel(application) {
+    private val TAG = "kongyi123/MainViewModel"
+    var currentSheetId:Int = 0
+    var currentTabTextView: TextView? = null
+    var isFirstStart = true
+
+    var sheetCount: Int = 0
+    var sheetIdCount:Int = 0
+    var sheets: ArrayList<Sheet> = ArrayList<Sheet>()
+    var sheetSelectionTab: LinearLayout? = null
+    var adapterViewPager: FragmentPagerAdapter? = null
+    private val sheetOrder: MutableMap<View, Int> = mutableMapOf<View, Int>()
+    var vpPager:ViewPager? = null
+    var currentTabPosition:Int = 0
+    private val dataManager = DataManager(getApplication())
+
+    fun getTextSizeById(id: Int):Float {
+        for (i in 1..sheets!!.size) {
+            if (sheets?.get(i-1)?.getId() == id) {
+                return sheets?.get(i-1)?.getTextSize()!!
+            }
+        }
+        return 10.0f
+    }
+
+    /** Initialize
+     */
+    fun initialize(context:Context, supportFragmentManager:FragmentManager):Boolean {
+        sheetSelectionTab = (context as AppCompatActivity).findViewById(R.id.tabInner)
+        loadSheetData()
+        initViewPager(vpPager!!, supportFragmentManager)
+        return true
+    }
+
+    /** Switch focused Sheet in Tab at the bottom line at the screen
+     */
+    fun switchFocusSheetInTab(position:Int) {
+        switchFocusSheetInTab(sheets?.get(position)?.getTextView() as View)
+    }
+
+    /** Save all of the data in the application.
+     */
+    fun save() {
+        // 현재 프레그 먼트 덩어리에 있는 것을 저장하여 올림
+        for (i in 1..sheets!!.size) {
+            if (adapterSheetFragmentArray?.size!! >= i) {
+                val text: String = adapterSheetFragmentArray!![i-1].editText?.text.toString() // pager의 프레그먼트의 내용물(editText)에 접근
+                val textSize: Float = adapterSheetFragmentArray!![i-1].textSize!! // pager의 프레그먼트의 내용물(textSize)에 접근
+                sheets?.get(i-1)?.setContent(text)
+                sheets?.get(i-1)?.setTextSize(textSize)
+            }
+        }
+
+        for (i in 1..sheets!!.size) {
+            val sheetNameKey = "sheetName$i"
+            val sheetContentKey = "sheetContent$i"
+            val sheetIdKey = "sheetId$i"
+            val sheetTextSizeKey = "sheetTextSize$i"
+
+            dataManager.setString(sheetNameKey, sheets?.get(i-1)?.getName())
+            dataManager.setString(sheetContentKey, sheets?.get(i-1)?.getContent())
+            dataManager.setString(sheetIdKey, sheets?.get(i-1)?.getId().toString())
+            dataManager.setFloat(sheetTextSizeKey, sheets?.get(i-1)?.getTextSize()!!)
+        }
+        dataManager.setInt("sheetCount", sheets!!.size)
+        dataManager.setInt("sheetIdCount", sheetIdCount!!)
+        Toast.makeText(getApplication(), "saved", Toast.LENGTH_SHORT).show()
+    }
+
+    /** Load All of the Sheet data
+     */
+    private fun loadSheetData() {
+        val context:Context = getApplication()
+        isFirstStart = false
+        sheetCount = dataManager.getInt("sheetCount")
+        sheetIdCount = dataManager.getInt("sheetIdCount")
+        if (sheetCount!! > 0) {
+            for (i in 1..sheetCount!!) {
+                val sheetNameKey = "sheetName$i"
+                val sheetContentKey = "sheetContent$i"
+                val sheetIdKey = "sheetId$i"
+                val sheetTextSizeKey = "sheetTextSize$i"
+                var sheetName = PreferenceManager.getString(context, sheetNameKey)
+                var sheetContent = PreferenceManager.getString(context, sheetContentKey)
+                var sheetId:String? = PreferenceManager.getString(context, sheetIdKey)
+                var sheetTextSize:Float? = PreferenceManager.getFloat(context, sheetTextSizeKey)
+                if (sheetTextSize == -1.0f) {
+                    sheetTextSize = 10.0f
+                }
+                if (sheetId != null) {
+                    val textView = TabTextView(context.applicationContext);
+                    sheets?.add(Sheet(sheetId!!.toInt(), sheetName, sheetContent, textView, sheetTextSize))
+                    val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                    textView.layoutParams = params
+                    textView.text = sheetName
+                    textView.id = sheetId!!.toInt()
+                    textView.setBackgroundColor(context.resources.getColor(R.color.colorDeactivatedSheet))
+                    sheetOrder?.set(textView, i - 1)
+                    textView.setOnClickListener {
+                        switchFocusSheetInTab(it)
+                        sheetOrder?.get(it as View)?.let { it1 ->
+//                                Toast.makeText(this, "it1 = " + it1, Toast.LENGTH_SHORT).show()
+                            vpPager?.setCurrentItem(it1, true)
+                            currentTabPosition = sheetOrder?.get(it as View)!!
+                        }
+                    }
+                    addShowingSheetInTab(textView)
+                }
+            }
+            currentTabTextView = sheets?.get(0)?.getTextView()
+            if (currentTabTextView != null) {
+                currentSheetId = currentTabTextView!!.id
+                currentTabTextView!!.setBackgroundColor(context.resources.getColor(
+                    R.color.colorActivatedSheet
+                ))
+            }
+        } else {
+            Toast.makeText(context, "저장된 데이터가 없습니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    /** Switch focus sheet in bottom tab
+     * - change currentSheetId, currentTabTextView
+     */
+    private fun switchFocusSheetInTab(it:View) {
+        val context:Context = getApplication()
+        Log.d(TAG, "switchFocusSheetInTab")
+
+        val view = it as TextView
+        if (view.id == currentSheetId) {
+            return
+        }
+        val existTextView = currentTabTextView
+        currentSheetId = view.id
+        currentTabTextView = view
+        existTextView?.setBackgroundColor(context.resources.getColor(R.color.colorDeactivatedSheet))
+        view.setBackgroundColor(context.resources.getColor(R.color.colorActivatedSheet))
+        Log.d(TAG,"id = " + currentSheetId + " / sheet id count = " + sheetIdCount!! )
+//        Toast.makeText(this, "id = " + viewModel?.currentSheetId + " / sheet id count = " + viewModel?.sheetIdCount!!, Toast.LENGTH_SHORT).show()
+    }
+
+    /** Add new title view of a sheet into the tab bottom side of screen
+     * - If there is previous parent (linear layout) of view, it should be called removeView method.
+     */
+    private fun addShowingSheetInTab(view: View) {
+        if (view.parent != null) {
+            ((view.parent) as ViewGroup).removeView(view)
+        }
+        sheetSelectionTab?.addView(view)
+    }
+
+    /** Increase text size of the text content in current text screen
+     */
+    fun contentTextSizeIncrease() {
+        val currentContentTextSize = adapterSheetFragmentArray!![currentTabPosition!!].textSize!! + 1
+        adapterSheetFragmentArray!![currentTabPosition!!].textSize = currentContentTextSize
+        adapterSheetFragmentArray!![currentTabPosition!!].editText?.textSize = currentContentTextSize!!
+//        sheets?.get(currentTabPosition).setTextSize(currentContentTextSize)
+    }
+
+    /** Decrease text size of the text content in current text screen
+     */
+    fun contentTextSizeDecrease() {
+        val currentContentTextSize = adapterSheetFragmentArray!![currentTabPosition!!].textSize!! - 1
+        adapterSheetFragmentArray!![currentTabPosition!!].textSize = currentContentTextSize
+        adapterSheetFragmentArray!![currentTabPosition!!].editText?.textSize = currentContentTextSize!!
+//        sheets?.get(currentTabPosition).setTextSize(currentContentTextSize)
+    }
+
+//    fun addNewSheet(context: Context, vpPager: ViewPager, switchFocusSheetInTab: (View) -> Unit, addShowingSheet: (TextView) -> Unit) {
+    fun addNewSheet(vpPager: ViewPager) {
+        val context:Context = getApplication()
+
+        val textView = TabTextView(context)
+        val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        textView.layoutParams = params
+        textView.text = "newSheet"
+        textView.id = ++sheetIdCount
+//        textView.background = getDrawable(R.drawable.edge)
+        textView.setBackgroundColor(context.resources.getColor(R.color.colorActivatedSheet))
+//        textView.typeface = resources.getFont(R.font.whj000f0cb5)
+        textView?.setOnClickListener {
+            switchFocusSheetInTab(it)
+            sheetOrder?.get(it as View)?.let { it1 -> // view - order match.
+                vpPager.setCurrentItem(it1, true)
+            }
+        }
+        sheets?.add(Sheet(sheetIdCount!!, "newSheet", "new", textView, 10.0f))
+        addShowingSheetInTab(textView)
+//        adapterViewPager?.getItem()
+        sheetOrder?.set(textView, sheetIdCount-1)
+        adapterViewPager?.notifyDataSetChanged()
+        switchFocusSheetInTab(textView)
+        vpPager.setCurrentItem(sheetIdCount-1, true)
+    }
+
+    private fun initViewPager(vpPager: ViewPager, supportFragmentManager: FragmentManager) {
+        Log.d(TAG, "initViewPager")
+        adapterViewPager = MyPagerAdapter(supportFragmentManager, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
+        vpPager.adapter = adapterViewPager
+    }
+
+    var adapterSheetFragmentArray: ArrayList<SheetFragment> = ArrayList<SheetFragment>()
+
+    inner class MyPagerAdapter(fm: FragmentManager, behavior: Int) : FragmentPagerAdapter(fm, behavior) {
+        override fun getCount(): Int {
+            Log.d(TAG, "getCount")
+            return sheets!!.size
+        }
+        // Returns the fragment to display for that page
+        // 여기서 뷰를 처음 만든다. (일단 한 번 만들었으면, 호출이 되지 않음)
+        override fun getItem(position: Int): Fragment {
+            Log.d(TAG, "getItem")
+            val sheetFragment = SheetFragment()
+            sheetFragment.initialize(sheets[position].getContent()!!, sheets[position].getTextSize()!!)
+            Log.d("kongyi123", " get Text size = " + sheets[position].getTextSize())
+            adapterSheetFragmentArray.add(sheetFragment)
+//            currentContentTextSize = sheets[position].getTextSize()!!
+            return sheetFragment
+        }
+
+        // Returns the page title for the top indicator
+        override fun getPageTitle(position: Int): CharSequence? {
+            Log.d(TAG, "getPageTitle")
+            return "Page $position"
+        }
+
+        override fun instantiateItem(container: ViewGroup, position: Int): Any {
+            Log.d(TAG, "instantiateItem")
+            return super.instantiateItem(container, position)
+        }
+
+        override fun finishUpdate(container: ViewGroup) {
+            Log.d(TAG, "finishUpdate")
+            super.finishUpdate(container)
+        }
+    }
+}

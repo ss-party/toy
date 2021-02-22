@@ -1,17 +1,16 @@
-package com.example.mynotepad
+package com.example.mynotepad.activity
 
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
-import com.example.mynotepad.Utils.PreferenceManager
-import com.example.mynotepad.Utils.TTSpeech
+import com.example.mynotepad.R
+import com.example.mynotepad.utility.PreferenceManager
+import com.example.mynotepad.utility.TTSpeech
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog.view.*
 
@@ -29,11 +28,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel?.vpPager = findViewById<ViewPager>(R.id.vpPager)
-        tts = TTSpeech(applicationContext)
+        tts = TTSpeech(this)
 
         clearData()
 
-        if (viewModel?.isFisrtStart == true) {
+        if (viewModel?.isFirstStart == true) {
             initializeDataForTheFirstTime()
         }
 
@@ -47,7 +46,7 @@ class MainActivity : AppCompatActivity() {
             override fun onPageSelected(position: Int) {
 //                Toast.makeText(mContext, "pos = " + position + " / viewModelSheetIdCount = " + viewModel?.sheetIdCount, Toast.LENGTH_SHORT).show()
                 if (position >= 0 && position < viewModel?.sheetIdCount!!) {
-                    switchFocusSheetInTab(viewModel?.sheets?.get(position)?.getTextView() as View)
+                    switchFocusSheetInTab(position)
                     //(viewModel?.adapterViewPager as MainViewModel.MyPagerAdapter).adapterSheetFragmentArray[position].textSize = viewModel!!.sheets[position].getTextSize()
                 }
                 viewModel?.currentTabPosition = position
@@ -91,6 +90,10 @@ class MainActivity : AppCompatActivity() {
         tts?.close()
     }
 
+    private fun switchFocusSheetInTab(position: Int) {
+        viewModel?.switchFocusSheetInTab(position)
+    }
+
     private fun makeDialogAndSetNewSheetName() {
         // make Dialog
         val dlg: AlertDialog.Builder = AlertDialog.Builder(this@MainActivity)
@@ -114,26 +117,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onPlusIconClick(view: View) {
-        viewModel?.addNewSheet(applicationContext, viewModel?.vpPager!!, ::switchFocusSheetInTab, ::addShowingSheetInTab)
-    }
-
-    /** Switch focus sheet in bottom tab
-     * - change currentSheetId, currentTabTextView
-     */
-    private fun switchFocusSheetInTab(it:View) {
-        Log.d(TAG, "switchFocusSheetInTab")
-
-        val view = it as TextView
-        if (view.id == viewModel?.currentSheetId) {
-            return
-        }
-        val existTextView = viewModel?.currentTabTextView
-        viewModel?.currentSheetId = view.id
-        viewModel?.currentTabTextView = view
-        existTextView?.setBackgroundColor(resources.getColor(R.color.colorDeactivatedSheet))
-        view.setBackgroundColor(resources.getColor(R.color.colorActivatedSheet))
-        Log.d(TAG,"id = " + viewModel?.currentSheetId + " / sheet id count = " + viewModel?.sheetIdCount!! )
-//        Toast.makeText(this, "id = " + viewModel?.currentSheetId + " / sheet id count = " + viewModel?.sheetIdCount!!, Toast.LENGTH_SHORT).show()
+        viewModel?.addNewSheet(viewModel?.vpPager!!)
     }
 
     private fun findInput() {
@@ -204,49 +188,14 @@ class MainActivity : AppCompatActivity() {
     */
     }
 
-    /** Add new title view of a sheet into the tab bottom side of screen
-     * - If there is previous parent (linear layout) of view, it should be called removeView method.
-     */
-    private fun addShowingSheetInTab(view: View) {
-        if (view.parent != null) {
-            ((view.parent) as ViewGroup).removeView(view)
-        }
-        viewModel?.sheetSelectionTab?.addView(view)
-    }
-
     /** Save data (the contents of sheets and so on)
      * 1. Move all data from adapterSheetFragmentArray to Sheets
      * 2. Set all data of sheets to PreferenceManager
      */
     private fun save() {
         Log.d(TAG, "save")
-
-        // 현재 프레그 먼트 덩어리에 있는 것을 저장하여 올림
-        for (i in 1..viewModel?.sheets!!.size) {
-            if (viewModel?.adapterSheetFragmentArray?.size!! >= i) {
-                val text: String = viewModel?.adapterSheetFragmentArray!![i-1].editText?.text.toString() // pager의 프레그먼트의 내용물(editText)에 접근
-                val textSize: Float = viewModel?.adapterSheetFragmentArray!![i-1].textSize!! // pager의 프레그먼트의 내용물(textSize)에 접근
-                viewModel?.sheets?.get(i-1)?.setContent(text)
-                viewModel?.sheets?.get(i-1)?.setTextSize(textSize)
-            }
-        }
-
-        for (i in 1..viewModel?.sheets!!.size) {
-            val sheetNameKey = "sheetName$i"
-            val sheetContentKey = "sheetContent$i"
-            val sheetIdKey = "sheetId$i"
-            val sheetTextSizeKey = "sheetTextSize$i"
-
-            PreferenceManager.setString(this, sheetNameKey, viewModel?.sheets?.get(i-1)?.getName())
-            PreferenceManager.setString(this, sheetContentKey, viewModel?.sheets?.get(i-1)?.getContent())
-            PreferenceManager.setString(this, sheetIdKey, viewModel?.sheets?.get(i-1)?.getId().toString())
-            PreferenceManager.setFloat(this, sheetTextSizeKey, viewModel?.sheets?.get(i-1)?.getTextSize()!!)
-        }
-        PreferenceManager.setInt(this, "sheetCount", viewModel?.sheets!!.size)
-        PreferenceManager.setInt(this, "sheetIdCount", viewModel?.sheetIdCount!!)
-        Toast.makeText(this, "saved", Toast.LENGTH_SHORT).show()
+        viewModel?.save()
     }
-
 
     /** Clear All sheets and data
      * - It works when CELAR variable set to true in code
@@ -265,53 +214,9 @@ class MainActivity : AppCompatActivity() {
     */
     private fun initializeDataForTheFirstTime() {
         Log.d(TAG, "initializeDataForTheFirstTime")
-        viewModel?.sheetSelectionTab = findViewById(R.id.tabInner)
-        viewModel?.isFisrtStart = false
-        viewModel?.sheetCount = PreferenceManager.getInt(this, "sheetCount")
-        viewModel?.sheetIdCount = PreferenceManager.getInt(this, "sheetIdCount")
-        if (viewModel?.sheetCount!! > 0) {
-            for (i in 1..viewModel?.sheetCount!!) {
-                val sheetNameKey = "sheetName$i"
-                val sheetContentKey = "sheetContent$i"
-                val sheetIdKey = "sheetId$i"
-                val sheetTextSizeKey = "sheetTextSize$i"
-                var sheetName = PreferenceManager.getString(this, sheetNameKey)
-                var sheetContent = PreferenceManager.getString(this, sheetContentKey)
-                var sheetId:String? = PreferenceManager.getString(this, sheetIdKey)
-                var sheetTextSize:Float? = PreferenceManager.getFloat(this, sheetTextSizeKey)
-                if (sheetTextSize == -1.0f) {
-                    sheetTextSize = 10.0f
-                }
-                if (sheetId != null) {
-                    val textView = TabTextView(applicationContext);
-                    viewModel?.sheets?.add(Sheet(sheetId!!.toInt(), sheetName, sheetContent, textView, sheetTextSize))
-                    val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                    textView.layoutParams = params
-                    textView.text = sheetName
-                    textView.id = sheetId!!.toInt()
-                    textView.setBackgroundColor(resources.getColor(R.color.colorDeactivatedSheet))
-                    viewModel?.sheetOrder?.set(textView, i - 1)
-                    textView.setOnClickListener {
-                        switchFocusSheetInTab(it)
-                        viewModel?.sheetOrder?.get(it as View)?.let { it1 ->
-//                                Toast.makeText(this, "it1 = " + it1, Toast.LENGTH_SHORT).show()
-                            viewModel?.vpPager?.setCurrentItem(it1, true)
-                            viewModel?.currentTabPosition = viewModel?.sheetOrder?.get(it as View)!!
-                        }
-                    }
-                    addShowingSheetInTab(textView)
-                }
-            }
-            viewModel?.currentTabTextView = viewModel?.sheets?.get(0)?.getTextView()
-            if (viewModel?.currentTabTextView != null) {
-                viewModel?.currentSheetId = viewModel?.currentTabTextView!!.id
-                viewModel?.currentTabTextView!!.setBackgroundColor(resources.getColor(R.color.colorActivatedSheet))
-            }
-            viewModel?.initViewPager(viewModel?.vpPager!!, supportFragmentManager)
-
-        } else {
-            Toast.makeText(this, "저장된 데이터가 없습니다.", Toast.LENGTH_SHORT).show()
+        val result = viewModel?.initialize(this, supportFragmentManager)
+        if (result == false) {
+            Toast.makeText(this, "데이터 초기화 실패", Toast.LENGTH_SHORT).show()
         }
     }
-
 }

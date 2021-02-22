@@ -1,8 +1,9 @@
-package com.example.mynotepad
+package com.example.mynotepad.view
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.Gravity
+import com.example.mynotepad.R
 
 class TabTextView : androidx.appcompat.widget.AppCompatTextView {
     constructor(context: Context) : super(context)
