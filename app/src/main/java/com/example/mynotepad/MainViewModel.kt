@@ -14,14 +14,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.viewpager.widget.ViewPager
 import java.util.*
 
-
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val TAG = "kongyi123/MainViewModel"
     var currentSheetId:Int = 0
     var currentTabTextView: TextView? = null
     var isFisrtStart = true
-    var viewModel_LocalValue: String? = null
-        private set
+
     var sheetCount: Int = 0
     var sheetIdCount:Int = 0
     var sheets: ArrayList<Sheet> = ArrayList<Sheet>()
@@ -40,6 +38,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         return 10.0f
     }
 
+    /** Increase text size of the text content in current text screen
+     */
     fun contentTextSizeIncrease() {
         val currentContentTextSize = adapterSheetFragmentArray!![currentTabPosition!!].textSize!! + 1
         adapterSheetFragmentArray!![currentTabPosition!!].textSize = currentContentTextSize
@@ -47,6 +47,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 //        sheets?.get(currentTabPosition).setTextSize(currentContentTextSize)
     }
 
+    /** Decrease text size of the text content in current text screen
+     */
     fun contentTextSizeDecrease() {
         val currentContentTextSize = adapterSheetFragmentArray!![currentTabPosition!!].textSize!! - 1
         adapterSheetFragmentArray!![currentTabPosition!!].textSize = currentContentTextSize

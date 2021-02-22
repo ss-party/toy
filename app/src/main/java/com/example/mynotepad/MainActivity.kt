@@ -11,14 +11,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.example.mynotepad.Utils.PreferenceManager
-import com.example.mynotepad.Utils.PreferenceManager.setFloat
-import com.example.mynotepad.Utils.PreferenceManager.setInt
-import com.example.mynotepad.Utils.PreferenceManager.setString
 import com.example.mynotepad.Utils.TTSpeech
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog.view.*
 
 class MainActivity : AppCompatActivity() {
+    private val TAG = "kongyi123/MainActivity"
     private var viewModel: MainViewModel? = null
     private var tts: TTSpeech? = null
 
@@ -26,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private val CLEAR = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d(TAG, "onCreate")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
@@ -36,8 +35,6 @@ class MainActivity : AppCompatActivity() {
 
         if (viewModel?.isFisrtStart == true) {
             initializeDataForTheFirstTime()
-        } else {
-            initializeWhenRotate()
         }
 
         tts?.initTTS()
@@ -60,13 +57,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        Log.d("kongyi123", "onCreateOptionsMenu")
+        Log.d(TAG, "onCreateOptionsMenu")
         menuInflater.inflate(R.menu.main_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        Log.d("kongyi123", "onOptionsItemSelected")
+        Log.d(TAG, "onOptionsItemSelected")
         when(item.itemId) {
             R.id.menuSaveOptionBtn-> save();
             R.id.menuEditSheetNameBtn-> makeDialogAndSetNewSheetName()
@@ -120,8 +117,11 @@ class MainActivity : AppCompatActivity() {
         viewModel?.addNewSheet(applicationContext, viewModel?.vpPager!!, ::switchFocusSheetInTab, ::addShowingSheetInTab)
     }
 
+    /** Switch focus sheet in bottom tab
+     * - change currentSheetId, currentTabTextView
+     */
     private fun switchFocusSheetInTab(it:View) {
-        Log.d("kongyi123", "switchFocusSheetInTab")
+        Log.d(TAG, "switchFocusSheetInTab")
 
         val view = it as TextView
         if (view.id == viewModel?.currentSheetId) {
@@ -132,7 +132,7 @@ class MainActivity : AppCompatActivity() {
         viewModel?.currentTabTextView = view
         existTextView?.setBackgroundColor(resources.getColor(R.color.colorDeactivatedSheet))
         view.setBackgroundColor(resources.getColor(R.color.colorActivatedSheet))
-        Log.d("kongyi123","id = " + viewModel?.currentSheetId + " / sheet id count = " + viewModel?.sheetIdCount!! )
+        Log.d(TAG,"id = " + viewModel?.currentSheetId + " / sheet id count = " + viewModel?.sheetIdCount!! )
 //        Toast.makeText(this, "id = " + viewModel?.currentSheetId + " / sheet id count = " + viewModel?.sheetIdCount!!, Toast.LENGTH_SHORT).show()
     }
 
@@ -145,7 +145,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeHotKey() {
-        Log.d("kongyi123", "initializeHotKey")
+        Log.d(TAG, "initializeHotKey")
 
 /*        val editText: EditText? = findViewById(R.id.editText)
         editText?.setOnKeyListener { v, keyCode, event ->
@@ -204,6 +204,9 @@ class MainActivity : AppCompatActivity() {
     */
     }
 
+    /** Add new title view of a sheet into the tab bottom side of screen
+     * - If there is previous parent (linear layout) of view, it should be called removeView method.
+     */
     private fun addShowingSheetInTab(view: View) {
         if (view.parent != null) {
             ((view.parent) as ViewGroup).removeView(view)
@@ -211,8 +214,12 @@ class MainActivity : AppCompatActivity() {
         viewModel?.sheetSelectionTab?.addView(view)
     }
 
+    /** Save data (the contents of sheets and so on)
+     * 1. Move all data from adapterSheetFragmentArray to Sheets
+     * 2. Set all data of sheets to PreferenceManager
+     */
     private fun save() {
-        Log.d("kongyi123", "save")
+        Log.d(TAG, "save")
 
         // 현재 프레그 먼트 덩어리에 있는 것을 저장하여 올림
         for (i in 1..viewModel?.sheets!!.size) {
@@ -225,36 +232,39 @@ class MainActivity : AppCompatActivity() {
         }
 
         for (i in 1..viewModel?.sheets!!.size) {
-
             val sheetNameKey = "sheetName$i"
             val sheetContentKey = "sheetContent$i"
             val sheetIdKey = "sheetId$i"
             val sheetTextSizeKey = "sheetTextSize$i"
 
-            setString(this, sheetNameKey, viewModel?.sheets?.get(i-1)?.getName())
-            setString(this, sheetContentKey, viewModel?.sheets?.get(i-1)?.getContent())
-            setString(this, sheetIdKey, viewModel?.sheets?.get(i-1)?.getId().toString())
-            setFloat(this, sheetTextSizeKey, viewModel?.sheets?.get(i-1)?.getTextSize()!!)
+            PreferenceManager.setString(this, sheetNameKey, viewModel?.sheets?.get(i-1)?.getName())
+            PreferenceManager.setString(this, sheetContentKey, viewModel?.sheets?.get(i-1)?.getContent())
+            PreferenceManager.setString(this, sheetIdKey, viewModel?.sheets?.get(i-1)?.getId().toString())
+            PreferenceManager.setFloat(this, sheetTextSizeKey, viewModel?.sheets?.get(i-1)?.getTextSize()!!)
         }
-        setInt(this, "sheetCount", viewModel?.sheets!!.size)
-        setInt(this, "sheetIdCount", viewModel?.sheetIdCount!!)
+        PreferenceManager.setInt(this, "sheetCount", viewModel?.sheets!!.size)
+        PreferenceManager.setInt(this, "sheetIdCount", viewModel?.sheetIdCount!!)
         Toast.makeText(this, "saved", Toast.LENGTH_SHORT).show()
     }
 
+
+    /** Clear All sheets and data
+     * - It works when CELAR variable set to true in code
+     */
     private fun clearData() {
         if (CLEAR) {
-            setInt(this, "sheetCount", 0)
-            setInt(this, "sheetIdCount", 0)
+            PreferenceManager.setInt(this, "sheetCount", 0)
+            PreferenceManager.setInt(this, "sheetIdCount", 0)
             Toast.makeText(this, "초기화 완료", Toast.LENGTH_SHORT).show()
             return
         }
     }
 
-    /** get datas from PreferenceManager
-    * e.g. sheetCount, sheetIdCount, Sheets, currentTextView
+    /** Get datas from PreferenceManager
+    * - e.g. sheetCount, sheetIdCount, Sheets, currentTextView
     */
     private fun initializeDataForTheFirstTime() {
-        Log.d("kongyi123", "initializeDataForTheFirstTime")
+        Log.d(TAG, "initializeDataForTheFirstTime")
         viewModel?.sheetSelectionTab = findViewById(R.id.tabInner)
         viewModel?.isFisrtStart = false
         viewModel?.sheetCount = PreferenceManager.getInt(this, "sheetCount")
@@ -302,31 +312,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this, "저장된 데이터가 없습니다.", Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private fun initializeWhenRotate() {
-        Log.d("kongyi123", "initializeWhenRotate")
-
-        //            editText.textSize = viewModel?.currentTextSize!!
-        //viewModel?.initViewPager(vpPager, supportFragmentManager)
-        viewModel?.sheetSelectionTab = findViewById(R.id.tabInner) // view의 id는 id를 숫자로 바꾼 것일 뿐. id가 같다고 같은 뷰가 아니다.
-        // 즉, 이것은 수직/수평 전환이 되면서 새로만들어진 뷰일 것이다.
-        // 하단의 시트들 보이는 탭 초기화
-        viewModel?.sheetSelectionTab?.removeAllViews()
-        for (i in 1..viewModel?.sheetCount!!) {
-            val textView = viewModel?.sheets?.get(i-1)?.getTextView();
-            textView?.setOnClickListener {
-                switchFocusSheetInTab(it)
-                viewModel?.sheetOrder?.get(it as View)?.let { it1 -> // view - order match.
-                    viewModel?.vpPager?.setCurrentItem(it1, true)
-                    viewModel?.currentTabPosition = viewModel?.sheetOrder?.get(it1 as View)!!
-                }
-            }
-            if (textView != null) {
-                addShowingSheetInTab(textView)
-            }
-        }
-        viewModel?.initViewPager(viewModel?.vpPager!!, supportFragmentManager)
     }
 
 }
