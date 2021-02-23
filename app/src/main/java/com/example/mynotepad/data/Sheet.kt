@@ -1,20 +1,30 @@
 package com.example.mynotepad.data
 
 import android.widget.TextView
+import com.example.mynotepad.view.SheetFragment
 
 class Sheet {
     private var name: String? = null
     private var content: String? = null
     private var id: Int? = null
-    private var textView: TextView? = null
+    private var tabTitleView: TextView? = null
     private var textSize: Float? = null
+    private var sheetFragment: SheetFragment? = null
 
     constructor(id: Int, name: String?, content: String?, textView: TextView?, textSize: Float?) {
         this.id = id
         this.name = name
         this.content = content
-        this.textView = textView
+        this.tabTitleView = textView
         this.textSize = textSize
+    }
+
+    fun getSheetFragment(): SheetFragment? {
+        return sheetFragment
+    }
+
+    fun setSheetFragment(sheetFragment: SheetFragment) {
+        this.sheetFragment = sheetFragment
     }
 
     fun getId(): Int? {
@@ -29,16 +39,12 @@ class Sheet {
         return content
     }
 
-    fun setText(text: String) {
-        setContent(text)
-    }
-
     fun setContent(text: String) {
         this.content = text
     }
 
-    fun getTextView(): TextView? {
-        return this.textView
+    fun getTabTitleView(): TextView? {
+        return this.tabTitleView
     }
 
     fun setName(text: String) {
@@ -51,5 +57,12 @@ class Sheet {
 
     fun setTextSize(size:Float) {
         this.textSize = size
+        updateTextSizeToEditText()
+    }
+
+    private fun updateTextSizeToEditText() {
+        if (sheetFragment != null) {
+            sheetFragment?.editText?.textSize = textSize!!
+        }
     }
 }

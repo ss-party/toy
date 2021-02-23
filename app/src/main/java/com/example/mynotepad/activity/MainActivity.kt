@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Log.d(TAG, "onOptionsItemSelected")
         when(item.itemId) {
-            R.id.menuSaveOptionBtn-> save();
+            R.id.menuSaveOptionBtn-> saveAllIntoDB();
             R.id.menuEditSheetNameBtn-> makeDialogAndSetNewSheetName()
             R.id.menuDeleteSheetBtn->{
 //                for (i in 1..sheets.size) {
@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        save()
+        saveAllIntoDB()
     }
 
     override fun onDestroy() {
@@ -92,6 +92,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun switchFocusSheetInTab(position: Int) {
         viewModel?.switchFocusSheetInTab(position)
+        viewModel?.updateFragmentToSheets()
+        showAllData()
     }
 
     private fun makeDialogAndSetNewSheetName() {
@@ -105,8 +107,8 @@ class MainActivity : AppCompatActivity() {
         // set New Sheet Name if the confirm button is clicked.
         view.dialogConfirmBtn.setOnClickListener {
             for (i in 1..viewModel?.sheets!!.size) {
-                if (viewModel?.currentTabTextView?.id == viewModel?.sheets?.get(i - 1)?.getId()) {
-                    viewModel?.sheets?.get(i - 1)?.getTextView()?.text = view.dialogEditBox.text
+                if (viewModel?.currentTabTitleView?.id == viewModel?.sheets?.get(i - 1)?.getId()) {
+                    viewModel?.sheets?.get(i - 1)?.getTabTitleView()?.text = view.dialogEditBox.text
                     viewModel?.sheets?.get(i - 1)?.setName(view.dialogEditBox.text.toString())
                     break
                 }
@@ -192,9 +194,9 @@ class MainActivity : AppCompatActivity() {
      * 1. Move all data from adapterSheetFragmentArray to Sheets
      * 2. Set all data of sheets to PreferenceManager
      */
-    private fun save() {
+    private fun saveAllIntoDB() {
         Log.d(TAG, "save")
-        viewModel?.save()
+        viewModel?.saveAllIntoDB()
     }
 
     /** Clear All sheets and data
@@ -217,6 +219,20 @@ class MainActivity : AppCompatActivity() {
         val result = viewModel?.initialize(this, supportFragmentManager)
         if (result == false) {
             Toast.makeText(this, "데이터 초기화 실패", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun showAllData() {
+        for (i in 1..viewModel?.sheets!!.size) {
+            val text: String = viewModel?.sheets!![i-1].getContent().toString()
+            val title: String = viewModel!!.sheets[i-1]!!.getName()!!
+            val viewId: Int = viewModel!!.sheets[i-1]!!.getTabTitleView()!!.id
+            val sheetId: Int = viewModel!!.sheets[i-1]!!.getId()!!
+            var length = text.length-1
+            if (text.length >= 5) {
+                length = 5
+            }
+            Log.d(TAG, "num = $i, content = ${text.substring(0, length)}, title = $title, viewId = $viewId sheetId = $sheetId")
         }
     }
 }

@@ -25,7 +25,7 @@ import java.util.*
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val TAG = "kongyi123/MainViewModel"
     var currentSheetId:Int = 0
-    var currentTabTextView: TextView? = null
+    var currentTabTitleView: TextView? = null
     var isFirstStart = true
 
     var sheetCount: Int = 0
@@ -56,24 +56,26 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         return true
     }
 
+    fun updateFragmentToSheets() {
+        for (i in 1..sheets.size) {
+            if (sheets[i-1].getSheetFragment() != null) {
+                sheets[i-1].setContent(sheets[i-1].getSheetFragment()?.editText?.text.toString())
+                sheets[i-1].setTextSize(sheets[i-1].getSheetFragment()?.textSize!!)
+            }
+        }
+    }
+
     /** Switch focused Sheet in Tab at the bottom line at the screen
      */
     fun switchFocusSheetInTab(position:Int) {
-        switchFocusSheetInTab(sheets?.get(position)?.getTextView() as View)
+        switchFocusSheetInTab(sheets?.get(position)?.getTabTitleView() as View)
     }
 
     /** Save all of the data in the application.
      */
-    fun save() {
+    fun saveAllIntoDB() {
         // 현재 프레그 먼트 덩어리에 있는 것을 저장하여 올림
-        for (i in 1..sheets!!.size) {
-            if (adapterSheetFragmentArray?.size!! >= i) {
-                val text: String = adapterSheetFragmentArray!![i-1].editText?.text.toString() // pager의 프레그먼트의 내용물(editText)에 접근
-                val textSize: Float = adapterSheetFragmentArray!![i-1].textSize!! // pager의 프레그먼트의 내용물(textSize)에 접근
-                sheets?.get(i-1)?.setContent(text)
-                sheets?.get(i-1)?.setTextSize(textSize)
-            }
-        }
+        updateFragmentToSheets()
 
         for (i in 1..sheets!!.size) {
             val sheetNameKey = "sheetName$i"
@@ -131,10 +133,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     addShowingSheetInTab(textView)
                 }
             }
-            currentTabTextView = sheets?.get(0)?.getTextView()
-            if (currentTabTextView != null) {
-                currentSheetId = currentTabTextView!!.id
-                currentTabTextView!!.setBackgroundColor(context.resources.getColor(
+            currentTabTitleView = sheets?.get(0)?.getTabTitleView()
+            if (currentTabTitleView != null) {
+                currentSheetId = currentTabTitleView!!.id
+                currentTabTitleView!!.setBackgroundColor(context.resources.getColor(
                     R.color.colorActivatedSheet
                 ))
             }
@@ -154,9 +156,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         if (view.id == currentSheetId) {
             return
         }
-        val existTextView = currentTabTextView
+        val existTextView = currentTabTitleView
         currentSheetId = view.id
-        currentTabTextView = view
+        currentTabTitleView = view
         existTextView?.setBackgroundColor(context.resources.getColor(R.color.colorDeactivatedSheet))
         view.setBackgroundColor(context.resources.getColor(R.color.colorActivatedSheet))
         Log.d(TAG,"id = " + currentSheetId + " / sheet id count = " + sheetIdCount!! )
@@ -176,19 +178,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     /** Increase text size of the text content in current text screen
      */
     fun contentTextSizeIncrease() {
-        val currentContentTextSize = adapterSheetFragmentArray!![currentTabPosition!!].textSize!! + 1
-        adapterSheetFragmentArray!![currentTabPosition!!].textSize = currentContentTextSize
-        adapterSheetFragmentArray!![currentTabPosition!!].editText?.textSize = currentContentTextSize!!
-//        sheets?.get(currentTabPosition).setTextSize(currentContentTextSize)
+        val currentContentTextSize = sheets!![currentTabPosition!!].getTextSize()!! + 1
+        sheets!![currentTabPosition!!].setTextSize(currentContentTextSize)
     }
 
     /** Decrease text size of the text content in current text screen
      */
     fun contentTextSizeDecrease() {
-        val currentContentTextSize = adapterSheetFragmentArray!![currentTabPosition!!].textSize!! - 1
-        adapterSheetFragmentArray!![currentTabPosition!!].textSize = currentContentTextSize
-        adapterSheetFragmentArray!![currentTabPosition!!].editText?.textSize = currentContentTextSize!!
-//        sheets?.get(currentTabPosition).setTextSize(currentContentTextSize)
+        val currentContentTextSize = sheets!![currentTabPosition!!].getTextSize()!! - 1
+        sheets!![currentTabPosition!!].setTextSize(currentContentTextSize)
     }
 
 //    fun addNewSheet(context: Context, vpPager: ViewPager, switchFocusSheetInTab: (View) -> Unit, addShowingSheet: (TextView) -> Unit) {
@@ -224,11 +222,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         vpPager.adapter = adapterViewPager
     }
 
-    var adapterSheetFragmentArray: ArrayList<SheetFragment> = ArrayList<SheetFragment>()
-
     inner class MyPagerAdapter(fm: FragmentManager, behavior: Int) : FragmentPagerAdapter(fm, behavior) {
         override fun getCount(): Int {
-            Log.d(TAG, "getCount")
             return sheets!!.size
         }
         // Returns the fragment to display for that page
@@ -236,10 +231,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         override fun getItem(position: Int): Fragment {
             Log.d(TAG, "getItem")
             val sheetFragment = SheetFragment()
-            sheetFragment.initialize(sheets[position].getContent()!!, sheets[position].getTextSize()!!)
-            Log.d("kongyi123", " get Text size = " + sheets[position].getTextSize())
-            adapterSheetFragmentArray.add(sheetFragment)
-//            currentContentTextSize = sheets[position].getTextSize()!!
+            sheetFragment.initialize(sheets[position].getContent()!!, sheets[position].getTextSize()!!, position)
+            sheets[position].setSheetFragment(sheetFragment)
             return sheetFragment
         }
 

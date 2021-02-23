@@ -18,6 +18,7 @@ class SheetFragment : Fragment() {
     var content: String? = null
     var textSize: Float? = null
     var editText:EditText? = null
+    var idxOfSheetsArray: Int? = null
     private var viewModel: MainViewModel? = null
 
     // Inflate the view for the fragment based on layout XML
@@ -31,9 +32,10 @@ class SheetFragment : Fragment() {
         return view
     }
 
-    fun initialize(content:String, textSize:Float) {
+    fun initialize(content:String, textSize:Float, idxOfSheets:Int) {
         Log.d(TAG, "initialize")
         this.content = content
         this.textSize = textSize
+        this.idxOfSheetsArray = idxOfSheets
     }
 }
