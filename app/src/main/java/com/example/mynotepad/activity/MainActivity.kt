@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
             override fun onPageScrollStateChanged(state: Int) { }
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) { }
             override fun onPageSelected(position: Int) {
-//                Toast.makeText(mContext, "pos = " + position + " / viewModelSheetIdCount = " + viewModel?.sheetIdCount, Toast.LENGTH_SHORT).show()
+//                Toast.makeText(ontext, "pos = " + position + " / viewModelSheetIdCount = " + viewModel?.sheetIdCount, Toast.LENGTH_SHORT).show()
                 if (position >= 0 && position < viewModel?.sheetIdCount!!) {
                     switchFocusSheetInTab(position)
                     //(viewModel?.adapterViewPager as MainViewModel.MyPagerAdapter).adapterSheetFragmentArray[position].textSize = viewModel!!.sheets[position].getTextSize()
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Log.d(TAG, "onOptionsItemSelected")
         when(item.itemId) {
-            R.id.menuSaveOptionBtn-> saveAllIntoDB();
+            R.id.menuSaveOptionBtn-> saveAllIntoDB()
             R.id.menuEditSheetNameBtn-> makeDialogAndSetNewSheetName()
             R.id.menuDeleteSheetBtn->{
 //                for (i in 1..sheets.size) {
@@ -93,6 +93,7 @@ class MainActivity : AppCompatActivity() {
     private fun switchFocusSheetInTab(position: Int) {
         viewModel?.switchFocusSheetInTab(position)
         viewModel?.updateFragmentToSheets()
+        tabOuter.requestFocus()
         showAllData()
     }
 
