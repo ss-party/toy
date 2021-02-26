@@ -1,10 +1,12 @@
 package com.example.mynotepad.activity
 
 import android.app.Application
+import android.app.Service
 import android.content.Context
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -18,6 +20,7 @@ import com.example.mynotepad.R
 import com.example.mynotepad.data.DataManager
 import com.example.mynotepad.data.Sheet
 import com.example.mynotepad.utility.PreferenceManager
+import com.example.mynotepad.utility.SoftKeyboard
 import com.example.mynotepad.view.SheetFragment
 import com.example.mynotepad.view.TabTextView
 import java.util.*
@@ -37,6 +40,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     var vpPager:ViewPager? = null
     var currentTabPosition:Int = 0
     private val dataManager = DataManager(getApplication())
+    var softKeyboard: SoftKeyboard? = null
+    var rootLayout: ViewGroup? = null
+    var controlManager: InputMethodManager? = null
 
     fun getTextSizeById(id: Int):Float {
         for (i in 1..sheets!!.size) {
@@ -52,6 +58,19 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun initialize(context:Context, supportFragmentManager:FragmentManager):Boolean {
         sheetSelectionTab = (context as AppCompatActivity).findViewById(R.id.tabInner)
         loadSheetData()
+        rootLayout = context.findViewById<LinearLayout>(R.id.root_layout)
+        controlManager = context.getSystemService(Service.INPUT_METHOD_SERVICE) as InputMethodManager
+        softKeyboard = SoftKeyboard(rootLayout, controlManager)
+        softKeyboard!!.setSoftKeyboardCallback(object : SoftKeyboard.SoftKeyboardChanged {
+            override fun onSoftKeyboardHide() {
+                Log.d(TAG, "keyboard hided")
+            }
+
+            override fun onSoftKeyboardShow() {
+                Log.d(TAG, "keyboard onSoftKeyboardShow")
+            }
+        })
+
         initViewPager(vpPager!!, supportFragmentManager)
         return true
     }
@@ -251,5 +270,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             Log.d(TAG, "finishUpdate")
             super.finishUpdate(container)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        softKeyboard?.unRegisterSoftKeyboardCallback();
     }
 }

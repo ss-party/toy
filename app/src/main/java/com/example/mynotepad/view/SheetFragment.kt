@@ -27,6 +27,7 @@ class SheetFragment : Fragment() {
         val view: View = inflater.inflate(R.layout.sheet_fragment, container, false)
         viewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
         editText = view.findViewById(R.id.editText)
+        viewModel?.softKeyboard?.addEditText(editText)
         editText?.setText("$content")
         if (textSize != null) editText?.textSize = textSize!!
         return view
