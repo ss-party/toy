@@ -7,16 +7,20 @@ import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager.widget.ViewPager
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.example.mynotepad.R
 import com.example.mynotepad.utility.PreferenceManager
 import com.example.mynotepad.utility.TTSpeech
+import com.example.mynotepad.view.SheetFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog.view.*
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "kongyi123/MainActivity"
-    private var viewModel: MainViewModel? = null
+    private var items: MainViewModel? = null
     private var tts: TTSpeech? = null
 
     // option setting
@@ -26,33 +30,50 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "onCreate")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
-        viewModel?.vpPager = findViewById<ViewPager>(R.id.vpPager)
+        items = ViewModelProvider(this)[MainViewModel::class.java]
+        items?.vpPager = findViewById(R.id.vpPager)
         tts = TTSpeech(this)
 
         clearData()
 
-        if (viewModel?.isFirstStart == true) {
+        if (items?.isFirstStart == true) {
             initializeDataForTheFirstTime()
         }
 
         tts?.initTTS()
-        if (viewModel?.sheetIdCount == 0) {
-            viewModel?.sheetIdCount = 15
+        if (items?.sheetIdCount == 0) {
+            items?.sheetIdCount = 15
         }
-        viewModel?.vpPager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) { }
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) { }
+
+        items?.vpPager?.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-//                Toast.makeText(ontext, "pos = " + position + " / viewModelSheetIdCount = " + viewModel?.sheetIdCount, Toast.LENGTH_SHORT).show()
-                if (position >= 0 && position < viewModel?.sheetIdCount!!) {
+                super.onPageSelected(position)
+                //                Toast.makeText(ontext, "pos = " + position + " / viewModelSheetIdCount = " + viewModel?.sheetIdCount, Toast.LENGTH_SHORT).show()
+                if (items?.size!! > 0 && position >= 0 && position < items?.sheetIdCount!!) {
+                    Log.d(TAG, "registerOnPageChangeCallback : position = " + position)
                     switchFocusSheetInTab(position)
                     //(viewModel?.adapterViewPager as MainViewModel.MyPagerAdapter).adapterSheetFragmentArray[position].textSize = viewModel!!.sheets[position].getTextSize()
                 }
-                viewModel?.currentTabPosition = position
+                items?.currentTabPosition = position
             }
         })
         initializeHotKey()
+    }
+
+    private fun createViewPagerAdapter(): RecyclerView.Adapter<*> {
+        val items = items
+        return object : FragmentStateAdapter(this) {
+            override fun createFragment(position: Int): SheetFragment {
+                val sheetFragment = SheetFragment()
+                sheetFragment.initialize(items!!.items[position]?.getContent()!!, items!!.items[position].getTextSize()!!, position)
+                items!!.items[position].setSheetFragment(sheetFragment)
+                return sheetFragment
+            }
+
+            override fun getItemCount(): Int = items!!.size
+            override fun getItemId(position: Int): Long = items!!.itemId(position)
+            override fun containsItem(itemId: Long): Boolean = items!!.contains(itemId)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -65,19 +86,63 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "onOptionsItemSelected")
         when(item.itemId) {
             R.id.menuSaveOptionBtn-> saveAllIntoDB()
-            R.id.menuEditSheetNameBtn-> makeDialogAndSetNewSheetName()
-            R.id.menuDeleteSheetBtn->{
-//                for (i in 1..sheets.size) {
-//                    if (currentSheetId == sheets[i-1].getId()) {
-//                        sheets.removeAt(i-1)
-//                        break
-//                    }
-//                }
-            }
-            R.id.menuTextSizeIncreaseBtn-> viewModel?.contentTextSizeIncrease()
-            R.id.menuTextSizeDecreaseBtn-> viewModel?.contentTextSizeDecrease()
+            R.id.menuEditSheetNameBtn-> makeDialogAndEditSheetName()
+            R.id.menuDeleteSheetBtn-> deleteCurrentSheet()
+            R.id.menuTextSizeIncreaseBtn-> items?.contentTextSizeIncrease()
+            R.id.menuTextSizeDecreaseBtn-> items?.contentTextSizeDecrease()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun isTargetLastElement(target: Int):Boolean {
+        return target == items?.sheetSize!!-1
+    }
+
+    private fun deleteCurrentSheet() {
+        if (items!!.size <= 0) return
+        for (i in 0 until items!!.size) {
+            val textViewId: Int = items?.items?.get(i)?.getId()!!
+            val order = items?.sheetOrder?.get(textViewId)
+            if (order != null && order >= items?.currentTabPosition!!) {
+                items?.sheetOrder?.set(textViewId, order-1)
+            }
+        }
+        val target = items?.currentTabPosition!!
+        val idsOld = items?.createIdSnapshot()
+        items?.removeAt(target)
+        val idsNew = items?.createIdSnapshot()
+        DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+            override fun getOldListSize(): Int = idsOld!!.size
+            override fun getNewListSize(): Int = idsNew!!.size
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+                idsOld!![oldItemPosition] == idsNew!![newItemPosition]
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
+                areItemsTheSame(oldItemPosition, newItemPosition)
+        }, true).dispatchUpdatesTo(vpPager.adapter!!)
+
+        items?.removeShowingSheetInTab(items?.currentTabTitleView as View)
+        if (isTargetLastElement(target)) {
+            if (items?.sheetSize!! > 1) {
+                switchFocusSheetInTab(target - 1)
+            }
+        } else {
+            switchFocusSheetInTab(target)
+        }
+        items?.sheetSize = items?.sheetSize!!-1
+
+// 아래는 사장된 코드임... 처음 모르는 것을 배울때는, 예제를 그대로 따르는 것을 원칙으로 하자.
+        // 아래 방식은 중간에 있는 항목에는 동작하지만, 마지막 끝 항에 대해서는 current page가 부적절하게 표시되는 오류가 있다.
+        // 지금 보니 아래 방식도 구현 가능한 예제가 구글에서 제공하는 git에 제시되어있음.
+//            items?.currentTabPosition = target-1
+//        }
+//        else {
+//            Log.d(TAG, "currentTabPosition = " + target)
+//            items?.removeAt(target)
+//            vpPager.adapter!!.notifyDataSetChanged()
+//            items?.removeShowingSheetInTab(items?.currentTabTitleView as View)
+//            switchFocusSheetInTab(target)
+//            items?.sheetSize = items?.sheetSize!!-1
+//        }
     }
 
     override fun onBackPressed() {
@@ -91,13 +156,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun switchFocusSheetInTab(position: Int) {
-        viewModel?.switchFocusSheetInTab(position)
-        viewModel?.updateFragmentToSheets()
+        items?.switchFocusSheetInTab(position)
+        items?.updateFragmentToSheets()
         tabOuter.requestFocus()
-        showAllData()
+        showAllData("switchFocusSheetInTab")
     }
 
-    private fun makeDialogAndSetNewSheetName() {
+    private fun makeDialogAndEditSheetName() {
         // make Dialog
         val dlg: AlertDialog.Builder = AlertDialog.Builder(this@MainActivity)
         val ad: AlertDialog = dlg.create()
@@ -107,10 +172,10 @@ class MainActivity : AppCompatActivity() {
         ad.setView(view) // 메시지
         // set New Sheet Name if the confirm button is clicked.
         view.dialogConfirmBtn.setOnClickListener {
-            for (i in 1..viewModel?.sheets!!.size) {
-                if (viewModel?.currentTabTitleView?.id == viewModel?.sheets?.get(i - 1)?.getId()) {
-                    viewModel?.sheets?.get(i - 1)?.getTabTitleView()?.text = view.dialogEditBox.text
-                    viewModel?.sheets?.get(i - 1)?.setName(view.dialogEditBox.text.toString())
+            for (i in 1..items?.items!!.size) {
+                if (items?.currentTabTitleView?.id == items?.items?.get(i - 1)?.getId()) {
+                    items?.items?.get(i - 1)?.getTabTitleView()?.text = view.dialogEditBox.text
+                    items?.items?.get(i - 1)?.setName(view.dialogEditBox.text.toString())
                     break
                 }
             }
@@ -119,8 +184,8 @@ class MainActivity : AppCompatActivity() {
         ad.show()
     }
 
-    fun onPlusIconClick(view: View) {
-        viewModel?.addNewSheet(viewModel?.vpPager!!)
+    fun onClickPlusIcon(view: View) {
+        items?.addNewSheet(items?.vpPager!!)
     }
 
     private fun findInput() {
@@ -197,7 +262,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun saveAllIntoDB() {
         Log.d(TAG, "save")
-        viewModel?.saveAllIntoDB()
+        items?.saveAllIntoDB()
     }
 
     /** Clear All sheets and data
@@ -217,18 +282,21 @@ class MainActivity : AppCompatActivity() {
     */
     private fun initializeDataForTheFirstTime() {
         Log.d(TAG, "initializeDataForTheFirstTime")
-        val result = viewModel?.initialize(this, supportFragmentManager)
+        val result = items?.initialize(this, supportFragmentManager)
         if (result == false) {
             Toast.makeText(this, "데이터 초기화 실패", Toast.LENGTH_SHORT).show()
         }
+        vpPager.adapter = createViewPagerAdapter()
     }
 
-    private fun showAllData() {
-        for (i in 1..viewModel?.sheets!!.size) {
-            val text: String = viewModel?.sheets!![i-1].getContent().toString()
-            val title: String = viewModel!!.sheets[i-1]!!.getName()!!
-            val viewId: Int = viewModel!!.sheets[i-1]!!.getTabTitleView()!!.id
-            val sheetId: Int = viewModel!!.sheets[i-1]!!.getId()!!
+    private fun showAllData(callingFunction: String) {
+        Log.d(TAG, "showAllData calling fucntion = " + callingFunction)
+        Log.d(TAG, "currentViewInTab = " + items?.currentTabTitleView!!.text)
+        for (i in 1..items?.items!!.size) {
+            val text: String = items?.items!![i-1].getContent().toString()
+            val title: String = items!!.items[i-1]!!.getName()!!
+            val viewId: Int = items!!.items[i-1]!!.getTabTitleView()!!.id
+            val sheetId: Int = items!!.items[i-1]!!.getId()!!
             var length = text.length-1
             if (text.length >= 5) {
                 length = 5
@@ -236,4 +304,5 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG, "num = $i, content = ${text.substring(0, length)}, title = $title, viewId = $viewId sheetId = $sheetId")
         }
     }
+
 }

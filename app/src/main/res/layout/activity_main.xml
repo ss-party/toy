@@ -8,7 +8,7 @@
     android:id="@+id/root_layout"
     tools:context=".activity.MainActivity">
 
-    <androidx.viewpager.widget.ViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vpPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -26,7 +26,7 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:background="@drawable/plus"
-            android:onClick="onPlusIconClick" />
+            android:onClick="onClickPlusIcon" />
         <HorizontalScrollView
             android:id="@+id/tabScroll"
             android:layout_width="match_parent"
