@@ -82,7 +82,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 } else {
                     items[i - 1].setContent(content)
                 }
-                items[i-1].setTextSize(items[i-1].getSheetFragment()?.textSize!!)
+                items[i-1].setTextSize(items[i-1].getTextSize()!!)
             }
         }
     }
@@ -206,15 +206,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     /** Increase text size of the text content in current text screen
      */
     fun contentTextSizeIncrease() {
-        val currentContentTextSize = items!![currentTabPosition!!].getTextSize()!! + 1
-        items!![currentTabPosition!!].setTextSize(currentContentTextSize)
+        val currentContentTextSize = items[currentTabPosition].getTextSize()!! + 1
+        items[currentTabPosition].setTextSize(currentContentTextSize)
     }
 
     /** Decrease text size of the text content in current text screen
      */
     fun contentTextSizeDecrease() {
-        val currentContentTextSize = items!![currentTabPosition!!].getTextSize()!! - 1
-        items!![currentTabPosition!!].setTextSize(currentContentTextSize)
+        val currentContentTextSize = items[currentTabPosition].getTextSize()!! - 1
+        items[currentTabPosition].setTextSize(currentContentTextSize)
     }
 
 //    fun addNewSheet(context: Context, vpPager: ViewPager, switchFocusSheetInTab: (View) -> Unit, addShowingSheet: (TextView) -> Unit) {
