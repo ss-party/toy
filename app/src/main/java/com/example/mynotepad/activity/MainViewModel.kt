@@ -94,7 +94,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         // 현재 프레그 먼트 덩어리에 있는 것을 저장하여 올림
         updateFragmentToSheets()
 
-        for (i in 1..items!!.size) {
+        for (i in 1..items.size) {
             val sheetNameKey = "sheetName$i"
             val sheetContentKey = "sheetContent$i"
             val sheetIdKey = "sheetId$i"
