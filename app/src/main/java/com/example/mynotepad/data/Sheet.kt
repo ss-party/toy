@@ -39,7 +39,7 @@ class Sheet {
         return content
     }
 
-    fun setContent(text: String) {
+    fun setContent(text: String?) {
         this.content = text
     }
 

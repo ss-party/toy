@@ -76,7 +76,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun updateFragmentToSheets() {
         for (i in 1..items.size) {
             if (items[i-1].getSheetFragment() != null) {
-                items[i-1].setContent(items[i-1].getSheetFragment()?.editText?.text.toString())
+                val content:String? = items[i-1].getSheetFragment()?.editText?.text.toString()
+                if (content == "null") {
+                    Log.d(TAG, "content is null!!")
+                } else {
+                    items[i - 1].setContent(content)
+                }
                 items[i-1].setTextSize(items[i-1].getSheetFragment()?.textSize!!)
             }
         }
