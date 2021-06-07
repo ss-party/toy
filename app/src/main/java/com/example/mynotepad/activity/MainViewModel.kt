@@ -58,7 +58,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         loadSheetData()
         rootLayout = context.findViewById<LinearLayout>(R.id.root_layout)
         controlManager = context.getSystemService(Service.INPUT_METHOD_SERVICE) as InputMethodManager
-        softKeyboard = SoftKeyboard(rootLayout, controlManager)
+        softKeyboard = SoftKeyboard(rootLayout, controlManager, context)
         softKeyboard!!.setSoftKeyboardCallback(object : SoftKeyboard.SoftKeyboardChanged {
             override fun onSoftKeyboardHide() {
                 Log.d(TAG, "keyboard hided")
@@ -68,7 +68,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 Log.d(TAG, "keyboard onSoftKeyboardShow")
             }
         })
-
 //        initViewPager(vpPager!!, supportFragmentManager)
         return true
     }

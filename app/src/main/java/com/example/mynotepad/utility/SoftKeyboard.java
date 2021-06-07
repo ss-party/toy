@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -17,6 +18,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import androidx.viewpager.widget.ViewPager;
+
+import static android.content.res.Configuration.KEYBOARD_QWERTY;
 
 public class SoftKeyboard implements View.OnFocusChangeListener {
     private static final int CLEAR_FOCUS = 0;
@@ -30,8 +33,9 @@ public class SoftKeyboard implements View.OnFocusChangeListener {
     private List<EditText> editTextList;
 
     private View tempView; // reference to a focused EditText
+    private Context mContext;
 
-    public SoftKeyboard(ViewGroup layout, InputMethodManager im) {
+    public SoftKeyboard(ViewGroup layout, InputMethodManager im, Context context) {
         this.layout = layout;
         keyboardHideByDefault();
         initEditTexts(layout);
@@ -40,6 +44,7 @@ public class SoftKeyboard implements View.OnFocusChangeListener {
         this.isKeyboardShow = false;
         this.softKeyboardThread = new SoftKeyboardChangesThread();
         this.softKeyboardThread.start();
+        this.mContext = context;
     }
 
 
@@ -137,7 +142,7 @@ public class SoftKeyboard implements View.OnFocusChangeListener {
         public void handleMessage(Message m) {
             switch(m.what) {
                 case CLEAR_FOCUS:
-                    if(tempView != null) {
+                    if(tempView != null && !isHwKeyboardConnected()) {
                         tempView.clearFocus();
                         tempView = null;
                     }
@@ -227,5 +232,9 @@ public class SoftKeyboard implements View.OnFocusChangeListener {
             }
         }
 
+    }
+
+    private Boolean isHwKeyboardConnected(){
+        return mContext.getResources().getConfiguration().keyboard == KEYBOARD_QWERTY;
     }
 }
