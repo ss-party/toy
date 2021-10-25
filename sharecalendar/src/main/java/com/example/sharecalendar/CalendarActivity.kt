@@ -17,17 +17,22 @@ import android.graphics.Typeface
 import android.text.style.StyleSpan
 
 import android.app.Activity
+import android.content.Intent
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
 import com.prolificinteractive.materialcalendarview.spans.DotSpan
 
 
-class MainActivity2 : AppCompatActivity() {
+
+
+
+class CalendarActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main2)
+        setContentView(R.layout.activity_calendar)
 
         val calView = findViewById<MaterialCalendarView>(R.id.calendarView)
         calView.state().edit()
@@ -51,7 +56,11 @@ class MainActivity2 : AppCompatActivity() {
             EventDecorator(Color.RED, dates, this)
         )
 
-
+        calView.setOnDateChangedListener(OnDateSelectedListener { widget, date, selected ->
+            val intent = Intent(this, DayActivity::class.java)
+            intent.addFlags (Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+        })
     }
 }
 

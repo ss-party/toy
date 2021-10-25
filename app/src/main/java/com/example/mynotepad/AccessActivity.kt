@@ -14,7 +14,7 @@ class AccessActivity : AppCompatActivity() {
             startActivity(Intent(this, MainActivity::class.java))
         }
         findViewById<Button>(R.id.shareCalendarBtn).setOnClickListener {
-            startActivity(Intent(this, com.example.sharecalendar.MainActivity2::class.java))
+            startActivity(Intent(this, com.example.sharecalendar.CalendarActivity::class.java))
         }
 
     }

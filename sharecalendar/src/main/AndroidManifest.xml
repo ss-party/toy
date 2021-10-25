@@ -8,9 +8,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true">
         <activity
-            android:name=".MainActivity2"
-            android:exported="true">
-        </activity>
+            android:name=".DayActivity"
+            android:exported="true" />
+        <activity
+            android:name=".CalendarActivity"
+            android:exported="true"></activity>
     </application>
 
 </manifest>
