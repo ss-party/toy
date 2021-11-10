@@ -21,19 +21,34 @@ import android.content.Intent
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.sharecalendar.activity.DayActivity
+import com.example.sharecalendar.data.Schedule
+import com.google.firebase.FirebaseApp
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
 import com.prolificinteractive.materialcalendarview.spans.DotSpan
-
-
-
+import kotlin.collections.HashMap
 
 
 class CalendarActivity : AppCompatActivity() {
+
+    private lateinit var textView: TextView
+    private lateinit var editText: EditText
+    private lateinit var button_bottom: Button
+    private var mScheduleList: ArrayList<Schedule>? = null
+    private val map = HashMap<CalendarDay, Schedule>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calendar)
-
         val calView = findViewById<MaterialCalendarView>(R.id.calendarView)
         calView.state().edit()
             .setFirstDayOfWeek(Calendar.SUNDAY)
@@ -42,26 +57,65 @@ class CalendarActivity : AppCompatActivity() {
             .setCalendarDisplayMode(CalendarMode.MONTHS)
             .commit()
 
-
-        val dates = ArrayList<CalendarDay>()
-        for (i in 1..5) {
-            val day:CalendarDay = CalendarDay.from(2021,10,21)
-            dates.add(day)
-        }
+        DataManager.getScheduleDataForPeriod()
+        DataManager.dataList.observe(this, androidx.lifecycle.Observer {
+            mScheduleList = it
+            putDataOnCalendar()
+        })
 
 
         calView.addDecorators(SundayDecorator(),
             SaturdayDecorator(),
-            OneDayDecorator(),
-            EventDecorator(Color.RED, dates, this)
+            OneDayDecorator()
         )
 
         calView.setOnDateChangedListener(OnDateSelectedListener { widget, date, selected ->
             val intent = Intent(this, DayActivity::class.java)
-            intent.addFlags (Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            val day: CalendarDay = CalendarDay.from(date.year, date.month, date.day)
+            Log.i("kongyi1220", "before send = " + map[day].toString())
+            var schedule:Schedule? = map[day]
+            if (schedule == null) {
+                schedule = Schedule("${date.year}~${date.month}~${date.day}","${date.year}~${date.month}~${date.day}", "", "")
+            }
+            intent.putExtra("info", schedule)
             startActivity(intent);
         })
+
+
+
+        textView = findViewById(R.id.textView)
+        editText = findViewById(R.id.editTextTextPersonName2)
+        button_bottom = findViewById(R.id.button)
     }
+
+    private fun putDataOnCalendar() {
+        val calView = findViewById<MaterialCalendarView>(R.id.calendarView)
+        val dates = ArrayList<CalendarDay>()
+        calView.removeDecorators()
+        for (schedule in mScheduleList!!) {
+            val day: CalendarDay? = Utils.getDateFromStringToCal(schedule.date)
+            if (day != null) {
+                map[day] = schedule
+                dates.add(day)
+            }
+        }
+
+        calView.addDecorators(
+            EventDecorator(Color.RED, dates, this)
+        )
+
+//            Log.i("kongyi1220", "size = " + scheduleList?.size)
+//            for (schedule in scheduleList!!) {
+//                Log.i("kongyi1220", "date = " + schedule.date)
+//            }
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+
+    }
+
 }
 
 class SundayDecorator : DayViewDecorator {
@@ -133,7 +187,8 @@ class EventDecorator(color: Int, dates: Collection<CalendarDay>, context: Activi
 
     override fun decorate(view: DayViewFacade) {
 //        view.setSelectionDrawable(drawable)
-        view.addSpan(DotSpan(5.0f, color)); // 날자밑에 점
+        val dot = DotSpan(5.0f, color)
+        view.addSpan(dot); // 날자밑에 점
     }
 
 }
