@@ -92,10 +92,10 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <Button
-            android:id="@+id/inputBtn"
+            android:id="@+id/deleteBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="입력"/>
+            android:text="삭제"/>
 
         <Button
             android:id="@+id/closeBtn"
@@ -104,10 +104,10 @@
             android:text="취소"/>
 
         <Button
-            android:id="@+id/deleteBtn"
+            android:id="@+id/inputBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="삭제"/>
+            android:text="입력"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
