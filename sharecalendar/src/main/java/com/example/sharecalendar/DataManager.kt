@@ -11,7 +11,7 @@ object DataManager {
     val arrayData = ArrayList<String>()
     val arrayIndex = ArrayList<String>()
     val dataList: MutableLiveData<ArrayList<Schedule>> = MutableLiveData()
-    fun getScheduleDataForPeriod() {
+    fun getAllScheduleData() {
         val scheduleList = ArrayList<Schedule>()
         val sortByAge:Query = FirebaseDatabase.getInstance().reference.child("id_list")
 /*      The way to only get 1 time.
@@ -44,13 +44,19 @@ object DataManager {
                         continue
                     }
                     val key = postSnapshot.key
-                    val get = postSnapshot.getValue(FirebasePost::class.java)
-                    Log.i("kongyi1220", "title = ${get?.title}, content = ${get?.content}, id = ${get?.id}")
-                    //arrayData.add(get.toString())
-                    get?.id?.let {
-                        scheduleList.add(Schedule(get.id, get.date, get.title, get.content))
+                    for (postPostSnapshot in postSnapshot.children) {
+                        Log.i("kongyi1220", "key = " + postPostSnapshot.key.toString())
+                        val get = postPostSnapshot.getValue(FirebasePost::class.java)
+                        Log.i(
+                            "kongyi1220",
+                            "title = ${get?.title}, content = ${get?.content}, id = ${get?.id}"
+                        )
+                        //arrayData.add(get.toString())
+                        get?.id?.let {
+                            scheduleList.add(Schedule(get.id, get.date, get.title, get.content))
+                        }
+                        arrayIndex.add(key!!)
                     }
-                    arrayIndex.add(key!!)
                 }
                 dataList.value = scheduleList
             }
@@ -75,7 +81,8 @@ object DataManager {
     }
 
     fun putSingleSchedule(date:String, title:String, content:String) {
-        postFirebaseDatabase(true, date, date, title, content)
+        val id = Utils.bytesToHex1(Utils.sha256(date+title+content))
+        postFirebaseDatabase(true, id, date, title, content)
     }
 
     fun postFirebaseDatabase(add: Boolean, id:String, date:String, title:String, content:String) {
@@ -84,10 +91,11 @@ object DataManager {
         var postValues: Map<String?, Any?>? = null
 
         if (add) {
-            val post = FirebasePost(date, title, content, date)
+            val id = Utils.bytesToHex1(Utils.sha256(date+title+content))
+            val post = FirebasePost(id, title, content, date)
             postValues = post.toMap()
         }
-        childUpdates["/id_list/$id"] = postValues
+        childUpdates["/id_list/$date/$id"] = postValues
         mPostReference.updateChildren(childUpdates)
     }
 }

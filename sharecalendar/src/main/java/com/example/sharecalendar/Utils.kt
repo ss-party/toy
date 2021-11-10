@@ -2,6 +2,7 @@ package com.example.sharecalendar
 
 import android.util.Log
 import com.prolificinteractive.materialcalendarview.CalendarDay
+import java.security.MessageDigest
 
 object Utils {
     fun getDateFromStringToCal(str:String): CalendarDay? {
@@ -15,4 +16,34 @@ object Utils {
         }
         return null
     }
+
+    /**
+     * SHA-256으로 해싱하는 메소드
+     *
+     * @param bytes
+     * @return
+     * @throws NoSuchAlgorithmException
+     */
+    fun sha256(msg:String) : ByteArray {
+        val md = MessageDigest.getInstance("SHA-256")
+
+        md.update(msg.toByteArray());
+
+        return md.digest();
+    }
+
+    /**
+     * 바이트를 헥사값으로 변환한다, type 1
+     *
+     * @param bytes
+     * @return
+     */
+    fun bytesToHex1(bytes:ByteArray):String {
+        val builder = StringBuilder();
+        for (b in bytes) {
+            builder.append(String.format("%02x", b));
+        }
+        return builder.toString();
+    }
+
 }

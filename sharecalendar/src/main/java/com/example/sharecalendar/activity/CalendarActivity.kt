@@ -22,17 +22,12 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sharecalendar.activity.DayActivity
 import com.example.sharecalendar.data.Schedule
-import com.google.firebase.FirebaseApp
-import com.google.firebase.database.*
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
 import com.prolificinteractive.materialcalendarview.spans.DotSpan
 import kotlin.collections.HashMap
@@ -57,7 +52,7 @@ class CalendarActivity : AppCompatActivity() {
             .setCalendarDisplayMode(CalendarMode.MONTHS)
             .commit()
 
-        DataManager.getScheduleDataForPeriod()
+        DataManager.getAllScheduleData()
         DataManager.dataList.observe(this, androidx.lifecycle.Observer {
             mScheduleList = it
             putDataOnCalendar()
@@ -74,7 +69,7 @@ class CalendarActivity : AppCompatActivity() {
             val day: CalendarDay = CalendarDay.from(date.year, date.month, date.day)
             Log.i("kongyi1220", "before send = " + map[day].toString())
             var schedule:Schedule? = map[day]
-            if (schedule == null) {
+            if (schedule == null) { // if it is null, make dummy
                 schedule = Schedule("${date.year}~${date.month}~${date.day}","${date.year}~${date.month}~${date.day}", "", "")
             }
             intent.putExtra("info", schedule)
@@ -92,7 +87,9 @@ class CalendarActivity : AppCompatActivity() {
         val calView = findViewById<MaterialCalendarView>(R.id.calendarView)
         val dates = ArrayList<CalendarDay>()
         calView.removeDecorators()
+        Log.i("kongyi1220", "mScheduleList.size = ${mScheduleList?.size}")
         for (schedule in mScheduleList!!) {
+            Log.i("kongyi1220", "show schedule.date = " + schedule.date)
             val day: CalendarDay? = Utils.getDateFromStringToCal(schedule.date)
             if (day != null) {
                 map[day] = schedule
