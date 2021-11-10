@@ -24,10 +24,12 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.sharecalendar.activity.DayActivity
 import com.example.sharecalendar.data.Schedule
+import com.example.sharecalendar.list.DayListAdapter
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
 import com.prolificinteractive.materialcalendarview.spans.DotSpan
 import kotlin.collections.HashMap
@@ -35,9 +37,6 @@ import kotlin.collections.HashMap
 
 class CalendarActivity : AppCompatActivity() {
 
-    private lateinit var textView: TextView
-    private lateinit var editText: EditText
-    private lateinit var button_bottom: Button
     private var mScheduleList: ArrayList<Schedule>? = null
     private val map = HashMap<CalendarDay, Schedule>()
 
@@ -76,11 +75,10 @@ class CalendarActivity : AppCompatActivity() {
             startActivity(intent);
         })
 
-
-
-        textView = findViewById(R.id.textView)
-        editText = findViewById(R.id.editTextTextPersonName2)
-        button_bottom = findViewById(R.id.button)
+//        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+//        val manager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+//        recyclerView.layoutManager = manager
+//        recyclerView.adapter = DayListAdapter(mScheduleList!!)
     }
 
     private fun putDataOnCalendar() {
