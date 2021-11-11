@@ -74,9 +74,14 @@ object DataManager {
         return null
     }
 
-    fun removeSingleSchedule(date:String) {
+    fun removeSingleSchedule(date:String, id:String) {
         val ref = FirebaseDatabase.getInstance().reference
         //ref.child("/id_list/$date").setValue(null)
+        ref.child("/id_list/$date/$id").removeValue()
+    }
+
+    fun removeDayAllSchedule(date:String) {
+        val ref = FirebaseDatabase.getInstance().reference
         ref.child("/id_list/$date").removeValue()
     }
 

@@ -15,7 +15,6 @@ import com.example.sharecalendar.data.Schedule
 class DayActivity : AppCompatActivity() {
     private lateinit var inputButtonView: Button
     private lateinit var closeButtonView: Button
-    private lateinit var deleteButtonView: Button
     private lateinit var contentView: EditText
     private lateinit var titleView: EditText
     private lateinit var dateView: DatePicker
@@ -25,7 +24,6 @@ class DayActivity : AppCompatActivity() {
         setContentView(R.layout.activity_day)
         inputButtonView = findViewById(R.id.inputBtn)
         closeButtonView = findViewById(R.id.closeBtn)
-        deleteButtonView = findViewById(R.id.deleteBtn)
         contentView = findViewById(R.id.content)
         titleView = findViewById(R.id.title)
         dateView = findViewById(R.id.datePicker)
@@ -52,18 +50,13 @@ class DayActivity : AppCompatActivity() {
         closeButtonView.setOnClickListener {
             onClickClose()
         }
-        if (schedule != null) {
-            deleteButtonView.visibility = View.VISIBLE
-        } else {
-            deleteButtonView.visibility = View.GONE
-        }
 
-        deleteButtonView.setOnClickListener {
-            date = "${ dateView.year }~${ dateView.month }~${ dateView.dayOfMonth }"
-            Log.i("kongyi1220", "removed")
-            DataManager.removeSingleSchedule(date)
-            onClickClose()
-        }
+//        deleteButtonView.setOnClickListener {
+//            date = "${ dateView.year }~${ dateView.month }~${ dateView.dayOfMonth }"
+//            Log.i("kongyi1220", "removed")
+//            DataManager.removeSingleSchedule(date)
+//            onClickClose()
+//        }
     }
 
     override fun onPause() {
