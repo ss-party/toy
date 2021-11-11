@@ -40,10 +40,11 @@ class DayListAdapter(scheduleList: ArrayList<Schedule>, date:String) : RecyclerV
         holder.content.text = mDayScheduleList[position].content
         holder.date.text = mDayScheduleList[position].date
         holder.id.text = mDayScheduleList[position].id
+        holder.color.text = mDayScheduleList[position].color
     }
 
     override fun getItemCount(): Int {
-        return mDayScheduleList!!.size
+        return mDayScheduleList.size
     }
 
     // 뷰홀더 포지션을 받아 그 위치의 데이터를 삭제하고 notifyItemRemoved로 어댑터에 갱신명령을 전달

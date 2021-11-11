@@ -12,16 +12,18 @@ public class FirebasePost {
     public String title;
     public String content;
     public String date;
+    public String color;
 
     public FirebasePost() {
 
     }
 
-    public FirebasePost(String id, String title, String content, String date) {
+    public FirebasePost(String id, String title, String content, String date, String color) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.date = date;
+        this.color = color;
     }
 
     @Exclude
@@ -31,6 +33,7 @@ public class FirebasePost {
         result.put("title", title);
         result.put("content", content);
         result.put("date", date);
+        result.put("color", color);
         return result;
     }
 }

@@ -101,7 +101,7 @@ class CalendarActivity : AppCompatActivity() {
                 val intent = Intent(this, DayActivity::class.java)
                 val day: CalendarDay = CalendarDay.from(date.year, date.month, date.day)
                 Log.i("kongyi1220", "before send = " + map[day].toString())
-                val schedule = Schedule("${date.year}~${date.month}~${date.day}","${date.year}~${date.month}~${date.day}", "", "")
+                val schedule = Schedule("${date.year}~${date.month}~${date.day}","${date.year}~${date.month}~${date.day}", "", "", "")
                 intent.putExtra("info", schedule)
                 startActivity(intent);
             }

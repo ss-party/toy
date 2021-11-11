@@ -53,7 +53,7 @@ object DataManager {
                         )
                         //arrayData.add(get.toString())
                         get?.id?.let {
-                            scheduleList.add(Schedule(get.id, get.date, get.title, get.content))
+                            scheduleList.add(Schedule(get.id, get.date, get.title, get.content, get.color))
                         }
                         arrayIndex.add(key!!)
                     }
@@ -74,30 +74,30 @@ object DataManager {
         return null
     }
 
-    fun removeSingleSchedule(date:String, id:String) {
+    fun removeSingleSchedule(date:String, id:String) { // color 넣어야 할지
         val ref = FirebaseDatabase.getInstance().reference
         //ref.child("/id_list/$date").setValue(null)
         ref.child("/id_list/$date/$id").removeValue()
     }
 
-    fun removeDayAllSchedule(date:String) {
+    fun removeDayAllSchedule(date:String) { // color 넣어야 할지
         val ref = FirebaseDatabase.getInstance().reference
         ref.child("/id_list/$date").removeValue()
     }
 
-    fun putSingleSchedule(date:String, title:String, content:String) {
+    fun putSingleSchedule(date:String, title:String, content:String, color:String) {
         val id = Utils.bytesToHex1(Utils.sha256(date+title+content))
-        postFirebaseDatabase(true, id, date, title, content)
+        postFirebaseDatabase(true, id, date, title, content, color)
     }
 
-    fun postFirebaseDatabase(add: Boolean, id:String, date:String, title:String, content:String) {
+    fun postFirebaseDatabase(add: Boolean, id:String, date:String, title:String, content:String, color:String) {
         val mPostReference = FirebaseDatabase.getInstance().reference
         val childUpdates: MutableMap<String, Any?> = HashMap()
         var postValues: Map<String?, Any?>? = null
 
         if (add) {
             val id = Utils.bytesToHex1(Utils.sha256(date+title+content))
-            val post = FirebasePost(id, title, content, date)
+            val post = FirebasePost(id, title, content, date, color)
             postValues = post.toMap()
         }
         childUpdates["/id_list/$date/$id"] = postValues

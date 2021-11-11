@@ -43,7 +43,7 @@ class DayActivity : AppCompatActivity() {
             date = "${ dateView.year }~${ dateView.month }~${ dateView.dayOfMonth }"
             Log.i("kongyi1220", "date = " + date)
 
-            DataManager.putSingleSchedule(date, titleView.text.toString(), contentView.text.toString())
+            DataManager.putSingleSchedule(date, titleView.text.toString(), contentView.text.toString(), "")
             //conditionRef.setValue(editText.text.toString())
             onClickClose()
         }
@@ -65,12 +65,6 @@ class DayActivity : AppCompatActivity() {
     }
 
     fun onClickClose() {
-        /*
-        데이터 삭제
-데이터를 삭제하는 가장 간단한 방법은 해당 데이터 위치의 참조에 removeValue()를 호출하는 것입니다.
-
-setValue() 또는 updateChildren() 등의 다른 쓰기 작업 값으로 null을 지정하여 삭제할 수도 있습니다. updateChildren()에 이 방법을 사용하면 API 호출 한 번으로 여러 하위 항목을 삭제할 수 있습니다.
-         */
         finish()
     }
 }

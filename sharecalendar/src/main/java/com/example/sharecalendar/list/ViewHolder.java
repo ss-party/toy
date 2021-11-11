@@ -17,6 +17,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     TextView content;
     TextView date;
     TextView id;
+    TextView color;
 //    ConstraintLayout item_layout;
 
     public ViewHolder(@NonNull View itemView) {
@@ -25,9 +26,10 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         content = itemView.findViewById(R.id.item_content);
         date = itemView.findViewById(R.id.item_date);
         id = itemView.findViewById(R.id.item_id);
+        color = itemView.findViewById(R.id.item_color);
         itemView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), DayActivity.class);
-            Schedule schedule = new Schedule(id.getText().toString(), date.getText().toString(), title.getText().toString(), content.getText().toString());
+            Schedule schedule = new Schedule(id.getText().toString(), date.getText().toString(), title.getText().toString(), content.getText().toString(), color.getText().toString());
             intent.putExtra("info", schedule);
             v.getContext().startActivity(intent);
         });
