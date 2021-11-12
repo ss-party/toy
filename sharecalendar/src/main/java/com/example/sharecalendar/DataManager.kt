@@ -86,11 +86,12 @@ object DataManager {
     }
 
     fun putSingleSchedule(date:String, title:String, content:String, color:String, id:String) {
+        Log.i("kongyi1220A", "id = " + id)
         if (id == "no_id") {
             val newId = Utils.bytesToHex1(Utils.sha256(date+title+content))
             postFirebaseDatabase(true, newId, date, title, content, color)
         } else {
-            postFirebaseDatabase(true, id, date, title, content, color)
+            postFirebaseDatabase(false, id, date, title, content, color)
         }
     }
 

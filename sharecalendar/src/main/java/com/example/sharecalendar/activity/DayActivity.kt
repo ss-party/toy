@@ -35,14 +35,14 @@ class DayActivity : AppCompatActivity() {
         titleView.setText(schedule?.title)
         contentView.setText(schedule?.content)
         if (schedule != null) {
-            val day = Utils.getDateFromStringToCal(schedule?.date!!)
+            val day = Utils.getDateFromStringToCal(schedule.date)
             dateView.init(day!!.year, day.month, day.day, null)
         }
 
         inputButtonView.setOnClickListener {
             date = "${ dateView.year }~${ dateView.month }~${ dateView.dayOfMonth }"
-            Log.i("kongyi1220", "date = " + date)
-            DataManager.putSingleSchedule(date, titleView.text.toString(), contentView.text.toString(), "", schedule!!.id)
+            Log.i("kongyi1220A", "before id = " + schedule!!.id)
+            DataManager.putSingleSchedule(date, titleView.text.toString(), contentView.text.toString(), "", schedule.id)
             //conditionRef.setValue(editText.text.toString())
             onClickClose()
         }

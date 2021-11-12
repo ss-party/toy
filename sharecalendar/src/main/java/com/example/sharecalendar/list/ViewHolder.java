@@ -1,6 +1,7 @@
 package com.example.sharecalendar.list;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
     public ViewHolder(@NonNull View itemView) {
         super(itemView);
+
         title = itemView.findViewById(R.id.item_title);
         content = itemView.findViewById(R.id.item_content);
         date = itemView.findViewById(R.id.item_date);
@@ -29,6 +31,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         color = itemView.findViewById(R.id.item_color);
         itemView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), DayActivity.class);
+            Log.i("kongyi123A", "id = " + id.getText().toString() + " / content = " + content.getText().toString());
             Schedule schedule = new Schedule(id.getText().toString(), date.getText().toString(), title.getText().toString(), content.getText().toString(), color.getText().toString());
             intent.putExtra("info", schedule);
             v.getContext().startActivity(intent);
