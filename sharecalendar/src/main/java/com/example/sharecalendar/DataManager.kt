@@ -77,6 +77,7 @@ object DataManager {
     fun removeSingleSchedule(date:String, id:String) { // color 넣어야 할지
         val ref = FirebaseDatabase.getInstance().reference
         //ref.child("/id_list/$date").setValue(null)
+        Log.i("kongyi12200", "date = " + date + " / id = " + id)
         ref.child("/id_list/$date/$id").removeValue()
     }
 
@@ -99,12 +100,14 @@ object DataManager {
         val mPostReference = FirebaseDatabase.getInstance().reference
         val childUpdates: MutableMap<String, Any?> = HashMap()
         var postValues: Map<String?, Any?>? = null
-
-        if (add) {
-            val id = Utils.bytesToHex1(Utils.sha256(date+title+content))
-            val post = FirebasePost(id, title, content, date, color)
-            postValues = post.toMap()
+        Log.i("kongyi111", "add = " + add + " / id = " + id);
+        var puttingId = Utils.bytesToHex1(Utils.sha256(date+title+content))
+        if (!add) {
+            puttingId = id
         }
+
+        val post = FirebasePost(puttingId, title, content, date, color)
+        postValues = post.toMap()
         childUpdates["/id_list/$date/$id"] = postValues
         mPostReference.updateChildren(childUpdates)
     }
