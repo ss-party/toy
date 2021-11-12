@@ -42,8 +42,7 @@ class DayActivity : AppCompatActivity() {
         inputButtonView.setOnClickListener {
             date = "${ dateView.year }~${ dateView.month }~${ dateView.dayOfMonth }"
             Log.i("kongyi1220", "date = " + date)
-
-            DataManager.putSingleSchedule(date, titleView.text.toString(), contentView.text.toString(), "")
+            DataManager.putSingleSchedule(date, titleView.text.toString(), contentView.text.toString(), "", schedule!!.id)
             //conditionRef.setValue(editText.text.toString())
             onClickClose()
         }

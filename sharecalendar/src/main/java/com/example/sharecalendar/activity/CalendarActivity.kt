@@ -24,6 +24,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -101,12 +102,11 @@ class CalendarActivity : AppCompatActivity() {
                 val intent = Intent(this, DayActivity::class.java)
                 val day: CalendarDay = CalendarDay.from(date.year, date.month, date.day)
                 Log.i("kongyi1220", "before send = " + map[day].toString())
-                val schedule = Schedule("${date.year}~${date.month}~${date.day}","${date.year}~${date.month}~${date.day}", "", "", "")
+                val schedule = Schedule("no_id","${date.year}~${date.month}~${date.day}", "", "", "")
                 intent.putExtra("info", schedule)
                 startActivity(intent);
             }
         })
-
 
         setSwipeToRecyclerView()
     }
@@ -180,11 +180,11 @@ class CalendarActivity : AppCompatActivity() {
                         c.drawRect(backgroundRight, paint)
                         c.drawRect(backgroundLeft, paint)
 
-    //                        // 휴지통 아이콘과 표시될 위치를 지정하고 비트맵을 그려줌
-    //                        // 비트맵 이미지는 Image Asset 기능으로 추가하고 drawable 폴더에 위치하도록 함
-    //                        icon = BitmapFactory.decodeResource(resources, R.drawable.ic_menu_delete)
-    //                        val iconDst = RectF(itemView.right.toFloat() - 3  - width, itemView.top.toFloat() + width, itemView.right.toFloat() - width, itemView.bottom.toFloat() - width)
-    //                        c.drawBitmap(icon, null, iconDst, null)
+                        //                        // 휴지통 아이콘과 표시될 위치를 지정하고 비트맵을 그려줌
+                        //                        // 비트맵 이미지는 Image Asset 기능으로 추가하고 drawable 폴더에 위치하도록 함
+                        //                        icon = BitmapFactory.decodeResource(resources, R.drawable.ic_menu_delete)
+                        //                        val iconDst = RectF(itemView.right.toFloat() - 3  - width, itemView.top.toFloat() + width, itemView.right.toFloat() - width, itemView.bottom.toFloat() - width)
+                        //                        c.drawBitmap(icon, null, iconDst, null)
                     }
                 }
 

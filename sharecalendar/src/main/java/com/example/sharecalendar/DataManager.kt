@@ -85,9 +85,13 @@ object DataManager {
         ref.child("/id_list/$date").removeValue()
     }
 
-    fun putSingleSchedule(date:String, title:String, content:String, color:String) {
-        val id = Utils.bytesToHex1(Utils.sha256(date+title+content))
-        postFirebaseDatabase(true, id, date, title, content, color)
+    fun putSingleSchedule(date:String, title:String, content:String, color:String, id:String) {
+        if (id == "no_id") {
+            val newId = Utils.bytesToHex1(Utils.sha256(date+title+content))
+            postFirebaseDatabase(true, newId, date, title, content, color)
+        } else {
+            postFirebaseDatabase(true, id, date, title, content, color)
+        }
     }
 
     fun postFirebaseDatabase(add: Boolean, id:String, date:String, title:String, content:String, color:String) {
