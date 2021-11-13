@@ -1,3 +1,4 @@
 include ':app'
 rootProject.name = "MyNotepad"
 include ':sharecalendar'
+include ':personalcalender'
