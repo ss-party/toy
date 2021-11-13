@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import com.example.mynotepad.activity.MainActivity
+import com.example.sharecalendar.activity.CalendarActivity
 
 class AccessActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,7 +15,7 @@ class AccessActivity : AppCompatActivity() {
             startActivity(Intent(this, MainActivity::class.java))
         }
         findViewById<Button>(R.id.shareCalendarBtn).setOnClickListener {
-            startActivity(Intent(this, com.example.sharecalendar.CalendarActivity::class.java))
+            startActivity(Intent(this, CalendarActivity::class.java))
         }
 
     }

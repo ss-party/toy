@@ -11,7 +11,7 @@
             android:name=".activity.DayActivity"
             android:exported="true" />
         <activity
-            android:name=".CalendarActivity"
+            android:name=".activity.CalendarActivity"
             android:exported="true"></activity>
     </application>
 

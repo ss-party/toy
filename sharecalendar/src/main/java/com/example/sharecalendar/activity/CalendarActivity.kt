@@ -1,4 +1,4 @@
-package com.example.sharecalendar
+package com.example.sharecalendar.activity
 
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
@@ -14,7 +14,9 @@ import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.*
 
@@ -22,14 +24,15 @@ import android.os.Bundle
 import android.text.style.LineBackgroundSpan
 import android.util.Log
 import android.widget.Button
-import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.sharecalendar.activity.DayActivity
+import com.example.sharecalendar.DataManager
+import com.example.sharecalendar.R
+import com.example.sharecalendar.Utils
 import com.example.sharecalendar.data.Schedule
 import com.example.sharecalendar.list.DayListAdapter
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
@@ -82,18 +85,31 @@ class CalendarActivity : AppCompatActivity() {
 
     }
 
+    private fun showDialog(date:CalendarDay) {
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder.setTitle("※ 경고 ※")
+        builder.setMessage("정말로 다 지우겠습니까?")
+        builder.setPositiveButton("예") { dialog, which ->
+            //                    Toast.makeText(applicationContext, "예를 선택했습니다.", Toast.LENGTH_LONG).show()
+            if (mScheduleList != null) {
+                val dateString = date.year.toString()+"~"+date.month.toString()+"~"+date.day.toString()
+                DataManager.removeDayAllSchedule(dateString)
+                refreshList(date)
+            }
+        }
+        builder.setNegativeButton("아니오") { dialog, which ->
+//          Toast.makeText(applicationContext, "아니오를 선택했습니다.", Toast.LENGTH_LONG).show()
+        }
+        builder.show()
+    }
+
     private fun initializeDayListView(calView: MaterialCalendarView) {
         calView.setOnDateChangedListener(OnDateSelectedListener { widget, date, selected ->
             Log.i("kongyi1220", "refreshed recyclerView")
             mCurrentDate = date
             refreshList(date)
             findViewById<Button>(R.id.deleteAllBtn).setOnClickListener {
-                // 당일 스케쥴 전체 삭제 구현 필요
-                if (mScheduleList != null) {
-                    val dateString = date.year.toString()+"~"+date.month.toString()+"~"+date.day.toString()
-                    DataManager.removeDayAllSchedule(dateString)
-                    refreshList(date)
-                }
+                showDialog(date)
             }
 
             findViewById<Button>(R.id.addScheduleBtn).setOnClickListener {
