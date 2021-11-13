@@ -26,6 +26,10 @@ public class FirebasePost {
         this.color = color;
     }
 
+    public FirebasePost(String content) {
+        this.content = content;
+    }
+
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();

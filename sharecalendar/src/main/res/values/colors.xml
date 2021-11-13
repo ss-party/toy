@@ -13,6 +13,8 @@
     <color name="orange">#FF9900</color>
     <color name="yellow">#FFCC00</color>
     <color name="green">#669900</color>
-    <color name="blue">#0000CC</color>
+    <color name="blue">#0000FF</color>
     <color name="purple">#8800CC</color>
+    <color name="grey">#44999999</color>
+
 </resources>

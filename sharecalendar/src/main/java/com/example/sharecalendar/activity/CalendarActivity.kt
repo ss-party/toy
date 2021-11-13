@@ -23,6 +23,8 @@ import android.graphics.*
 import android.os.Bundle
 import android.text.style.LineBackgroundSpan
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -36,6 +38,7 @@ import com.example.sharecalendar.Utils
 import com.example.sharecalendar.data.Schedule
 import com.example.sharecalendar.list.DayListAdapter
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
+import kotlinx.android.synthetic.main.list_item.*
 import kotlin.collections.HashMap
 
 
@@ -51,9 +54,14 @@ class CalendarActivity : AppCompatActivity() {
         setContentView(R.layout.activity_calendar)
         val calView = findViewById<MaterialCalendarView>(R.id.calendarView)
         mRecyclerView = findViewById(R.id.recyclerView)
-
+        findViewById<TextView>(R.id.noticeView).setOnClickListener {
+            val intent = Intent(this, SettingActivity::class.java)
+            intent.putExtra("notice", findViewById<TextView>(R.id.noticeView).text)
+            startActivity(intent)
+        }
         mContext = this
         DataManager.getAllScheduleData()
+        DataManager.getNotice()
         initializeCalendar(calView)
         initializeDayListView(calView)
     }
@@ -79,6 +87,11 @@ class CalendarActivity : AppCompatActivity() {
                 SaturdayDecorator(),
                 TodayDecorator()
             )
+        })
+
+        DataManager.notice.observe(this, androidx.lifecycle.Observer {
+            Log.i("kongyi1234", "noteice obersve / notice.value")
+            findViewById<TextView>(R.id.noticeView).setText(DataManager.notice.value.toString())
         })
 
 
@@ -261,6 +274,23 @@ class CalendarActivity : AppCompatActivity() {
             )
         }
     }
+
+
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.menu_option, menu)
+//        return super.onCreateOptionsMenu(menu)
+//    }
+
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        when (item.itemId) {
+//            R.id.menu_item_edit_notice -> {
+//                val intent = Intent(this, SettingActivity::class.java)
+//                intent.putExtra("notice", findViewById<TextView>(R.id.noticeView).text)
+//                startActivity(intent)
+//            }
+//        }
+//        return super.onOptionsItemSelected(item)
+//    }
 }
 
 
