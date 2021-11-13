@@ -41,6 +41,14 @@ class DayListAdapter(scheduleList: ArrayList<Schedule>, date:String) : RecyclerV
         holder.date.text = mDayScheduleList[position].date
         holder.id.text = mDayScheduleList[position].id
         holder.color.text = mDayScheduleList[position].color
+        when (holder.color.text) {
+            "red" -> holder.colorCircle.setBackgroundResource(R.drawable.circle_red)
+            "orange" -> holder.colorCircle.setBackgroundResource(R.drawable.circle_orange)
+            "yellow" -> holder.colorCircle.setBackgroundResource(R.drawable.circle_yellow)
+            "green" -> holder.colorCircle.setBackgroundResource(R.drawable.circle_green)
+            "blue" -> holder.colorCircle.setBackgroundResource(R.drawable.circle_blue)
+            "purple" -> holder.colorCircle.setBackgroundResource(R.drawable.circle_purple)
+        }
     }
 
     override fun getItemCount(): Int {

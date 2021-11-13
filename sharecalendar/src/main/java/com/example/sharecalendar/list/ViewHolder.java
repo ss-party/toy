@@ -3,6 +3,7 @@ package com.example.sharecalendar.list;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     TextView date;
     TextView id;
     TextView color;
+    ImageView colorCircle;
 //    ConstraintLayout item_layout;
 
     public ViewHolder(@NonNull View itemView) {
@@ -29,6 +31,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         date = itemView.findViewById(R.id.item_date);
         id = itemView.findViewById(R.id.item_id);
         color = itemView.findViewById(R.id.item_color);
+        colorCircle = itemView.findViewById(R.id.color_circle);
         itemView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), DayActivity.class);
             Log.i("kongyi123A", "id = " + id.getText().toString() + " / content = " + content.getText().toString());

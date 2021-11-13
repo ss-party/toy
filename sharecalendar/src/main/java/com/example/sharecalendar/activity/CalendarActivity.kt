@@ -22,6 +22,7 @@ import android.os.Bundle
 import android.text.style.LineBackgroundSpan
 import android.util.Log
 import android.widget.Button
+import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.getColor
@@ -32,14 +33,12 @@ import com.example.sharecalendar.activity.DayActivity
 import com.example.sharecalendar.data.Schedule
 import com.example.sharecalendar.list.DayListAdapter
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
-import com.prolificinteractive.materialcalendarview.spans.DotSpan
 import kotlin.collections.HashMap
 
 
 class CalendarActivity : AppCompatActivity() {
 
     private var mScheduleList: ArrayList<Schedule>? = null
-    private val map = HashMap<CalendarDay, Schedule>()
     private var rvAdapter:DayListAdapter? = null
     private lateinit var mRecyclerView:RecyclerView
     private lateinit var mContext: Context
@@ -101,7 +100,6 @@ class CalendarActivity : AppCompatActivity() {
                 // 새로 입력 하는 것으로 수정 필요
                 val intent = Intent(this, DayActivity::class.java)
                 val day: CalendarDay = CalendarDay.from(date.year, date.month, date.day)
-                Log.i("kongyi1220", "before send = " + map[day].toString())
                 val schedule = Schedule("no_id","${date.year}~${date.month}~${date.day}", "", "", "")
                 intent.putExtra("info", schedule)
                 startActivity(intent);
@@ -206,27 +204,46 @@ class CalendarActivity : AppCompatActivity() {
 
     private fun putDataOnCalendar() {
         val calView = findViewById<MaterialCalendarView>(R.id.calendarView)
-        val dates = ArrayList<CalendarDay>()
+        val dayList = ArrayList<CalendarDay>()
+        val colorSetHash = HashMap<CalendarDay, MutableSet<String>>()
         calView.removeDecorators()
-        Log.i("kongyi1220", "mScheduleList.size = ${mScheduleList?.size}")
+        Log.i("kongyi1220B", "mScheduleList.size = ${mScheduleList?.size}")
+        var current:CalendarDay? = null
+        val colorSet = mutableSetOf<String>()
+        var day: CalendarDay? = null
+        var color: String? = null
         for (schedule in mScheduleList!!) {
-            Log.i("kongyi1220", "show schedule.date = " + schedule.date)
-            val day: CalendarDay? = Utils.getDateFromStringToCal(schedule.date)
+            Log.i("kongyi1220B", "show schedule.date = " + schedule.date)
+            day = Utils.getDateFromStringToCal(schedule.date)
+            color = schedule.color
             if (day != null) {
-                map[day] = schedule
-                dates.add(day)
+                if (current == null) {
+                    current = day
+                }
+
+                if (current == day) {
+                    Log.i("kongyi1220B", "Not Clear")
+                    colorSet.add(color)
+                } else {
+                    Log.i("kongyi1220B", "Clear / colorSet.size = " + colorSet.size)
+                    colorSetHash[current] = colorSet.toMutableSet()
+                    dayList.add(current)
+                    colorSet.clear()
+                    colorSet.add(color)
+                    current = day
+                }
             }
         }
+        if (day != null) {
+            colorSetHash[current!!] = colorSet
+            dayList.add(current)
+        }
 
-        calView.addDecorators(
-            EventDecorator(Color.RED, dates, this)
-        )
-    }
-
-
-    override fun onStart() {
-        super.onStart()
-
+        for (day in dayList) {
+            calView.addDecorators(
+                colorSetHash[day]?.let { EventDecorator(it, day, this) }
+            )
+        }
     }
 }
 
@@ -271,28 +288,42 @@ class TodayDecorator : DayViewDecorator {
     }
 }
 
-class EventDecorator(color: Int, dates: Collection<CalendarDay>, context: Activity) :
+class EventDecorator(colorSet: MutableSet<String>, day: CalendarDay, context: Activity) :
     DayViewDecorator {
-    var color: Int
-    private var dates: HashSet<CalendarDay>
-    init {
-        this.color = color
-        this.dates = HashSet(dates)
-    }
+    private var mColorSet: MutableSet<String> = colorSet
+    private val mContext = context
+    private var mDay = day
 
     override fun shouldDecorate(day: CalendarDay): Boolean {
-        return dates.contains(day)
+        return mDay == day
     }
 
     override fun decorate(view: DayViewFacade) {
-        val dot = DotSpan(5.0f, color)
+//      Log.i("kongyi1220C", "in decorate mColorSet.size = " + mColorSet.size)
+        val colorList = ArrayList<String>()
+        if (mColorSet != null) {
+            for (color in mColorSet) {
+                colorList.add(color)
+            }
+        }
+        Log.i("kongyi1220C", "colorList = $colorList")
+        val dot = DotsSpan(mContext, colorList)
+        //        val dot = DotSpan(5.0f, color)
         view.addSpan(dot) // 날자밑에 점
-//        view.addSpan(SecondDotSpan())
+        //        view.addSpan(SecondDotSpan())
     }
 }
 
-// 아래에는 빨간점과 검은점, 플레이어 사용자 구분 기능이 탑재되면 사용가능할 듯
-class FirstDotSpan : LineBackgroundSpan {
+class DotsSpan(context:Context, colorList:ArrayList<String>): LineBackgroundSpan {
+    private var mColorList = ArrayList<String>()
+    val mContext = context
+
+    init {
+        Log.i("kongyi1220D", "init")
+        mColorList = colorList
+        Log.i("kongyi1220DD", "colorList = " + colorList.toString() + " Object Id = " + mColorList.hashCode())
+    }
+
     override fun drawBackground(
         canvas: Canvas,
         paint: Paint,
@@ -306,26 +337,22 @@ class FirstDotSpan : LineBackgroundSpan {
         end: Int,
         lineNumber: Int
     ) {
-        paint.color = Color.RED
-        canvas.drawCircle(((left + right) / 2).toFloat() - 7f, bottom + 5.0f, 5.0f, paint)
-    }
-}
-
-class SecondDotSpan : LineBackgroundSpan {
-    override fun drawBackground(
-        canvas: Canvas,
-        paint: Paint,
-        left: Int,
-        right: Int,
-        top: Int,
-        baseline: Int,
-        bottom: Int,
-        text: CharSequence,
-        start: Int,
-        end: Int,
-        lineNumber: Int
-    ) {
-        paint.color = Color.BLUE
-        canvas.drawCircle(((left + right) / 2).toFloat() + 7f, bottom + 5.0f, 5.0f, paint)
+        val cnt = mColorList.size
+        var i = 0
+        Log.i("kongyi1220DD", "-->" + mColorList.hashCode())
+        for (color in mColorList) {
+            i ++
+            Log.i("kongyi1220D", "color = " + color)
+            when (color) {
+                "red" -> paint.color = getColor(mContext, R.color.red)
+                "orange" -> paint.color = getColor(mContext, R.color.orange)
+                "yellow" -> paint.color = getColor(mContext, R.color.yellow)
+                "green" -> paint.color = getColor(mContext, R.color.green)
+                "blue" -> paint.color = getColor(mContext, R.color.blue)
+                "purple" -> paint.color = getColor(mContext, R.color.purple)
+            }
+            canvas.drawCircle(((left + right) / 2).toFloat() - 6f*(cnt-1) + 12f*(i-1), bottom + 5.0f, 5.0f, paint)
+        }
+        paint.color = Color.BLACK
     }
 }
