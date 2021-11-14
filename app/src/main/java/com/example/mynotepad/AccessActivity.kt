@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import com.example.mynotepad.activity.MainActivity
-import com.example.personalcalender.pCalendarActivity
+import com.example.personalcalendar.activity.PcalendarActivity
 import com.example.sharecalendar.activity.CalendarActivity
 
 class AccessActivity : AppCompatActivity() {
@@ -19,7 +19,7 @@ class AccessActivity : AppCompatActivity() {
             startActivity(Intent(this, CalendarActivity::class.java))
         }
         findViewById<Button>(R.id.personalCalendarBtn).setOnClickListener {
-            startActivity(Intent(this, pCalendarActivity::class.java))
+            startActivity(Intent(this, PcalendarActivity::class.java))
         }
 
     }

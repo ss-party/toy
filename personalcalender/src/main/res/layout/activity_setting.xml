@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.SettingActivity">
+
+    <EditText
+        android:id="@+id/setting_view_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginHorizontal="10dp"
+        android:ems="10"
+        android:maxLines="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        android:background="@color/cardview_shadow_start_color"
+        android:text="" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/setting_view_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="취소"/>
+        <Button
+            android:id="@+id/setting_view_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="수정"/>
+    </LinearLayout>
+
+</LinearLayout>

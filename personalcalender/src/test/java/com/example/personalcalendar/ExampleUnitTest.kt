@@ -1,4 +1,4 @@
-package com.example.personalcalender
+package com.example.personalcalendar
 
 import org.junit.Test
 
