@@ -16,6 +16,8 @@ class DayActivity : AppCompatActivity() {
     private lateinit var titleView: EditText
     private lateinit var dateView: DatePicker
     private var mSelectedColor:String = ""
+    private var isNew = false
+    private var mSchedule:Schedule? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,25 +27,30 @@ class DayActivity : AppCompatActivity() {
         contentView = findViewById(R.id.content)
         titleView = findViewById(R.id.title)
         dateView = findViewById(R.id.datePicker)
+        findViewById<RadioButton>(R.id.radio_button_copy).setOnClickListener {
+            setRadioButtonCopy()
+        }
+        findViewById<RadioButton>(R.id.radio_button_modify). setOnClickListener {
+            setRadioButtonModify()
+        }
 
-        var date = ""
 
-        val schedule = intent.getSerializableExtra("info") as? Schedule
-        Log.i("kongyi1220", "hey!!! title = " + schedule?.title)
-        titleView.setText(schedule?.title)
-        contentView.setText(schedule?.content)
+        mSchedule = intent.getSerializableExtra("info") as? Schedule
+        Log.i("kongyi1220", "hey!!! title = " + mSchedule?.title)
+        titleView.setText(mSchedule?.title)
+        contentView.setText(mSchedule?.content)
 
-        if (schedule != null) {
-            val day = Utils.getDateFromStringToCal(schedule.date)
+        if (mSchedule != null) {
+            val day = Utils.getDateFromStringToCal(mSchedule!!.date)
             dateView.init(day!!.year, day.month, day.day, null)
         }
 
+        if (mSchedule?.id == "no_id") {
+            setRadioButtonCopy()
+        }
+
         inputButtonView.setOnClickListener {
-            date = "${ dateView.year }~${ dateView.month }~${ dateView.dayOfMonth }"
-            Log.i("kongyi1220A", "before id = " + schedule!!.id)
-            DataManager.putSingleSchedule(date, titleView.text.toString(), contentView.text.toString(), mSelectedColor, schedule.id)
-            //conditionRef.setValue(editText.text.toString())
-            onClickClose()
+            setInput()
         }
         closeButtonView.setOnClickListener {
             onClickClose()
@@ -56,7 +63,7 @@ class DayActivity : AppCompatActivity() {
 //            onClickClose()
 //        }
 
-        when (schedule?.color) {
+        when (mSchedule?.color) {
             "red" -> {
                 findViewById<RadioButton>(R.id.radio_button_red).isChecked = true
                 mSelectedColor = "red"
@@ -96,6 +103,47 @@ class DayActivity : AppCompatActivity() {
         }
     }
 
+    private fun setInput() {
+        var date = "${dateView.year}~${dateView.month}~${dateView.dayOfMonth}"
+        Log.i("kongyi1220A", "before id = " + mSchedule!!.id)
+        if (isNew) {
+            mSchedule?.id = "no_id"
+            DataManager.putSingleSchedule(
+                date,
+                titleView.text.toString(),
+                contentView.text.toString(),
+                mSelectedColor,
+                mSchedule!!.id
+            )
+        } else {
+            DataManager.removeSingleSchedule(mSchedule!!.date, mSchedule!!.id)
+            DataManager.putSingleSchedule(
+                date,
+                titleView.text.toString(),
+                contentView.text.toString(),
+                mSelectedColor,
+                mSchedule!!.id
+            )
+        }
+        //conditionRef.setValue(editText.text.toString())
+        onClickClose()
+    }
+
+    private fun setRadioButtonCopy() {
+        isNew = true
+        Log.i("kongyi1220A", "setRadioButtonCopy")
+        findViewById<RadioButton>(R.id.radio_button_copy).isChecked = true
+        findViewById<RadioButton>(R.id.radio_button_modify).isChecked = false
+    }
+
+    private fun setRadioButtonModify() {
+        isNew = false
+        Log.i("kongyi1220A", "setRadioButtonModify")
+        findViewById<RadioButton>(R.id.radio_button_copy).isChecked = false
+        findViewById<RadioButton>(R.id.radio_button_modify).isChecked = true
+    }
+
+
     override fun onPause() {
         super.onPause()
         overridePendingTransition(0, 0)
@@ -103,5 +151,11 @@ class DayActivity : AppCompatActivity() {
 
     fun onClickClose() {
         finish()
+    }
+
+    override fun onBackPressed() {
+        setInput()
+        Toast.makeText(this, "saved", Toast.LENGTH_SHORT).show()
+        super.onBackPressed()
     }
 }

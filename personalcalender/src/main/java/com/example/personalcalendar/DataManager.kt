@@ -5,7 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import com.example.personalcalendar.data.Notice
 import com.example.personalcalendar.data.Schedule
 import com.google.firebase.database.*
-import java.util.HashMap
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 object DataManager {
@@ -80,11 +81,14 @@ object DataManager {
     }
 
     fun putSingleSchedule(date:String, title:String, content:String, color:String, id:String) {
-        Log.i("kongyi1220A", "id = " + id)
-        if (id == "no_id") {
-            val newId = Utils.bytesToHex1(Utils.sha256(date + title + content))
+        Log.i("kongyi1220A", "id = " + id + " " + Random().nextInt())
+        if ("no_id" == id) {
+            Log.i("kongyi1220A", "newId = here!!!")
+
+            val newId = Utils.bytesToHex1(Utils.sha256(Random().nextInt().toString()))
             postFirebaseDatabase(true, newId, date, title, content, color)
         } else {
+            Log.i("kongyi1220A", "newId = there!!!")
             postFirebaseDatabase(false, id, date, title, content, color)
         }
     }
@@ -94,12 +98,8 @@ object DataManager {
         val childUpdates: MutableMap<String, Any?> = HashMap()
         var postValues: Map<String?, Any?>? = null
         Log.i("kongyi111", "add = " + add + " / id = " + id);
-        var puttingId = Utils.bytesToHex1(Utils.sha256(date + title + content))
-        if (!add) {
-            puttingId = id
-        }
 
-        val post = FirebasePost(puttingId, title, content, date, color)
+        val post = FirebasePost(id, title, content, date, color)
         postValues = post.toMap()
         childUpdates["/pid_list/$date/$id"] = postValues
         mPostReference.updateChildren(childUpdates)

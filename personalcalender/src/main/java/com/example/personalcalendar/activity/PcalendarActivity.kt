@@ -153,6 +153,7 @@ class PcalendarActivity : AppCompatActivity() {
                 val id = viewHolder.itemView.findViewById<TextView>(R.id.item_id).text.toString()
                 rvAdapter?.removeData(viewHolder.layoutPosition)
                 Log.i("kongyi1220", "removed")
+                Log.i("kongyi1220", "date = ${date} | id = ${id}")
                 DataManager.removeSingleSchedule(date, id)
             }
 
