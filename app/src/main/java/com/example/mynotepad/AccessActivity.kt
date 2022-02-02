@@ -12,6 +12,9 @@ class AccessActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_access)
+        findViewById<Button>(R.id.alarmNotiBtn).setOnClickListener {
+            startActivity(Intent(this, AlarmMainActivity::class.java))
+        }
         findViewById<Button>(R.id.myMemoBtn).setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
         }

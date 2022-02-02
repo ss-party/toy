@@ -9,6 +9,12 @@
     tools:context=".AccessActivity">
 
     <Button
+        android:id="@+id/alarmNotiBtn"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:text="alarm Notification Register" />
+
+    <Button
         android:id="@+id/myMemoBtn"
         android:layout_width="300dp"
         android:layout_height="50dp"
