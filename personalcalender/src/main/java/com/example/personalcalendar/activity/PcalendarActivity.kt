@@ -44,7 +44,7 @@ class PcalendarActivity : AppCompatActivity() {
             startActivity(intent)
         }
         mContext = this
-        DataManager.getAllScheduleData()
+        DataManager.getAllScheduleData("pid_list")
         DataManager.getNotice()
         initializeCalendar(calView)
         initializeDayListView(calView)
@@ -89,7 +89,7 @@ class PcalendarActivity : AppCompatActivity() {
             //                    Toast.makeText(applicationContext, "예를 선택했습니다.", Toast.LENGTH_LONG).show()
             if (mScheduleList != null) {
                 val dateString = date.year.toString()+"~"+date.month.toString()+"~"+date.day.toString()
-                DataManager.removeDayAllSchedule(dateString)
+                DataManager.removeDayAllSchedule("pid_list", dateString)
                 refreshList(date)
             }
         }
@@ -154,7 +154,7 @@ class PcalendarActivity : AppCompatActivity() {
                 rvAdapter?.removeData(viewHolder.layoutPosition)
                 Log.i("kongyi1220", "removed")
                 Log.i("kongyi1220", "date = ${date} | id = ${id}")
-                DataManager.removeSingleSchedule(date, id)
+                DataManager.removeSingleSchedule("pid_list", date, id)
             }
 
             override fun onChildDraw(

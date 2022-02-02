@@ -109,6 +109,7 @@ class DayActivity : AppCompatActivity() {
         if (isNew) {
             mSchedule?.id = "no_id"
             DataManager.putSingleSchedule(
+                "pid_list",
                 date,
                 titleView.text.toString(),
                 contentView.text.toString(),
@@ -116,8 +117,9 @@ class DayActivity : AppCompatActivity() {
                 mSchedule!!.id
             )
         } else {
-            DataManager.removeSingleSchedule(mSchedule!!.date, mSchedule!!.id)
+            DataManager.removeSingleSchedule("pid_list", mSchedule!!.date, mSchedule!!.id)
             DataManager.putSingleSchedule(
+                "pid_list",
                 date,
                 titleView.text.toString(),
                 contentView.text.toString(),

@@ -60,7 +60,7 @@ class CalendarActivity : AppCompatActivity() {
             startActivity(intent)
         }
         mContext = this
-        DataManager.getAllScheduleData()
+        DataManager.getAllScheduleData("id_list")
         DataManager.getNotice()
         initializeCalendar(calView)
         initializeDayListView(calView)
@@ -106,7 +106,7 @@ class CalendarActivity : AppCompatActivity() {
             //                    Toast.makeText(applicationContext, "예를 선택했습니다.", Toast.LENGTH_LONG).show()
             if (mScheduleList != null) {
                 val dateString = date.year.toString()+"~"+date.month.toString()+"~"+date.day.toString()
-                DataManager.removeDayAllSchedule(dateString)
+                DataManager.removeDayAllSchedule("id_list", dateString)
                 refreshList(date)
             }
         }
@@ -170,7 +170,7 @@ class CalendarActivity : AppCompatActivity() {
                 val id = viewHolder.itemView.findViewById<TextView>(R.id.item_id).text.toString()
                 rvAdapter?.removeData(viewHolder.layoutPosition)
                 Log.i("kongyi1220", "removed")
-                DataManager.removeSingleSchedule(date, id)
+                DataManager.removeSingleSchedule("id_list", date, id)
             }
 
             override fun onChildDraw(
