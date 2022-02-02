@@ -11,8 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.personalcalendar.R;
 import com.example.personalcalendar.activity.DayActivity;
-import com.example.personalcalendar.data.Schedule;
-import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.example.sharecalendar.data.Schedule;
 
 public class ViewHolder extends RecyclerView.ViewHolder {
     TextView title;

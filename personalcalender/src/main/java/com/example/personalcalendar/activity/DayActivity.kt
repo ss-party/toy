@@ -4,10 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
-import com.example.personalcalendar.DataManager
 import com.example.personalcalendar.R
-import com.example.personalcalendar.Utils
-import com.example.personalcalendar.data.Schedule
+import com.example.sharecalendar.DataManager
+import com.example.sharecalendar.Utils
+import com.example.sharecalendar.data.Schedule
 
 class DayActivity : AppCompatActivity() {
     private lateinit var inputButtonView: Button
@@ -17,7 +17,7 @@ class DayActivity : AppCompatActivity() {
     private lateinit var dateView: DatePicker
     private var mSelectedColor:String = ""
     private var isNew = false
-    private var mSchedule:Schedule? = null
+    private var mSchedule: Schedule? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

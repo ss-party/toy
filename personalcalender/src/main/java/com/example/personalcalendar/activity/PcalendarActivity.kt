@@ -18,11 +18,11 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.personalcalendar.DataManager
 import com.example.personalcalendar.R
-import com.example.personalcalendar.Utils
-import com.example.personalcalendar.data.Schedule
 import com.example.personalcalendar.list.DayListAdapter
+import com.example.sharecalendar.DataManager
+import com.example.sharecalendar.Utils
+import com.example.sharecalendar.data.Schedule
 import com.prolificinteractive.materialcalendarview.*
 import java.util.*
 import kotlin.collections.HashMap
