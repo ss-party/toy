@@ -151,10 +151,15 @@ class PcalendarActivity : AppCompatActivity() {
                 val date =
                     viewHolder.itemView.findViewById<TextView>(R.id.item_date).text.toString()
                 val id = viewHolder.itemView.findViewById<TextView>(R.id.item_id).text.toString()
+                val title = viewHolder.itemView.findViewById<TextView>(R.id.item_title).text.toString()
+                val content = viewHolder.itemView.findViewById<TextView>(R.id.item_content).text.toString()
+                val color = viewHolder.itemView.findViewById<TextView>(R.id.item_color).text.toString()
+
                 rvAdapter?.removeData(viewHolder.layoutPosition)
                 Log.i("kongyi1220", "removed")
                 Log.i("kongyi1220", "date = ${date} | id = ${id}")
                 DataManager.removeSingleSchedule("pid_list", date, id)
+                DataManager.putSingleHistory("pcal-schedule-remove", "content: id = ${id}, date = ${date}, title=$title, content=$content, color=$color}")
             }
 
             override fun onChildDraw(

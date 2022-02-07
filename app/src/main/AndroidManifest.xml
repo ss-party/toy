@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mynotepad">
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
@@ -9,6 +14,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".HistoryActivity"
+            android:exported="true"
+            android:label="@string/title_activity_history"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AccessActivity"
             android:exported="true">
@@ -21,10 +31,9 @@
         <activity
             android:name=".activity.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".AlarmMainActivity" />
 
-        <activity android:name=".AlarmMainActivity"/>
         <receiver
             android:name=".DeviceBootReceiver"
             android:enabled="false"
@@ -38,12 +47,7 @@
         <service
             android:name=".MyService"
             android:enabled="true"
-            android:exported="true"/>
-
+            android:exported="true" />
     </application>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
 </manifest>

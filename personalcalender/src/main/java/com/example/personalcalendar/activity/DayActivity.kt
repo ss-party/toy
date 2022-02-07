@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.*
 import com.example.personalcalendar.R
 import com.example.sharecalendar.DataManager
+import com.example.sharecalendar.DataManager.putSingleHistory
 import com.example.sharecalendar.Utils
 import com.example.sharecalendar.data.Schedule
 
@@ -116,6 +117,8 @@ class DayActivity : AppCompatActivity() {
                 mSelectedColor,
                 mSchedule!!.id
             )
+            val str = "$date, ${titleView.text}, ${contentView.text}, $mSelectedColor, ${Utils.bytesToHex1(Utils.sha256(date+titleView.text+contentView.text))}"
+            putSingleHistory("pcal-schedule-new", "content: $str")
         } else {
             DataManager.removeSingleSchedule("pid_list", mSchedule!!.date, mSchedule!!.id)
             DataManager.putSingleSchedule(
@@ -126,6 +129,10 @@ class DayActivity : AppCompatActivity() {
                 mSelectedColor,
                 mSchedule!!.id
             )
+            val from_str = "${mSchedule!!.date}, ${mSchedule!!.title}, ${mSchedule!!.content}, ${mSchedule!!.color}, ${mSchedule!!.id}"
+            val to_str = "$date, ${titleView.text}, ${contentView.text}, $mSelectedColor, ${mSchedule!!.id}"
+
+            putSingleHistory("pcal-schedule-modify", "from: $from_str", "to: $to_str")
         }
         //conditionRef.setValue(editText.text.toString())
         onClickClose()

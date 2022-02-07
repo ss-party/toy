@@ -18,16 +18,12 @@ public class FirebasePost {
 
     }
 
-    public FirebasePost(String id, String title, String content, String date, String color) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.date = date;
-        this.color = color;
-    }
-
-    public FirebasePost(String content) {
-        this.content = content;
+    public FirebasePost(String arg1, String arg2, String arg3, String arg4, String arg5) {
+        this.id = arg1;
+        this.title = arg2;
+        this.content = arg3;
+        this.date = arg4;
+        this.color = arg5;
     }
 
     @Exclude
@@ -41,3 +37,4 @@ public class FirebasePost {
         return result;
     }
 }
+
