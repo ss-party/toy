@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".PaperWeightActivity"
+            android:exported="true" />
+        <activity
             android:name=".HistoryActivity"
             android:exported="true"
             android:label="@string/title_activity_history"

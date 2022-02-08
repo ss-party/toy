@@ -6,7 +6,10 @@
         <entry key="..\:/MyNotePad/app/src/main/res/layout/activity_access.xml" value="0.2046875" />
         <entry key="..\:/MyNotePad/app/src/main/res/layout/activity_history.xml" value="0.20520833333333333" />
         <entry key="..\:/MyNotePad/app/src/main/res/layout/activity_main.xml" value="0.23125" />
+        <entry key="..\:/MyNotePad/app/src/main/res/layout/activity_paper_wieght.xml" value="0.2598958333333333" />
+        <entry key="..\:/MyNotePad/app/src/main/res/layout/alarm_activity_main.xml" value="0.22083333333333333" />
         <entry key="..\:/MyNotePad/app/src/main/res/layout/dialog.xml" value="0.23125" />
+        <entry key="..\:/MyNotePad/app/src/main/res/layout/item_weight_recycler.xml" value="0.25" />
         <entry key="..\:/MyNotePad/app/src/main/res/layout/sheet_fragment.xml" value="0.23125" />
         <entry key="..\:/MyNotePad/personalcalender/src/main/res/drawable/circle_black.xml" value="0.3764102564102564" />
         <entry key="..\:/MyNotePad/personalcalender/src/main/res/layout/activity_day.xml" value="0.36614583333333334" />
@@ -37,5 +40,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.1" />
+      </ProjectState>
+    </option>
   </component>
 </project>

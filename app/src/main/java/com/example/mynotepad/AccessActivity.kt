@@ -46,5 +46,9 @@ class AccessActivity : AppCompatActivity() {
             startActivity(Intent(this, HistoryActivity::class.java))
 //            putSingleHistory("access", "historyManager")
         }
+        findViewById<Button>(R.id.paperWeightBtn).setOnClickListener {
+            startActivity(Intent(this, PaperWeightActivity::class.java))
+//            putSingleHistory("access", "historyManager")
+        }
     }
 }

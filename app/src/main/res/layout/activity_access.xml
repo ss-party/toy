@@ -37,4 +37,10 @@
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:text="History Manager" />
+
+    <Button
+        android:id="@+id/paperWeightBtn"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:text="PaperWeight Manager" />
 </LinearLayout>
