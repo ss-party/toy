@@ -1,8 +1,11 @@
 package com.example.sharecalendar
 
 import android.util.Log
+import android.widget.TextView
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import java.security.MessageDigest
+import java.text.SimpleDateFormat
+import java.util.*
 
 object Utils {
     fun getDateFromStringToCal(str:String): CalendarDay? {
@@ -15,6 +18,13 @@ object Utils {
             return day
         }
         return null
+    }
+
+    fun getDateFromCalToString(cal:Calendar):String {
+        val year = cal.get(Calendar.YEAR)
+        val month = cal.get(Calendar.MONTH)
+        val day = cal.get(Calendar.DATE)
+        return "$year~$month~$day"
     }
 
     /**

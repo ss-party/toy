@@ -118,7 +118,17 @@ object DataManager {
 
     }
 
-
+    fun getScheduleDataInDate(date:String): ArrayList<Schedule> {
+        val list = ArrayList<Schedule>()
+        if (dataList.value != null) {
+            for (node in dataList.value!!) {
+                if (node.date == date) {
+                    list.add(node)
+                }
+            }
+        }
+        return list
+    }
 
     fun getSingleScheduleById(String:Int): Schedule? {
         return null
