@@ -1,17 +1,10 @@
-package com.example.mynotepad
+package com.example.home
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import com.example.mynotepad.activity.MainActivity
-import com.example.personalcalendar.activity.PcalendarActivity
 import com.example.model.DataManager
-import com.example.sharecalendar.activity.CalendarActivity
-
-
-
 
 class AccessActivity : AppCompatActivity() {
     private lateinit var mPhoneNumber:String
@@ -41,7 +34,7 @@ class AccessActivity : AppCompatActivity() {
                         " arg5 = ${it.get(it.lastIndex).arg5}"
             }
 
-            MyNotification.doNotify(this, content)
+//            MyNotification.doNotify(this, content) // 이거 대신 broadcast 하도록 해야한다.
         })
 
         mPhoneNumber = DataManager.getLineNumber(this, this) // context 정보가 null이 아니려면 onCreate 에서 this를 넣어줘야.
@@ -52,27 +45,27 @@ class AccessActivity : AppCompatActivity() {
 
     private fun init() {
         findViewById<Button>(R.id.alarmNotiBtn).setOnClickListener {
-            startActivity(Intent(this, AlarmMainActivity::class.java))
+//            startActivity(Intent(this, AlarmMainActivity::class.java))
             DataManager.putSingleHistory(this,"access", "alarmNoti", mPhoneNumber)
         }
         findViewById<Button>(R.id.myMemoBtn).setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
+//            startActivity(Intent(this, MainActivity::class.java))
             DataManager.putSingleHistory(this, "access", "myMemo", mPhoneNumber)
         }
         findViewById<Button>(R.id.shareCalendarBtn).setOnClickListener {
-            startActivity(Intent(this, CalendarActivity::class.java))
+//            startActivity(Intent(this, CalendarActivity::class.java))
             DataManager.putSingleHistory(this, "access", "shareCalendar", mPhoneNumber)
         }
         findViewById<Button>(R.id.personalCalendarBtn).setOnClickListener {
-            startActivity(Intent(this, PcalendarActivity::class.java))
+//            startActivity(Intent(this, PcalendarActivity::class.java))
             DataManager.putSingleHistory(this, "access", "personalCalendar", mPhoneNumber)
         }
         findViewById<Button>(R.id.historyManagerBtn).setOnClickListener {
-            startActivity(Intent(this, HistoryActivity::class.java))
+//            startActivity(Intent(this, HistoryActivity::class.java))
             DataManager.putSingleHistory(this, "access", "historyManager", mPhoneNumber)
         }
         findViewById<Button>(R.id.paperWeightBtn).setOnClickListener {
-            startActivity(Intent(this, PaperWeightActivity::class.java))
+//            startActivity(Intent(this, PaperWeightActivity::class.java))
             DataManager.putSingleHistory(this, "access", "historyManager", mPhoneNumber)
         }
     }
