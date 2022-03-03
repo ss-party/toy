@@ -3,3 +3,6 @@ rootProject.name = "MyNotepad"
 include ':sharecalendar'
 include ':personalcalender'
 include ':model'
+include ':mynotepad'
+include ':home'
+include ':paperweight'

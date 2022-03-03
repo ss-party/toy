@@ -2,47 +2,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mynotepad">
 
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
     <application
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true">
-
         <activity
-            android:name="com.example.home.HistoryActivity"
+            android:name="com.example.mynotepad.AccessActivity"
             android:exported="true"
-            android:label="@string/title_activity_history"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="access"
+            android:theme="@style/AppTheme.NoActionBar">
 
-        <activity android:name="com.example.home.AlarmMainActivity" />
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
-        <receiver
-            android:name="com.example.home.DeviceBootReceiver"
-            android:enabled="false"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-        <receiver android:name="com.example.home.AlarmReceiver" />
-        <receiver
-            android:name="com.example.home.TimeChangeReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.TIME_SET" />
-            </intent-filter>
-        </receiver>
-        <service
-            android:name="com.example.home.MyService"
-            android:enabled="true"
-            android:exported="true" />
     </application>
 
 </manifest>

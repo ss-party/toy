@@ -1,4 +1,4 @@
-package com.example.mynotepad
+package com.example.paperweight
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,19 +7,17 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mynotepad.data.WeightPaperData
-import com.example.mynotepad.list.WeightListAdapter
 import com.example.model.DataManager
-import com.example.model.Utils
 import com.example.model.data.Schedule
+import com.example.paperweight.list.WeightListAdapter
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class PaperWeightActivity : AppCompatActivity() {
-    lateinit var weightListAdapter: com.example.mynotepad.list.WeightListAdapter
-    val list = mutableListOf<com.example.mynotepad.data.WeightPaperData>()
+    lateinit var weightListAdapter: WeightListAdapter
+    val list = mutableListOf<WeightPaperData>()
     val exsisted = HashMap<String, Schedule>()
     var today = ""
 
@@ -47,16 +45,16 @@ class PaperWeightActivity : AppCompatActivity() {
     }
 
     private fun initRecycler() {
-        weightListAdapter = com.example.mynotepad.list.WeightListAdapter(this)
+        weightListAdapter = WeightListAdapter(this)
         findViewById<RecyclerView>(R.id.paper_recyclerview).adapter = weightListAdapter
         list.clear()
         list.apply {
             Log.i("kongyi444", "datas.apply applied")
             val cal = Calendar.getInstance()
             cal.timeInMillis = System.currentTimeMillis()
-            val dateOfToday = com.example.model.Utils.getDateFromCalToString(cal)
+            val dateOfToday = Utils.getDateFromCalToString(cal)
             Log.d("kongyi444", "date = $dateOfToday")
-            val listInDate = com.example.model.DataManager.getScheduleDataInDate(dateOfToday)
+            val listInDate = DataManager.getScheduleDataInDate(dateOfToday)
             putCard(listInDate, "green", "기록", "오늘 한 일 기록하자", " *3가지 키워드만 쓰자")
             putCard(listInDate, "blue", "업무/익스", "한 업무를 기록하자", " *키워드-진행위치 형식으로")
             putCard(listInDate, "purple", "골프", "골프 쳤니?", " *깨달은 점도 비고란에")
@@ -83,7 +81,7 @@ class PaperWeightActivity : AppCompatActivity() {
             val ex = exsisted[title]
             if (ex != null) {
                 val sc = weightListAdapter.datas[idx]
-                com.example.model.DataManager.putSingleSchedule(
+                DataManager.putSingleSchedule(
                     "pid_list",
                     ex!!.date,
                     sc.paper_weight_item_title,
@@ -95,8 +93,8 @@ class PaperWeightActivity : AppCompatActivity() {
                 val sc = weightListAdapter.datas[idx]
                 val cal = Calendar.getInstance()
                 cal.timeInMillis = System.currentTimeMillis()
-                val dateOfToday = com.example.model.Utils.getDateFromCalToString(cal)
-                com.example.model.DataManager.putSingleSchedule(
+                val dateOfToday = Utils.getDateFromCalToString(cal)
+                DataManager.putSingleSchedule(
                     "pid_list",
                     dateOfToday,
                     sc.paper_weight_item_title,
@@ -107,11 +105,11 @@ class PaperWeightActivity : AppCompatActivity() {
             }
         } else if (exsisted[title] != null) {
             val sc = exsisted[title]
-            com.example.model.DataManager.removeSingleSchedule("pid_list", sc!!.date, sc.id)
+            DataManager.removeSingleSchedule("pid_list", sc!!.date, sc.id)
         }
     }
 
-    private fun MutableList<com.example.mynotepad.data.WeightPaperData>.putCard(listInDate: ArrayList<Schedule>, color: String, title: String, main: String, sub: String) {
+    private fun MutableList<WeightPaperData>.putCard(listInDate: ArrayList<Schedule>, color: String, title: String, main: String, sub: String) {
         var isRecord = false
         var comment = ""
         for (node in listInDate) {
@@ -124,7 +122,7 @@ class PaperWeightActivity : AppCompatActivity() {
             }
         }
         add(
-            com.example.mynotepad.data.WeightPaperData(
+            WeightPaperData(
                 paper_weight_color_circle = color,
                 paper_weight_item_title = title,
                 paper_weight_question_tv = main,

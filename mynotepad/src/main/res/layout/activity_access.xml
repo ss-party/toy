@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context="com.example.home.AccessActivity">
+    tools:context="com.example.mynotepad.AccessActivity">
 
     <Button
         android:id="@+id/alarmNotiBtn"

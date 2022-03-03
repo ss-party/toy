@@ -1,4 +1,4 @@
-package com.example.mynotepad;
+package com.example.home;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

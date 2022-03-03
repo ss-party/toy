@@ -4,6 +4,9 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -15,8 +18,6 @@ import com.example.mynotepad.R
 import com.example.mynotepad.utility.PreferenceManager
 import com.example.mynotepad.utility.TTSpeech
 import com.example.mynotepad.view.SheetFragment
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.dialog.view.*
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "kongyi123/MainActivity"
@@ -25,6 +26,8 @@ class MainActivity : AppCompatActivity() {
 
     // option setting
     private val CLEAR = false
+    private lateinit var tabOuter:LinearLayout
+    private lateinit var vpPager:ViewPager2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate")
@@ -34,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         modelView?.vpPager = findViewById(R.id.vpPager)
         tts = TTSpeech(this)
 
+        tabOuter = findViewById(R.id.tabOuter)
         clearData()
 
         if (modelView?.isFirstStart == true) {
@@ -168,14 +172,14 @@ class MainActivity : AppCompatActivity() {
         val ad: AlertDialog = dlg.create()
         ad.setTitle("Edit Name") //제목
         val inflater: LayoutInflater = LayoutInflater.from(applicationContext)
-        val view = inflater.inflate(R.layout.dialog, root_layout, false)
+        val view = inflater.inflate(R.layout.dialog, findViewById(R.id.root_layout), false)
         ad.setView(view) // 메시지
         // set New Sheet Name if the confirm button is clicked.
-        view.dialogConfirmBtn.setOnClickListener {
+        view.findViewById<Button>(R.id.dialogConfirmBtn).setOnClickListener {
             for (i in 1..modelView?.items!!.size) {
                 if (modelView?.currentTabTitleView?.id == modelView?.items?.get(i - 1)?.getId()) {
-                    modelView?.items?.get(i - 1)?.getTabTitleView()?.text = view.dialogEditBox.text
-                    modelView?.items?.get(i - 1)?.setName(view.dialogEditBox.text.toString())
+                    modelView?.items?.get(i - 1)?.getTabTitleView()?.text = view.findViewById<EditText>(R.id.dialogEditBox).text
+                    modelView?.items?.get(i - 1)?.setName(view.findViewById<EditText>(R.id.dialogEditBox).text.toString())
                     break
                 }
             }
@@ -286,7 +290,7 @@ class MainActivity : AppCompatActivity() {
         if (result == false) {
             Toast.makeText(this, "데이터 초기화 실패", Toast.LENGTH_SHORT).show()
         }
-        vpPager.adapter = createViewPagerAdapter()
+        modelView?.vpPager?.adapter = createViewPagerAdapter()
     }
 
     private fun showAllData(callingFunction: String) {

@@ -1,4 +1,4 @@
-package com.example.model
+package com.example.paperweight
 
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import java.security.MessageDigest

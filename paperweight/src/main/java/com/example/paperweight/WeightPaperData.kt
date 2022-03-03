@@ -1,4 +1,4 @@
-package com.example.mynotepad.data
+package com.example.paperweight
 
 data class WeightPaperData(
     var paper_weight_color_circle : String = "black",

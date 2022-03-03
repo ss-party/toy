@@ -1,4 +1,4 @@
-package com.example.mynotepad.list
+package com.example.paperweight.list
 
 import android.content.Context
 import android.util.Log
@@ -12,11 +12,10 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mynotepad.R
-import com.example.mynotepad.data.WeightPaperData
+import com.example.paperweight.R
 
 class WeightListAdapter(private val context: Context) : RecyclerView.Adapter<WeightListAdapter.ViewHolder>() {
-    var datas = mutableListOf<WeightPaperData>()
+    var datas = mutableListOf<com.example.paperweight.WeightPaperData>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_weight_recycler,parent,false)
         return ViewHolder(view)
@@ -37,7 +36,7 @@ class WeightListAdapter(private val context: Context) : RecyclerView.Adapter<Wei
         private val subText: TextView = itemView.findViewById(R.id.paper_weight_sub_tv)
         private val commentText: TextView = itemView.findViewById(R.id.paper_weight_comment)
 
-        fun bind(item: WeightPaperData) {
+        fun bind(item: com.example.paperweight.WeightPaperData) {
             Log.i("kongyi1220", "bind datas = ${datas.toString()}")
 
 //            circleColor.text = item.paper_weight_color_circle
