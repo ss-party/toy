@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
-import com.example.sharecalendar.DataManager
+import com.example.model.DataManager
 import com.example.sharecalendar.R
 
 class SettingActivity : AppCompatActivity() {

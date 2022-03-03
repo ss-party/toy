@@ -9,9 +9,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mynotepad.data.WeightPaperData
 import com.example.mynotepad.list.WeightListAdapter
-import com.example.sharecalendar.DataManager
-import com.example.sharecalendar.Utils
-import com.example.sharecalendar.data.Schedule
+import com.example.model.DataManager
+import com.example.model.Utils
+import com.example.model.data.Schedule
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -30,8 +30,8 @@ class PaperWeightActivity : AppCompatActivity() {
         vibrator.cancel(); //<- 중단 시키기 ?? 이게 안먹는것처럼 보인다. 문진 액티비티로 와도 진동이 안멈춤.
         // 대신 화면을 켰다가 끄면 멈추는 것으로 보임
 
-        DataManager.getAllScheduleData("pid_list")
-        DataManager.dataList.observe(this, {
+        com.example.model.DataManager.getAllScheduleData("pid_list")
+        com.example.model.DataManager.dataList.observe(this, {
             initOthers()
             initRecycler()
         })
@@ -54,9 +54,9 @@ class PaperWeightActivity : AppCompatActivity() {
             Log.i("kongyi444", "datas.apply applied")
             val cal = Calendar.getInstance()
             cal.timeInMillis = System.currentTimeMillis()
-            val dateOfToday = Utils.getDateFromCalToString(cal)
+            val dateOfToday = com.example.model.Utils.getDateFromCalToString(cal)
             Log.d("kongyi444", "date = $dateOfToday")
-            val listInDate = DataManager.getScheduleDataInDate(dateOfToday)
+            val listInDate = com.example.model.DataManager.getScheduleDataInDate(dateOfToday)
             putCard(listInDate, "green", "기록", "오늘 한 일 기록하자", " *3가지 키워드만 쓰자")
             putCard(listInDate, "blue", "업무/익스", "한 업무를 기록하자", " *키워드-진행위치 형식으로")
             putCard(listInDate, "purple", "골프", "골프 쳤니?", " *깨달은 점도 비고란에")
@@ -83,7 +83,7 @@ class PaperWeightActivity : AppCompatActivity() {
             val ex = exsisted[title]
             if (ex != null) {
                 val sc = weightListAdapter.datas[idx]
-                DataManager.putSingleSchedule(
+                com.example.model.DataManager.putSingleSchedule(
                     "pid_list",
                     ex!!.date,
                     sc.paper_weight_item_title,
@@ -95,8 +95,8 @@ class PaperWeightActivity : AppCompatActivity() {
                 val sc = weightListAdapter.datas[idx]
                 val cal = Calendar.getInstance()
                 cal.timeInMillis = System.currentTimeMillis()
-                val dateOfToday = Utils.getDateFromCalToString(cal)
-                DataManager.putSingleSchedule(
+                val dateOfToday = com.example.model.Utils.getDateFromCalToString(cal)
+                com.example.model.DataManager.putSingleSchedule(
                     "pid_list",
                     dateOfToday,
                     sc.paper_weight_item_title,
@@ -107,7 +107,7 @@ class PaperWeightActivity : AppCompatActivity() {
             }
         } else if (exsisted[title] != null) {
             val sc = exsisted[title]
-            DataManager.removeSingleSchedule("pid_list", sc!!.date, sc.id)
+            com.example.model.DataManager.removeSingleSchedule("pid_list", sc!!.date, sc.id)
         }
     }
 

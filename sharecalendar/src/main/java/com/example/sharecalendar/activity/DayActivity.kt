@@ -4,10 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
-import com.example.sharecalendar.DataManager
+import com.example.model.DataManager
 import com.example.sharecalendar.R
-import com.example.sharecalendar.Utils
-import com.example.sharecalendar.data.Schedule
+import com.example.model.Utils
+import com.example.model.data.Schedule
 
 class DayActivity : AppCompatActivity() {
     private lateinit var inputButtonView: Button

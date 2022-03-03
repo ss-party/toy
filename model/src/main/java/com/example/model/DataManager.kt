@@ -1,4 +1,4 @@
-package com.example.sharecalendar
+package com.example.model
 
 import android.Manifest
 import android.app.Activity
@@ -8,14 +8,12 @@ import android.telephony.TelephonyManager
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
-import com.example.sharecalendar.data.History
-import com.example.sharecalendar.data.Notice
-import com.example.sharecalendar.data.Schedule
+import com.example.model.data.History
+import com.example.model.data.Notice
+import com.example.model.data.Schedule
 import com.google.firebase.database.*
 import java.util.HashMap
-import kotlin.reflect.KFunction0
 
 
 object DataManager {

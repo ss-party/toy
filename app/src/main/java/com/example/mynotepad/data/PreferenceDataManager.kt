@@ -3,7 +3,7 @@ package com.example.mynotepad.data
 import android.content.Context
 import com.example.mynotepad.utility.PreferenceManager
 
-class DataManager(private val context:Context) {
+class PreferenceDataManager(private val context:Context) {
     /**
      * float 값 로드
      * @param key

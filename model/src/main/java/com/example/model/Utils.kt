@@ -1,10 +1,7 @@
-package com.example.sharecalendar
+package com.example.model
 
-import android.util.Log
-import android.widget.TextView
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import java.security.MessageDigest
-import java.text.SimpleDateFormat
 import java.util.*
 
 object Utils {

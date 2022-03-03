@@ -4,8 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import com.example.model.DataManager
 import com.example.personalcalendar.R
-import com.example.sharecalendar.DataManager
 
 class SettingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

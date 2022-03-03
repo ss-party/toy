@@ -29,13 +29,12 @@ import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.sharecalendar.DataManager
+import com.example.model.DataManager
 import com.example.sharecalendar.R
-import com.example.sharecalendar.Utils
-import com.example.sharecalendar.data.Schedule
+import com.example.model.Utils
+import com.example.model.data.Schedule
 import com.example.sharecalendar.list.DayListAdapter
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
-import kotlinx.android.synthetic.main.list_item.*
 import kotlin.collections.HashMap
 
 
@@ -88,7 +87,7 @@ class CalendarActivity : AppCompatActivity() {
 
         DataManager.notice.observe(this, androidx.lifecycle.Observer {
             Log.i("kongyi1234", "noteice obersve / notice.value")
-            findViewById<TextView>(R.id.noticeView).setText(DataManager.notice.value.toString())
+            findViewById<TextView>(R.id.noticeView).setText(com.example.model.DataManager.notice.value.toString())
         })
 
 

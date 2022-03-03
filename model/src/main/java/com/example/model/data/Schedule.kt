@@ -1,4 +1,4 @@
-package com.example.sharecalendar.data
+package com.example.model.data
 import java.io.Serializable
 
 data class Schedule (

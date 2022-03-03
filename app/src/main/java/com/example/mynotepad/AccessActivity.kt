@@ -5,12 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.example.mynotepad.activity.MainActivity
 import com.example.personalcalendar.activity.PcalendarActivity
-import com.example.sharecalendar.DataManager
+import com.example.model.DataManager
 import com.example.sharecalendar.activity.CalendarActivity
 
 

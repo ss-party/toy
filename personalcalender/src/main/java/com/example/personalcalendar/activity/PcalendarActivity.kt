@@ -20,9 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.personalcalendar.R
 import com.example.personalcalendar.list.DayListAdapter
-import com.example.sharecalendar.DataManager
-import com.example.sharecalendar.Utils
-import com.example.sharecalendar.data.Schedule
+import com.example.model.Utils
+import com.example.model.data.Schedule
 import com.prolificinteractive.materialcalendarview.*
 import java.util.*
 import kotlin.collections.HashMap
@@ -46,11 +45,11 @@ class PcalendarActivity : AppCompatActivity() {
             startActivity(intent)
         }
         mContext = this
-        DataManager.getAllScheduleData("pid_list")
-        DataManager.getNotice()
+        com.example.model.DataManager.getAllScheduleData("pid_list")
+        com.example.model.DataManager.getNotice()
         initializeCalendar(calView)
         initializeDayListView(calView)
-        mPhoneNumber = DataManager.getLineNumber(this, this)
+        mPhoneNumber = com.example.model.DataManager.getLineNumber(this, this)
 
     }
     private fun initializeCalendar(calView: MaterialCalendarView) {
@@ -63,7 +62,7 @@ class PcalendarActivity : AppCompatActivity() {
             .setCalendarDisplayMode(CalendarMode.MONTHS)
             .commit()
 
-        DataManager.dataList.observe(this, androidx.lifecycle.Observer {
+        com.example.model.DataManager.dataList.observe(this, androidx.lifecycle.Observer {
             mScheduleList = it
             putDataOnCalendar()
             if (mCurrentDate != null) {
@@ -76,9 +75,9 @@ class PcalendarActivity : AppCompatActivity() {
             )
         })
 
-        DataManager.notice.observe(this, androidx.lifecycle.Observer {
+        com.example.model.DataManager.notice.observe(this, androidx.lifecycle.Observer {
             Log.i("kongyi1234", "noteice obersve / notice.value")
-            findViewById<TextView>(R.id.noticeView).setText(DataManager.notice.value.toString())
+            findViewById<TextView>(R.id.noticeView).setText(com.example.model.DataManager.notice.value.toString())
         })
 
 
@@ -93,7 +92,7 @@ class PcalendarActivity : AppCompatActivity() {
             //                    Toast.makeText(applicationContext, "예를 선택했습니다.", Toast.LENGTH_LONG).show()
             if (mScheduleList != null) {
                 val dateString = date.year.toString()+"~"+date.month.toString()+"~"+date.day.toString()
-                DataManager.removeDayAllSchedule("pid_list", dateString)
+                com.example.model.DataManager.removeDayAllSchedule("pid_list", dateString)
                 refreshList(date)
             }
         }
@@ -162,8 +161,8 @@ class PcalendarActivity : AppCompatActivity() {
                 rvAdapter?.removeData(viewHolder.layoutPosition)
                 Log.i("kongyi1220", "removed")
                 Log.i("kongyi1220", "date = ${date} | id = ${id}")
-                DataManager.removeSingleSchedule("pid_list", date, id)
-                DataManager.putSingleHistory(mContext, "pcal-schedule-remove", "content: id = ${id}, date = ${date}, title=$title, content=$content, color=$color}", mPhoneNumber)
+                com.example.model.DataManager.removeSingleSchedule("pid_list", date, id)
+                com.example.model.DataManager.putSingleHistory(mContext, "pcal-schedule-remove", "content: id = ${id}, date = ${date}, title=$title, content=$content, color=$color}", mPhoneNumber)
             }
 
             override fun onChildDraw(

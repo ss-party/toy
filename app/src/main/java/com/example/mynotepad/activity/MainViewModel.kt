@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.AndroidViewModel
 import com.example.mynotepad.R
-import com.example.mynotepad.data.DataManager
+import com.example.mynotepad.data.PreferenceDataManager
 import com.example.mynotepad.data.Sheet
 import com.example.mynotepad.utility.PreferenceManager
 import com.example.mynotepad.utility.SoftKeyboard
@@ -33,7 +33,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val sheetOrder: MutableMap<Int, Int> = mutableMapOf<Int, Int>()
     var vpPager:ViewPager2? = null
     var currentTabPosition:Int = 0
-    private val dataManager = DataManager(getApplication())
+    private val dataManager = PreferenceDataManager(getApplication())
     var softKeyboard: SoftKeyboard? = null
     var rootLayout: ViewGroup? = null
     var controlManager: InputMethodManager? = null

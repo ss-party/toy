@@ -1,4 +1,4 @@
-package com.example.sharecalendar;
+package com.example.model;
 
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
