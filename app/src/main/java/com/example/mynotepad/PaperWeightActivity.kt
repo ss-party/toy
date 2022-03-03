@@ -2,6 +2,7 @@ package com.example.mynotepad
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Vibrator
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
@@ -25,6 +26,10 @@ class PaperWeightActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_paper_weight)
+        val vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
+        vibrator.cancel(); //<- 중단 시키기 ?? 이게 안먹는것처럼 보인다. 문진 액티비티로 와도 진동이 안멈춤.
+        // 대신 화면을 켰다가 끄면 멈추는 것으로 보임
+
         DataManager.getAllScheduleData("pid_list")
         DataManager.dataList.observe(this, {
             initOthers()

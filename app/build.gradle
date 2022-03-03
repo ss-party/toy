@@ -15,7 +15,7 @@ android {
     defaultConfig {
         applicationId "com.example.mynotepad"
         minSdkVersion 28
-        targetSdkVersion 32
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 

@@ -19,6 +19,7 @@ class DayActivity : AppCompatActivity() {
     private var mSelectedColor:String = ""
     private var isNew = false
     private var mSchedule: Schedule? = null
+    private lateinit var mPhoneNumber:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +35,24 @@ class DayActivity : AppCompatActivity() {
         findViewById<RadioButton>(R.id.radio_button_modify). setOnClickListener {
             setRadioButtonModify()
         }
-
+//
+//        DataManager.hList.observe(this, androidx.lifecycle.Observer {
+//            Log.i("kongyi1220TT", "hList is updated.")
+////            init()
+//            var content = "none"
+//            if (it.get(it.lastIndex).arg2 == "access") {
+//
+//                content = "번호 = ${it.get(it.lastIndex).arg1} 행위 = ${it.get(it.lastIndex).arg2}" +
+//                        " 대상 = ${it.get(it.lastIndex).arg3} 주체 = ${it.get(it.lastIndex).arg4}"
+//
+//            } else if (it.get(it.lastIndex).arg2 == "pcal-schedule-new") {
+//                content = "번호 = ${it.get(it.lastIndex).arg1} 행위 = ${it.get(it.lastIndex).arg2}" +
+//                        " arg3 = ${it.get(it.lastIndex).arg3} arg4 = ${it.get(it.lastIndex).arg4}" +
+//                        " arg5 = ${it.get(it.lastIndex).arg5}"
+//            }
+//
+//            MyNotification.doNotify(this, content)
+//        })
 
         mSchedule = intent.getSerializableExtra("info") as? Schedule
         Log.i("kongyi1220", "hey!!! title = " + mSchedule?.title)
@@ -102,11 +120,13 @@ class DayActivity : AppCompatActivity() {
                 R.id.radio_button_purple -> mSelectedColor = "purple"
             }
         }
+
+        mPhoneNumber = DataManager.getLineNumber(this, this)
     }
 
     private fun setInput() {
         var date = "${dateView.year}~${dateView.month}~${dateView.dayOfMonth}"
-        Log.i("kongyi1220A", "before id = " + mSchedule!!.id)
+        Log.i("kongyi1220TT", "before id = " + mSchedule!!.id)
         if (isNew) {
             mSchedule?.id = "no_id"
             DataManager.putSingleSchedule(
@@ -118,7 +138,8 @@ class DayActivity : AppCompatActivity() {
                 mSchedule!!.id
             )
             val str = "$date, ${titleView.text}, ${contentView.text}, $mSelectedColor, ${Utils.bytesToHex1(Utils.sha256(date+titleView.text+contentView.text))}"
-            putSingleHistory("pcal-schedule-new", "content: $str")
+
+            putSingleHistory(this, "pcal-schedule-new", "content: $str", mPhoneNumber)
         } else {
             DataManager.removeSingleSchedule("pid_list", mSchedule!!.date, mSchedule!!.id)
             DataManager.putSingleSchedule(
@@ -132,7 +153,7 @@ class DayActivity : AppCompatActivity() {
             val from_str = "${mSchedule!!.date}, ${mSchedule!!.title}, ${mSchedule!!.content}, ${mSchedule!!.color}, ${mSchedule!!.id}"
             val to_str = "$date, ${titleView.text}, ${contentView.text}, $mSelectedColor, ${mSchedule!!.id}"
 
-            putSingleHistory("pcal-schedule-modify", "from: $from_str", "to: $to_str")
+            putSingleHistory(this, "pcal-schedule-modify", "from: $from_str", "to: $to_str", mPhoneNumber)
         }
         //conditionRef.setValue(editText.text.toString())
         onClickClose()

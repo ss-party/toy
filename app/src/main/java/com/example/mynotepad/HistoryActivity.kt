@@ -3,9 +3,6 @@ package com.example.mynotepad
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
-import com.example.personalcalendar.activity.SaturdayDecorator
-import com.example.personalcalendar.activity.SundayDecorator
-import com.example.personalcalendar.activity.TodayDecorator
 import com.example.sharecalendar.DataManager
 import com.example.sharecalendar.data.History
 

@@ -33,6 +33,8 @@ class PcalendarActivity : AppCompatActivity() {
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mContext: Context
     private var mCurrentDate: CalendarDay? = null
+    private lateinit var mPhoneNumber:String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pcalendar)
@@ -48,6 +50,8 @@ class PcalendarActivity : AppCompatActivity() {
         DataManager.getNotice()
         initializeCalendar(calView)
         initializeDayListView(calView)
+        mPhoneNumber = DataManager.getLineNumber(this, this)
+
     }
     private fun initializeCalendar(calView: MaterialCalendarView) {
         calView.setDateTextAppearance(1); // 날짜 선택했을 때, 날짜 text가 색깔이 검은 색이 되도록 함. 이거 안쓰면 흰색됨.
@@ -159,7 +163,7 @@ class PcalendarActivity : AppCompatActivity() {
                 Log.i("kongyi1220", "removed")
                 Log.i("kongyi1220", "date = ${date} | id = ${id}")
                 DataManager.removeSingleSchedule("pid_list", date, id)
-                DataManager.putSingleHistory("pcal-schedule-remove", "content: id = ${id}, date = ${date}, title=$title, content=$content, color=$color}")
+                DataManager.putSingleHistory(mContext, "pcal-schedule-remove", "content: id = ${id}, date = ${date}, title=$title, content=$content, color=$color}", mPhoneNumber)
             }
 
             override fun onChildDraw(

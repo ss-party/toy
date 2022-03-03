@@ -16,8 +16,8 @@ object AlarmNotification {
 
     fun createNotification(
         context: Context
-    ) : Notification {
-        val contentIntent = Intent(context, AlarmMainActivity::class.java)
+    ) : Notification { // default noti
+        val contentIntent = Intent(context, PaperWeightActivity::class.java) // noti 눌렀을 때 접근하는 액티비티
         val contentPendingIntent = PendingIntent.getActivity(
             context,
             NOTIFICATION_ID,

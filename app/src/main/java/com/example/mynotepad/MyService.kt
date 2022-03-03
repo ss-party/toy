@@ -1,8 +1,13 @@
 package com.example.mynotepad
+import android.R
 import android.app.*
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
+import com.example.mynotepad.activity.MainActivity
+
+
+
 
 // Notification ID.
 
@@ -19,6 +24,7 @@ class MyService : Service() {
 
         if (intent != null) {
             startOnGoingNotification()
+
         } else {
             return Service.START_STICKY
         }

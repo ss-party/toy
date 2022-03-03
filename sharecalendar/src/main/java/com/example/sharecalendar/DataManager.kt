@@ -1,12 +1,21 @@
 package com.example.sharecalendar
 
+import android.Manifest
+import android.app.Activity
+import android.content.Context
+import android.content.pm.PackageManager
+import android.telephony.TelephonyManager
 import android.util.Log
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import com.example.sharecalendar.data.History
 import com.example.sharecalendar.data.Notice
 import com.example.sharecalendar.data.Schedule
 import com.google.firebase.database.*
 import java.util.HashMap
+import kotlin.reflect.KFunction0
 
 
 object DataManager {
@@ -19,6 +28,19 @@ object DataManager {
     const val TYPE_HISTORY:String = "HISTORY"
     const val TYPE_SCHEDULE:String = "SCHEDULE"
 
+    fun getLineNumber(context:Context, tt:Activity):String {
+        var result = "none"
+        if (context?.let { ContextCompat.checkSelfPermission(it, Manifest.permission.READ_PHONE_STATE) }
+            != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(tt, arrayOf(Manifest.permission.READ_PHONE_STATE),1004)
+
+        } else {
+            result = (tt.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager).line1Number.toString()
+        }
+
+        return result
+
+    }
 
     fun getNotice() {
         val query:Query = FirebaseDatabase.getInstance().reference.child("notice")
@@ -42,16 +64,20 @@ object DataManager {
         Log.i("kongyi1220", "ref = ${query.ref}")
         var cnt:Long = 0
         var str:String? = null
-        query.get().addOnCompleteListener {
-            if (it.isSuccessful) {
-                Log.i("kyi1220", "content = [${it.result?.value}]")
-                str = it.result?.value.toString()
+        query.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val get = snapshot.value
+
+                Log.i("kyi1220", "content = [${get}]")
+                str = get.toString()
                 Log.i("kyi1220", "str = [${str}]")
-                hcnt.value = str!!.toLong()
-            } else {
-                Log.i("kyi1220", "fail")
+                hcnt.postValue(str!!.toLong())
             }
-        }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+
+        })
     }
 
     fun getAllHistoryData() {
@@ -75,7 +101,7 @@ object DataManager {
                         historyList.add(History(get.id, get.command, get.arg1, get.arg2, get.arg3))
                     }
                 }
-                hList.value = historyList
+                hList.postValue(historyList)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -157,10 +183,10 @@ object DataManager {
     }
 
 
-    fun putSingleHistory(command:String, arg1:String = "", arg2:String = "", arg3:String = "", arg4:String = "", arg5:String = "") {
-        Log.i("kongyi1220A", "command = ${command}, arg1 = $arg1, arg2 = $arg2, arg3 = $arg3, arg4 = $arg4, arg5 = $arg5")
+    fun putSingleHistory(context: Context, command:String, arg1:String = "", arg2:String = "", arg3:String = "", arg4:String = "", arg5:String = "") {
+        Log.i("kongyi1220TT", "command = ${command}, arg1 = $arg1, arg2 = $arg2, arg3 = $arg3, arg4 = $arg4, arg5 = $arg5")
         // arg1 : type
-        val newId = "${++newCount + hcnt.value!!}"
+        val newId = "${1 + hcnt.value!!}"
         //Utils.bytesToHex1(Utils.sha256(""+System.currentTimeMillis()))
         postFirebaseDatabaseForPutHistory(true, newId, command, arg1, arg2, arg3)
     }
