@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import com.example.model.DataManager
 import com.example.mynotepad.activity.MainActivity
@@ -30,6 +32,17 @@ class AccessActivity : AppCompatActivity() {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.menuSettingBtn-> startActivity(Intent(this, SettingActivity::class.java))
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     private fun init() {
         findViewById<Button>(R.id.alarmNotiBtn).setOnClickListener {

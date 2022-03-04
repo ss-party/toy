@@ -8,25 +8,27 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true">
         <activity
-            android:name="com.example.mynotepad.AccessActivity"
+            android:name=".SettingActivity"
+            android:exported="true" />
+        <activity
+            android:name=".AccessActivity"
             android:exported="true"
-            android:label="access"
-            android:theme="@style/AppTheme.NoActionBar">
-
-            <intent-filter >
+            android:label="Toy Project">
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.mynotepad.AlarmMainActivity" />
+        <activity android:name=".AlarmMainActivity" />
 
         <service
-            android:name="com.example.mynotepad.MyService"
+            android:name=".MyService"
             android:enabled="true"
             android:exported="true" />
 
         <receiver
-            android:name="com.example.mynotepad.DeviceBootReceiver"
+            android:name=".DeviceBootReceiver"
             android:enabled="false"
             android:exported="false">
             <intent-filter>
@@ -34,7 +36,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name="com.example.mynotepad.TimeChangeReceiver"
+            android:name=".TimeChangeReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -43,7 +45,7 @@
         </receiver>
 
         <activity
-            android:name="com.example.mynotepad.HistoryActivity"
+            android:name=".HistoryActivity"
             android:exported="true"
             android:label="@string/title_activity_history"
             android:theme="@style/AppTheme.NoActionBar" />
