@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="blue">#0000FF</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="colorActivatedSheet">#FAFAFA</color>
+    <color name="colorBlack">#202020</color>
+    <color name="colorDeactivatedSheet">#F2F2F2</color>
+    <color name="colorPrimary">#FAFAFA</color>
+    <color name="colorPrimaryDark">#FAFAFA</color>
+    <color name="green">#669900</color>
+    <color name="green_today">#FF006600</color>
+    <color name="grey">#44999999</color>
+    <color name="ic_launcher_background">#FFAEC9</color>
+    <color name="light_yellow">#33FFCC00</color>
+    <color name="orange">#FF9900</color>
+    <color name="purple">#8800CC</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="red">#FF0000</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="yellow">#FFCC00</color>
+    <dimen name="fab_margin">16dp</dimen>
+    <string name="app_name">My Note</string>
+    <string name="breakfast_notification_channel_description">Breakfast reminder</string>
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="next">Next</string>
+    <string name="notification_channel_id" translatable="false">kyi_channel</string>
+    <string name="notification_channel_name" translatable="true">kyi</string>
+    <string name="previous">Previous</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="title_activity_history">HistoryActivity</string>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="titleTextColor">@color/colorBlack</item>
+        <item name="android:windowLightStatusBar">@color/colorBlack</item>
+        <item name="fontFamily">@font/whj000f0cb5</item>
+        <item name="android:colorEdgeEffect">#FFAEC9</item>
+        <item name="android:actionOverflowButtonStyle">@style/AppTheme.OverFlow</item>
+        <item name="android:actionMenuTextColor">@color/colorBlack</item>
+    </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="AppTheme.OverFlow" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:tint">@color/colorBlack</item>
+    </style>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+</resources>

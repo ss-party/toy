@@ -17,7 +17,7 @@
             <option value="$PROJECT_DIR$/mynotepad" />
             <option value="$PROJECT_DIR$/paperweight" />
             <option value="$PROJECT_DIR$/personalcalender" />
-            <option value="$PROJECT_DIR$/sharecalendar" />
+            <option value="$PROJECT_DIR$/sharedcalendar" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

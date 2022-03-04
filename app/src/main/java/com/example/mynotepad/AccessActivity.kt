@@ -5,13 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import com.example.home.AlarmMainActivity
-import com.example.home.HistoryActivity
 import com.example.model.DataManager
 import com.example.mynotepad.activity.MainActivity
 import com.example.paperweight.PaperWeightActivity
 import com.example.personalcalendar.activity.PcalendarActivity
-import com.example.sharecalendar.activity.CalendarActivity
+import com.example.sharedcalendar.activity.CalendarActivity
 
 class AccessActivity : AppCompatActivity() {
     private lateinit var mPhoneNumber:String
@@ -19,35 +17,18 @@ class AccessActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_access)
         DataManager.getNewNumberForHistory()
-        DataManager.getAllHistoryData()
+//        DataManager.getAllHistoryData()
         DataManager.hcnt.observe(this, androidx.lifecycle.Observer {
             Log.i("kongyi3212", "hcnt is updated.")
             init()
-//            MyNotification.doNotify(this)
         })
-
-        DataManager.hList.observe(this, androidx.lifecycle.Observer {
-            Log.i("kongyi1220TT", "hList is updated.")
-//            init()
-            var content = "none"
-            if (it.get(it.lastIndex).arg2 == "access") {
-
-                content = "번호 = ${it.get(it.lastIndex).arg1} 행위 = ${it.get(it.lastIndex).arg2}" +
-                        " 대상 = ${it.get(it.lastIndex).arg3} 주체 = ${it.get(it.lastIndex).arg4}"
-
-            } else if (it.get(it.lastIndex).arg2 == "pcal-schedule-new") {
-                content = "번호 = ${it.get(it.lastIndex).arg1} 행위 = ${it.get(it.lastIndex).arg2}" +
-                        " arg3 = ${it.get(it.lastIndex).arg3} arg4 = ${it.get(it.lastIndex).arg4}" +
-                        " arg5 = ${it.get(it.lastIndex).arg5}"
-            }
-
-//            MyNotification.doNotify(this, content) // 이거 대신 broadcast 하도록 해야한다.
-        })
-
+        val intent = Intent(applicationContext, MyService::class.java)
+        intent.putExtra("command", "show")
+        startForegroundService(intent) // foreground service 실행을 위해 이것만 있으면 됨. 윗줄의 startService(intent)는 필요 없음.
         mPhoneNumber = DataManager.getLineNumber(this, this) // context 정보가 null이 아니려면 onCreate 에서 this를 넣어줘야.
         // onCreate 이전에는 null이다.
-    }
 
+    }
 
 
     private fun init() {
@@ -61,7 +42,7 @@ class AccessActivity : AppCompatActivity() {
         }
         findViewById<Button>(R.id.shareCalendarBtn).setOnClickListener {
             startActivity(Intent(this, CalendarActivity::class.java))
-            DataManager.putSingleHistory(this, "access", "shareCalendar", mPhoneNumber)
+            DataManager.putSingleHistory(this, "access", "sharedCalendar", mPhoneNumber)
         }
         findViewById<Button>(com.example.mynotepad.R.id.personalCalendarBtn).setOnClickListener {
             startActivity(Intent(this, PcalendarActivity::class.java))

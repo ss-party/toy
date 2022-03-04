@@ -45,7 +45,7 @@ dependencies {
     implementation project(path: ':model')
     implementation project(path: ':common')
     implementation project(path: ':mynotepad')
-    implementation project(path: ':sharecalendar')
+    implementation project(path: ':sharedcalendar')
     implementation project(path: ':personalcalender')
     implementation project(path: ':paperweight')
 

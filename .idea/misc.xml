@@ -47,6 +47,10 @@
         <entry key="..\:/Users/kongyi123/MyNotePad/mynotepad/src/main/res/layout/dialog.xml" value="0.2046875" />
         <entry key="..\:/Users/kongyi123/MyNotePad/paperweight/src/main/res/drawable/circle_black.xml" value="0.38229166666666664" />
         <entry key="..\:/Users/kongyi123/MyNotePad/personalcalender/src/main/res/drawable/circle_black.xml" value="0.22083333333333333" />
+        <entry key="..\:/Users/kongyi123/MyNotePad/personalcalender/src/main/res/layout/activity_day.xml" value="0.1609375" />
+        <entry key="..\:/Users/kongyi123/MyNotePad/personalcalender/src/main/res/layout/activity_pcalendar.xml" value="0.1609375" />
+        <entry key="..\:/Users/kongyi123/MyNotePad/sharedcalendar/src/main/res/layout/activity_calendar.xml" value="0.1609375" />
+        <entry key="..\:/Users/kongyi123/MyNotePad/sharedcalendar/src/main/res/layout/activity_day.xml" value="0.1609375" />
       </map>
     </option>
   </component>

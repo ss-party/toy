@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.home">
+    package="com.example.common">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -16,34 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity
-            android:name="com.example.home.HistoryActivity"
-            android:exported="true"
-            android:label="@string/title_activity_history"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name="com.example.home.AlarmMainActivity" />
-
-        <receiver
-            android:name="com.example.home.DeviceBootReceiver"
-            android:enabled="false"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-        <receiver android:name="com.example.home.AlarmReceiver" />
-        <receiver
-            android:name="com.example.home.TimeChangeReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.TIME_SET" />
-            </intent-filter>
-        </receiver>
-        <service
-            android:name="com.example.home.MyService"
-            android:enabled="true"
-            android:exported="true" />
+        <receiver android:name="com.example.common.AlarmReceiver" />
     </application>
 </manifest>

@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.model.DataManager
 import com.example.personalcalendar.R
 import com.example.personalcalendar.list.DayListAdapter
 import com.example.model.Utils
@@ -45,11 +46,11 @@ class PcalendarActivity : AppCompatActivity() {
             startActivity(intent)
         }
         mContext = this
-        com.example.model.DataManager.getAllScheduleData("pid_list")
-        com.example.model.DataManager.getNotice()
+        DataManager.getAllScheduleData("pid_list")
+        DataManager.getNotice()
         initializeCalendar(calView)
         initializeDayListView(calView)
-        mPhoneNumber = com.example.model.DataManager.getLineNumber(this, this)
+        mPhoneNumber = DataManager.getLineNumber(this, this)
 
     }
     private fun initializeCalendar(calView: MaterialCalendarView) {
@@ -62,7 +63,7 @@ class PcalendarActivity : AppCompatActivity() {
             .setCalendarDisplayMode(CalendarMode.MONTHS)
             .commit()
 
-        com.example.model.DataManager.dataList.observe(this, androidx.lifecycle.Observer {
+        DataManager.dataList.observe(this, androidx.lifecycle.Observer {
             mScheduleList = it
             putDataOnCalendar()
             if (mCurrentDate != null) {
@@ -75,7 +76,7 @@ class PcalendarActivity : AppCompatActivity() {
             )
         })
 
-        com.example.model.DataManager.notice.observe(this, androidx.lifecycle.Observer {
+        DataManager.notice.observe(this, androidx.lifecycle.Observer {
             Log.i("kongyi1234", "noteice obersve / notice.value")
             findViewById<TextView>(R.id.noticeView).setText(com.example.model.DataManager.notice.value.toString())
         })
@@ -161,8 +162,8 @@ class PcalendarActivity : AppCompatActivity() {
                 rvAdapter?.removeData(viewHolder.layoutPosition)
                 Log.i("kongyi1220", "removed")
                 Log.i("kongyi1220", "date = ${date} | id = ${id}")
-                com.example.model.DataManager.removeSingleSchedule("pid_list", date, id)
-                com.example.model.DataManager.putSingleHistory(mContext, "pcal-schedule-remove", "content: id = ${id}, date = ${date}, title=$title, content=$content, color=$color}", mPhoneNumber)
+                DataManager.removeSingleSchedule("pid_list", date, id)
+                DataManager.putSingleHistory(mContext, "pcal-schedule-remove", "content: id = ${id}, date = ${date}, title=$title, content=$content, color=$color}", mPhoneNumber)
             }
 
             override fun onChildDraw(

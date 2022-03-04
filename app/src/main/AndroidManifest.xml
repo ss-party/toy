@@ -18,7 +18,35 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.example.mynotepad.AlarmMainActivity" />
 
+        <service
+            android:name="com.example.mynotepad.MyService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver
+            android:name="com.example.mynotepad.DeviceBootReceiver"
+            android:enabled="false"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.example.mynotepad.TimeChangeReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.TIME_SET" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name="com.example.mynotepad.HistoryActivity"
+            android:exported="true"
+            android:label="@string/title_activity_history"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

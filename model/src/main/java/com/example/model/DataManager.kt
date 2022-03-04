@@ -3,12 +3,14 @@ package com.example.model
 import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.telephony.TelephonyManager
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
+import com.example.common.MyNotification
 import com.example.model.data.History
 import com.example.model.data.Notice
 import com.example.model.data.Schedule
@@ -78,7 +80,7 @@ object DataManager {
         })
     }
 
-    fun getAllHistoryData() {
+    fun getAllHistoryData(context:Context) {
         val historyList = ArrayList<History>()
         val sortByAge:Query = FirebaseDatabase.getInstance().reference.child("history")
         sortByAge.addValueEventListener(object : ValueEventListener {
@@ -100,6 +102,8 @@ object DataManager {
                     }
                 }
                 hList.postValue(historyList)
+                val content = decideNotifyText(historyList)
+                MyNotification.doNotify(context, content) // 이거 대신 broadcast 하도록 해야한다.
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -107,6 +111,62 @@ object DataManager {
 
         })
 
+    }
+
+    private fun decideNotifyText(historyList: ArrayList<History>): String {
+        var content = "none"
+        val latestAction = historyList.get(historyList.lastIndex)
+        when (latestAction.arg2) {
+            "access" -> {
+                //                    content =
+                //                        "번호 = ${latestAction.arg1} 행위 = ${latestAction.arg2}" +
+                //                                " 대상 = ${latestAction.arg3} 주체 = ${latestAction.arg4}"
+                content = "휴대전화번호 [${latestAction.arg4}]가 [${latestAction.arg3}]에 접근하였습니다."
+            }
+            "pcal-schedule-new" -> {
+                //                    content =
+                //                        "번호 = ${latestAction.arg1} 행위 = ${latestAction.arg2}" +
+                //                                " arg3 = ${latestAction.arg3} arg4 = ${latestAction.arg4}" +
+                //                                " arg5 = ${latestAction.arg5}"
+                content = "휴대전화번호 [${latestAction.arg4}]가 [${latestAction.arg2}] 동작을 했습니다.\n" +
+                        "상세 내용 : { ${latestAction.arg3} }"
+            }
+            "pcal-schedule-remove" -> {
+                //                    content =
+                //                        "번호 = ${latestAction.arg1} 행위 = ${latestAction.arg2}" +
+                //                                " arg3 = ${latestAction.arg3} arg4 = ${latestAction.arg4}" +
+                //                                " arg5 = ${latestAction.arg5}"
+                content = "휴대전화번호 [${latestAction.arg4}]가 [${latestAction.arg2}] 동작을 했습니다. \n" +
+                        "상세 내용 : { ${latestAction.arg3} }"
+            }
+            "pcal-schedule-modify" -> {
+                content = "번호 ${latestAction.arg5}가 [${latestAction.arg2}] 동작을 했습니다. \n" +
+                        "수정 전 내용 : { ${latestAction.arg3} } \n" +
+                        "수정 후 내용 : { ${latestAction.arg4} }"
+            }
+            "cal-schedule-new" -> {
+                //                    content =
+                //                        "번호 = ${latestAction.arg1} 행위 = ${latestAction.arg2}" +
+                //                                " arg3 = ${latestAction.arg3} arg4 = ${latestAction.arg4}" +
+                //                                " arg5 = ${latestAction.arg5}"
+                content = "휴대전화번호 [${latestAction.arg4}]가 [${latestAction.arg2}] 동작을 했습니다.\n" +
+                        "상세 내용 : { ${latestAction.arg3} }"
+            }
+            "cal-schedule-remove" -> {
+                //                    content =
+                //                        "번호 = ${latestAction.arg1} 행위 = ${latestAction.arg2}" +
+                //                                " arg3 = ${latestAction.arg3} arg4 = ${latestAction.arg4}" +
+                //                                " arg5 = ${latestAction.arg5}"
+                content = "휴대전화번호 [${latestAction.arg4}]가 [${latestAction.arg2}] 동작을 했습니다. \n" +
+                        "상세 내용 : { ${latestAction.arg3} }"
+            }
+            "cal-schedule-modify" -> {
+                content = "번호 ${latestAction.arg5}가 [${latestAction.arg2}] 동작을 했습니다. \n" +
+                        "수정 전 내용 : { ${latestAction.arg3} } \n" +
+                        "수정 후 내용 : { ${latestAction.arg4} }"
+            }
+        }
+        return content
     }
 
     fun getAllScheduleData(id_list:String) {
