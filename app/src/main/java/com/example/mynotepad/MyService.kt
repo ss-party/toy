@@ -13,8 +13,6 @@ import com.example.model.DataManager
 private const val NOTIFICATION_ID = 2 // 0이면 절대 안됨. 노티가 안나온다.
 
 class MyService : Service() {
-    private var notificationEnable = false
-
     override fun onBind(intent: Intent): IBinder {
         TODO("Return the communication channel to the service.")
     }
@@ -34,7 +32,9 @@ class MyService : Service() {
 
     private fun startOnGoingNotification() {
         Log.d("kyi123", "startForegroundService()")
-        val notification = AlarmNotification.createNotification(this) // foreground Noti
+        val intent = Intent(this, AccessActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP) // 액티비티 중복생성 하지 않게 하는 FLAG
+        val notification = AlarmNotification.createNotification(this, intent) // foreground Noti
         startForeground(NOTIFICATION_ID, notification)
     }
 
