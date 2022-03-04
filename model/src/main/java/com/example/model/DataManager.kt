@@ -24,6 +24,7 @@ object DataManager {
     var hcnt: MutableLiveData<Long> = MutableLiveData()
     val hList: MutableLiveData<ArrayList<History>> = MutableLiveData()
     var newCount = 0
+    private var lineNumber:String = ""
 
     const val TYPE_HISTORY:String = "HISTORY"
     const val TYPE_SCHEDULE:String = "SCHEDULE"
@@ -37,7 +38,7 @@ object DataManager {
         } else {
             result = (tt.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager).line1Number.toString()
         }
-
+        lineNumber = result
         return result
 
     }
@@ -102,8 +103,14 @@ object DataManager {
                     }
                 }
                 hList.postValue(historyList)
-                val content = decideNotifyText(historyList)
-                MyNotification.doNotify(context, content) // 이거 대신 broadcast 하도록 해야한다.
+                val notificationEnable = getNotificationState(context)
+                if (notificationEnable) {
+                    val content = decideNotifyText(historyList)
+                    val subjectLineNumber = getOnlySubjectLineNumber(historyList)
+                    if (lineNumber != subjectLineNumber) {
+                        MyNotification.doNotify(context, content) // 이거 대신 broadcast 하도록 해야한다.
+                    }
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -111,6 +118,21 @@ object DataManager {
 
         })
 
+    }
+
+    private fun getOnlySubjectLineNumber(historyList: ArrayList<History>): String {
+        var number:String? = "none"
+        val latestAction = historyList.get(historyList.lastIndex)
+        when (latestAction.arg2) {
+            "access" -> number = latestAction.arg4
+            "pcal-schedule-new" -> number = latestAction.arg4
+            "pcal-schedule-remove" -> number = latestAction.arg4
+            "pcal-schedule-modify" -> number = latestAction.arg5
+            "cal-schedule-new" -> number = latestAction.arg4
+            "cal-schedule-remove" -> number = latestAction.arg4
+            "cal-schedule-modify" -> number = latestAction.arg5
+        }
+        return number!!
     }
 
     private fun decideNotifyText(historyList: ArrayList<History>): String {
@@ -140,7 +162,7 @@ object DataManager {
                         "상세 내용 : { ${latestAction.arg3} }"
             }
             "pcal-schedule-modify" -> {
-                content = "번호 ${latestAction.arg5}가 [${latestAction.arg2}] 동작을 했습니다. \n" +
+                content = "휴대전화번호 ${latestAction.arg5}가 [${latestAction.arg2}] 동작을 했습니다. \n" +
                         "수정 전 내용 : { ${latestAction.arg3} } \n" +
                         "수정 후 내용 : { ${latestAction.arg4} }"
             }
@@ -161,7 +183,7 @@ object DataManager {
                         "상세 내용 : { ${latestAction.arg3} }"
             }
             "cal-schedule-modify" -> {
-                content = "번호 ${latestAction.arg5}가 [${latestAction.arg2}] 동작을 했습니다. \n" +
+                content = "휴대전화번호 ${latestAction.arg5}가 [${latestAction.arg2}] 동작을 했습니다. \n" +
                         "수정 전 내용 : { ${latestAction.arg3} } \n" +
                         "수정 후 내용 : { ${latestAction.arg4} }"
             }
@@ -306,5 +328,22 @@ object DataManager {
         result["content"] = content
         childUpdates["/notice/"] = result
         mPostReference.updateChildren(childUpdates)
+    }
+
+    fun getNotificationState(context:Context):Boolean {
+        val dataManager = PreferenceDataManager(context)
+        if (dataManager.getInt("notification") == 1) {
+            return true
+        }
+        return false
+    }
+
+    fun setNotificationState(context:Context, state:Boolean) {
+        val dataManager = PreferenceDataManager(context)
+        if (state) {
+            dataManager.setInt("notification", 1)
+        } else {
+            dataManager.setInt("notification", 0)
+        }
     }
 }

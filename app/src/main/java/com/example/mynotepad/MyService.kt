@@ -13,6 +13,8 @@ import com.example.model.DataManager
 private const val NOTIFICATION_ID = 2 // 0이면 절대 안됨. 노티가 안나온다.
 
 class MyService : Service() {
+    private var notificationEnable = false
+
     override fun onBind(intent: Intent): IBinder {
         TODO("Return the communication channel to the service.")
     }
