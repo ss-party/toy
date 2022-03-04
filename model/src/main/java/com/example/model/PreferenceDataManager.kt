@@ -1,7 +1,7 @@
-package com.example.mynotepad.data
+package com.example.model
 
 import android.content.Context
-import com.example.mynotepad.utility.PreferenceManager
+import com.example.model.PreferenceManager
 
 class PreferenceDataManager(private val context:Context) {
     /**

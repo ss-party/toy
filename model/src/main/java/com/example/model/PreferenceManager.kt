@@ -1,4 +1,4 @@
-package com.example.mynotepad.utility
+package com.example.model
 
 import android.content.Context
 import android.content.SharedPreferences

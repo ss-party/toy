@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.example.mynotepad.R
-import com.example.mynotepad.utility.PreferenceManager
+import com.example.model.PreferenceManager
 import com.example.mynotepad.utility.TTSpeech
 import com.example.mynotepad.view.SheetFragment
 

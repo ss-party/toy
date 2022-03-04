@@ -14,9 +14,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.AndroidViewModel
 import com.example.mynotepad.R
-import com.example.mynotepad.data.PreferenceDataManager
+import com.example.model.PreferenceDataManager
 import com.example.mynotepad.data.Sheet
-import com.example.mynotepad.utility.PreferenceManager
+import com.example.model.PreferenceManager
 import com.example.mynotepad.utility.SoftKeyboard
 import com.example.mynotepad.view.TabTextView
 import androidx.viewpager2.widget.ViewPager2
