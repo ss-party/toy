@@ -37,10 +37,6 @@ public class AlarmMainActivity extends AppCompatActivity {
         et_min = findViewById(com.example.common.R.id.et_min);
         et_sec = findViewById(com.example.common.R.id.et_second);
 
-        createChannel(
-                getString(com.example.common.R.string.notification_channel_id),
-                getString(com.example.common.R.string.notification_channel_name)
-        );
 
         Log.d("kyi123", "here!");
     }
@@ -134,37 +130,5 @@ public class AlarmMainActivity extends AppCompatActivity {
         }
     }
 
-    // 채널 생성
-    @SuppressLint("WrongConstant")
-    void createChannel(String channelId, String channelName) {
-        Log.d("kyi123", "createChannel");
-        NotificationChannel notificationChannel = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationChannel = new NotificationChannel(
-                    channelId,
-                    channelName,
-                    NotificationManager.IMPORTANCE_MAX);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationChannel.setDescription(getString(com.example.common.R.string.breakfast_notification_channel_description));
-            notificationChannel.enableVibration(true);
-            notificationChannel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PRIVATE);
-        }
-
-//        notificationChannel.setShowBadge(false);
-//        notificationChannel.enableLights(true);
-//        notificationChannel.setLightColor(Color.RED);
-//        notificationChannel.setShowBadge(true);
-
-        NotificationManager notificationManager = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            notificationManager = getSystemService(
-                    NotificationManager.class
-            );
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationManager.createNotificationChannel(notificationChannel);
-        }
-    }
 
 }

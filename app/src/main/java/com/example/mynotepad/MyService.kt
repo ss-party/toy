@@ -1,10 +1,14 @@
 package com.example.mynotepad
+import android.annotation.SuppressLint
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.IBinder
 import android.util.Log
+import androidx.core.app.NotificationCompat
 import com.example.common.AlarmNotification
+import com.example.common.R
 import com.example.model.DataManager
 
 
@@ -22,6 +26,12 @@ class MyService : Service() {
         Log.d("kyi123", "onStartCommand()")
 
         if (intent != null) {
+
+            createChannel(
+                getString(R.string.notification_channel_id),
+                getString(R.string.notification_channel_name)
+            )
+
             startOnGoingNotification()
             DataManager.getAllHistoryData(this)
         } else {
@@ -46,5 +56,40 @@ class MyService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         Log.d("kyi123", "onDestroy")
+    }
+
+
+    // 채널 생성
+    @SuppressLint("WrongConstant")
+    fun createChannel(channelId: String?, channelName: String?) {
+        Log.d("kyi123", "createChannel")
+        var notificationChannel: NotificationChannel? = null
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationChannel = NotificationChannel(
+                channelId,
+                channelName,
+                NotificationManager.IMPORTANCE_MAX
+            )
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationChannel!!.description =
+                getString(R.string.breakfast_notification_channel_description)
+            notificationChannel.enableVibration(true)
+            notificationChannel.lockscreenVisibility = NotificationCompat.VISIBILITY_PRIVATE
+        }
+
+//        notificationChannel.setShowBadge(false);
+//        notificationChannel.enableLights(true);
+//        notificationChannel.setLightColor(Color.RED);
+//        notificationChannel.setShowBadge(true);
+        var notificationManager: NotificationManager? = null
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            notificationManager = getSystemService(
+                NotificationManager::class.java
+            )
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationManager!!.createNotificationChannel(notificationChannel!!)
+        }
     }
 }
