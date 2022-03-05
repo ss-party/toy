@@ -28,9 +28,20 @@ class AccessActivity : AppCompatActivity() {
             Log.i("kongyi3212", "hcnt is updated.")
             init()
         })
-        val intent = Intent(applicationContext, MyService::class.java)
-        intent.putExtra("command", "show")
-        startForegroundService(intent) // foreground service 실행을 위해 이것만 있으면 됨. 윗줄의 startService(intent)는 필요 없음.
+
+        /*  From Google's docs on Android 8.0 behavior changes:
+
+            The system allows apps to call Context.startForegroundService()
+            even while the app is in the background.
+            However, the app must call that service's startForeground()
+            method within five seconds after the service is created.` */
+
+        if (DataManager.getNotificationState(this)) {
+            val intent = Intent(applicationContext, MyService::class.java)
+            intent.putExtra("command", "show")
+            startForegroundService(intent) // foreground service 실행을 위해 이것만 있으면 됨. 윗줄의 startService(intent)는 필요 없음.
+        }
+
         mPhoneNumber = DataManager.getLineNumber(this, this) // context 정보가 null이 아니려면 onCreate 에서 this를 넣어줘야.
         // onCreate 이전에는 null이다.
         if (mPhoneNumber == "+821027740931"

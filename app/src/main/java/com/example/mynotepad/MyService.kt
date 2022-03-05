@@ -27,6 +27,7 @@ class MyService : Service() {
 
         if (intent != null) {
             if (DataManager.getNotificationState(this)) {
+                Log.i("kongyiAAA", "getNotiState is true")
                 createChannel(
                     getString(R.string.notification_channel_id),
                     getString(R.string.notification_channel_name)
@@ -35,6 +36,7 @@ class MyService : Service() {
                 startOnGoingNotification()
             }
             DataManager.getAllHistoryData(this)
+
         } else {
             return Service.START_STICKY
         }
