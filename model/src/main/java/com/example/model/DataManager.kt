@@ -352,4 +352,22 @@ object DataManager {
             dataManager.setInt("notification", 0)
         }
     }
+
+
+    fun getUpdateState(context:Context):Boolean {
+        val dataManager = PreferenceDataManager(context)
+        if (dataManager.getInt("updateEnable") == 1) {
+            return true
+        }
+        return false
+    }
+
+    fun setUpdateState(context:Context, state:Boolean) {
+        val dataManager = PreferenceDataManager(context)
+        if (state) {
+            dataManager.setInt("updateEnable", 1)
+        } else {
+            dataManager.setInt("updateEnable", 0)
+        }
+    }
 }

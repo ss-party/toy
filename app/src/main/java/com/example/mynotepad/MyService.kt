@@ -26,13 +26,14 @@ class MyService : Service() {
         Log.d("kyi123", "onStartCommand()")
 
         if (intent != null) {
+            if (DataManager.getNotificationState(this)) {
+                createChannel(
+                    getString(R.string.notification_channel_id),
+                    getString(R.string.notification_channel_name)
+                )
 
-            createChannel(
-                getString(R.string.notification_channel_id),
-                getString(R.string.notification_channel_name)
-            )
-
-            startOnGoingNotification()
+                startOnGoingNotification()
+            }
             DataManager.getAllHistoryData(this)
         } else {
             return Service.START_STICKY
