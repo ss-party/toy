@@ -15,6 +15,7 @@ import com.example.model.data.History
 import com.example.model.data.Notice
 import com.example.model.data.Schedule
 import com.google.firebase.database.*
+import java.lang.NullPointerException
 import java.util.HashMap
 
 
@@ -36,7 +37,12 @@ object DataManager {
             ActivityCompat.requestPermissions(tt, arrayOf(Manifest.permission.READ_PHONE_STATE),1004)
 
         } else {
-            result = (tt.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager).line1Number.toString()
+            try {
+                result =
+                    (tt.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager).line1Number.toString()
+            } catch (e:NullPointerException) {
+                e.printStackTrace()
+            }
         }
         lineNumber = result
         return result
