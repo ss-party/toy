@@ -1,7 +1,6 @@
 include ':app'
 rootProject.name = "MyNotepad"
 include ':sharedcalendar'
-include ':personalcalender'
 include ':model'
 include ':mynotepad'
 include ':common'

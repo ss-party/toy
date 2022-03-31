@@ -59,13 +59,6 @@ class DayActivity : AppCompatActivity() {
             onClickClose()
         }
 
-//        deleteButtonView.setOnClickListener {
-//            date = "${ dateView.year }~${ dateView.month }~${ dateView.dayOfMonth }"
-//            Log.i("kongyi1220", "removed")
-//            DataManager.removeSingleSchedule(date)
-//            onClickClose()
-//        }
-
         when (mSchedule?.color) {
             "red" -> {
                 findViewById<RadioButton>(R.id.radio_button_red).isChecked = true
@@ -147,7 +140,6 @@ class DayActivity : AppCompatActivity() {
                 mPhoneNumber
             )
         }
-        //conditionRef.setValue(editText.text.toString())
         onClickClose()
     }
 

@@ -1,11 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 32
-    buildToolsVersion "29.0.3"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -46,7 +44,6 @@ dependencies {
     implementation project(path: ':common')
     implementation project(path: ':mynotepad')
     implementation project(path: ':sharedcalendar')
-    implementation project(path: ':personalcalender')
     implementation project(path: ':paperweight')
 
     testImplementation 'junit:junit:4.12'

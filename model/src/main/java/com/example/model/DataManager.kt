@@ -3,7 +3,6 @@ package com.example.model
 import android.Manifest
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.telephony.TelephonyManager
 import android.util.Log
@@ -24,11 +23,7 @@ object DataManager {
     var notice: MutableLiveData<String> = MutableLiveData()
     var hcnt: MutableLiveData<Long> = MutableLiveData()
     val hList: MutableLiveData<ArrayList<History>> = MutableLiveData()
-    var newCount = 0
     private var lineNumber:String = ""
-
-    const val TYPE_HISTORY:String = "HISTORY"
-    const val TYPE_SCHEDULE:String = "SCHEDULE"
 
     fun getLineNumber(context:Context, tt:Activity):String {
         var result = "none"
@@ -146,24 +141,13 @@ object DataManager {
         val latestAction = historyList.get(historyList.lastIndex)
         when (latestAction.arg2) {
             "access" -> {
-                //                    content =
-                //                        "번호 = ${latestAction.arg1} 행위 = ${latestAction.arg2}" +
-                //                                " 대상 = ${latestAction.arg3} 주체 = ${latestAction.arg4}"
                 content = "휴대전화번호 [${latestAction.arg4}]가 [${latestAction.arg3}]에 접근하였습니다."
             }
             "pcal-schedule-new" -> {
-                //                    content =
-                //                        "번호 = ${latestAction.arg1} 행위 = ${latestAction.arg2}" +
-                //                                " arg3 = ${latestAction.arg3} arg4 = ${latestAction.arg4}" +
-                //                                " arg5 = ${latestAction.arg5}"
                 content = "휴대전화번호 [${latestAction.arg4}]가 [${latestAction.arg2}] 동작을 했습니다.\n" +
                         "상세 내용 : { ${latestAction.arg3} }"
             }
             "pcal-schedule-remove" -> {
-                //                    content =
-                //                        "번호 = ${latestAction.arg1} 행위 = ${latestAction.arg2}" +
-                //                                " arg3 = ${latestAction.arg3} arg4 = ${latestAction.arg4}" +
-                //                                " arg5 = ${latestAction.arg5}"
                 content = "휴대전화번호 [${latestAction.arg4}]가 [${latestAction.arg2}] 동작을 했습니다. \n" +
                         "상세 내용 : { ${latestAction.arg3} }"
             }
@@ -173,18 +157,10 @@ object DataManager {
                         "수정 후 내용 : { ${latestAction.arg4} }"
             }
             "cal-schedule-new" -> {
-                //                    content =
-                //                        "번호 = ${latestAction.arg1} 행위 = ${latestAction.arg2}" +
-                //                                " arg3 = ${latestAction.arg3} arg4 = ${latestAction.arg4}" +
-                //                                " arg5 = ${latestAction.arg5}"
                 content = "휴대전화번호 [${latestAction.arg4}]가 [${latestAction.arg2}] 동작을 했습니다.\n" +
                         "상세 내용 : { ${latestAction.arg3} }"
             }
             "cal-schedule-remove" -> {
-                //                    content =
-                //                        "번호 = ${latestAction.arg1} 행위 = ${latestAction.arg2}" +
-                //                                " arg3 = ${latestAction.arg3} arg4 = ${latestAction.arg4}" +
-                //                                " arg5 = ${latestAction.arg5}"
                 content = "휴대전화번호 [${latestAction.arg4}]가 [${latestAction.arg2}] 동작을 했습니다. \n" +
                         "상세 내용 : { ${latestAction.arg3} }"
             }
@@ -268,7 +244,6 @@ object DataManager {
         }
     }
 
-
     fun putSingleHistory(context: Context, command:String, arg1:String = "", arg2:String = "", arg3:String = "", arg4:String = "", arg5:String = "") {
         Log.i("kongyi1220TT", "command = ${command}, arg1 = $arg1, arg2 = $arg2, arg3 = $arg3, arg4 = $arg4, arg5 = $arg5")
         // arg1 : type
@@ -314,13 +289,10 @@ object DataManager {
         val childUpdates2: MutableMap<String, Any?> = HashMap()
         if (add) {
             Log.i("kongyi333", "add = $add / id = $id / hcnt = ${hcnt.value}");
-
-//            postValues = post.toMapForHistoryCnt(hcnt.value!!+1)
             childUpdates2["/history_cnt"] = (id).toString()
             mPostReference.updateChildren(childUpdates2)
         }
     }
-
 
     fun setNotice(content: String) {
         postFirebaseDatabaseForPutSchedule(content)
