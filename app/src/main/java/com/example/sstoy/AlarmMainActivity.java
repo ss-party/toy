@@ -1,9 +1,6 @@
-package com.example.mynotepad;
+package com.example.sstoy;
 
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
@@ -17,7 +14,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 
 import com.example.common.AlarmNotification;
 import com.example.common.AlarmReceiver;

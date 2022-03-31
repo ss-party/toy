@@ -1,4 +1,4 @@
-package com.example.mynotepad.utility;
+package com.example.sstoy.utility;
 /*
  * Author: Felipe Herranz (felhr85@gmail.com)
  * Contributors:Francesco Verheye (verheye.francesco@gmail.com)
@@ -16,8 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-
-import androidx.viewpager.widget.ViewPager;
 
 import static android.content.res.Configuration.KEYBOARD_QWERTY;
 

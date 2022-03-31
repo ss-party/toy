@@ -1,4 +1,4 @@
-package com.example.mynotepad.activity
+package com.example.sstoy.activity
 
 import android.app.Application
 import android.app.Service
@@ -13,12 +13,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.AndroidViewModel
-import com.example.mynotepad.R
+import com.example.sstoy.R
 import com.example.model.PreferenceDataManager
-import com.example.mynotepad.data.Sheet
+import com.example.sstoy.data.Sheet
 import com.example.model.PreferenceManager
-import com.example.mynotepad.utility.SoftKeyboard
-import com.example.mynotepad.view.TabTextView
+import com.example.sstoy.utility.SoftKeyboard
+import com.example.sstoy.view.TabTextView
 import androidx.viewpager2.widget.ViewPager2
 
 

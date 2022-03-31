@@ -1,7 +1,7 @@
-package com.example.mynotepad.data
+package com.example.sstoy.data
 
 import android.widget.TextView
-import com.example.mynotepad.view.SheetFragment
+import com.example.sstoy.view.SheetFragment
 
 class Sheet {
     private var name: String? = null

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.mynotepad">
+    package="com.example.sstoy">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
@@ -10,10 +10,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true">
         <activity
-            android:name=".SettingActivity"
+            android:name="com.example.sstoy.SettingActivity"
             android:exported="true" />
         <activity
-            android:name=".AccessActivity"
+            android:name="com.example.sstoy.AccessActivity"
             android:exported="true"
             android:label="Toy Project">
             <intent-filter>
@@ -22,15 +22,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AlarmMainActivity" />
+        <activity android:name="com.example.sstoy.AlarmMainActivity" />
 
         <service
-            android:name=".MyService"
+            android:name="com.example.sstoy.MyService"
             android:enabled="true"
             android:exported="true" />
 
         <receiver
-            android:name=".DeviceBootReceiver"
+            android:name="com.example.sstoy.DeviceBootReceiver"
             android:enabled="false"
             android:exported="false">
             <intent-filter>
@@ -38,7 +38,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".TimeChangeReceiver"
+            android:name="com.example.sstoy.TimeChangeReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -47,7 +47,7 @@
         </receiver>
 
         <activity
-            android:name=".HistoryActivity"
+            android:name="com.example.sstoy.HistoryActivity"
             android:exported="true"
             android:label="@string/title_activity_history"
             android:theme="@style/AppTheme.NoActionBar" />

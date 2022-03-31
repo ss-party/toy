@@ -1,4 +1,4 @@
-package com.example.mynotepad
+package com.example.sstoy
 
 import org.junit.Test
 

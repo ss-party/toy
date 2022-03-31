@@ -1,4 +1,4 @@
-package com.example.mynotepad.view
+package com.example.sstoy.view
 
 import android.os.Bundle
 import android.util.Log
@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.mynotepad.activity.MainViewModel
-import com.example.mynotepad.R
+import com.example.sstoy.activity.MainViewModel
+import com.example.sstoy.R
 
 
 class SheetFragment : Fragment() {

@@ -1,4 +1,4 @@
-package com.example.mynotepad
+package com.example.sstoy
 
 import android.app.ActivityManager
 import android.app.NotificationManager

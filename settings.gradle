@@ -1,5 +1,5 @@
 include ':app'
-rootProject.name = "MyNotepad"
+rootProject.name = "SsToy"
 include ':sharedcalendar'
 include ':model'
 include ':mynotepad'

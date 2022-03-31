@@ -1,4 +1,4 @@
-package com.example.mynotepad
+package com.example.sstoy
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

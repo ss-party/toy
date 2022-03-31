@@ -1,4 +1,4 @@
-package com.example.mynotepad
+package com.example.sstoy
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

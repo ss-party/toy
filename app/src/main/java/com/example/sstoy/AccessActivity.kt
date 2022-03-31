@@ -1,4 +1,4 @@
-package com.example.mynotepad
+package com.example.sstoy
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -9,11 +9,10 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import com.example.model.DataManager
-import com.example.mynotepad.activity.MainActivity
+import com.example.sstoy.activity.MainActivity
 import com.example.paperweight.PaperWeightActivity
 import com.example.personalcalendar.activity.PcalendarActivity
 import com.example.sharedcalendar.activity.CalendarActivity
-import kotlin.properties.Delegates
 
 class AccessActivity : AppCompatActivity() {
     private lateinit var mPhoneNumber:String

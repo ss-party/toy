@@ -1,7 +1,6 @@
-package com.example.mynotepad
+package com.example.sstoy
 import android.annotation.SuppressLint
 import android.app.*
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder

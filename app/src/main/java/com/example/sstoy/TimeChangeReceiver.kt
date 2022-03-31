@@ -1,4 +1,4 @@
-package com.example.mynotepad
+package com.example.sstoy
 
 import android.content.BroadcastReceiver
 import android.content.Context

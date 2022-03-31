@@ -20,14 +20,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.mynotepad.HistoryActivity"
+            android:name="com.example.sstoy.HistoryActivity"
             android:exported="true"
             android:label="@string/title_activity_history"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="com.example.mynotepad.DeviceBootReceiver.AlarmMainActivity" />
+        <activity android:name="com.example.sstoy.DeviceBootReceiver.AlarmMainActivity" />
 
         <receiver
-            android:name="com.example.mynotepad.DeviceBootReceiver.AlarmMainActivity.DeviceBootReceiver"
+            android:name="com.example.sstoy.DeviceBootReceiver.AlarmMainActivity.DeviceBootReceiver"
             android:enabled="false"
             android:exported="false" >
             <intent-filter>
@@ -36,7 +36,7 @@
         </receiver>
         <receiver android:name="com.example.common.AlarmReceiver" />
         <receiver
-            android:name="com.example.mynotepad.TimeChangeReceiver"
+            android:name="com.example.sstoy.TimeChangeReceiver"
             android:enabled="true"
             android:exported="true" >
             <intent-filter>

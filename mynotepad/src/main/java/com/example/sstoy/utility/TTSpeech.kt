@@ -1,4 +1,4 @@
-package com.example.mynotepad.utility
+package com.example.sstoy.utility
 
 import android.content.Context
 import android.speech.tts.TextToSpeech

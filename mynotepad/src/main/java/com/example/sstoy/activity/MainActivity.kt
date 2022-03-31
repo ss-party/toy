@@ -1,4 +1,4 @@
-package com.example.mynotepad.activity
+package com.example.sstoy.activity
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -14,10 +14,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.example.mynotepad.R
+import com.example.sstoy.R
 import com.example.model.PreferenceManager
-import com.example.mynotepad.utility.TTSpeech
-import com.example.mynotepad.view.SheetFragment
+import com.example.sstoy.utility.TTSpeech
+import com.example.sstoy.view.SheetFragment
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "kongyi123/MainActivity"
