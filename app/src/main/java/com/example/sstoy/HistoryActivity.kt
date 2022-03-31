@@ -3,7 +3,6 @@ package com.example.sstoy
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
-import com.example.common.R
 import com.example.model.DataManager
 import com.example.model.data.History
 

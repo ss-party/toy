@@ -15,8 +15,6 @@ import androidx.core.app.NotificationCompat;
 public class AlarmReceiver extends BroadcastReceiver {
 
     private int NOTIFICATION_ID = 1;
-    private int REQUEST_CODE = 0;
-    private int FLAGS = 0;
 
     Context context;
     @Override
@@ -34,26 +32,14 @@ public class AlarmReceiver extends BroadcastReceiver {
                 Log.i("kyi123", "Alarm Else");
 
                 doNotify(); // 노티
-                //        MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.alim); // 소리
-                //        mediaPlayer.start();
                 ringVibration(); // 진동
             }
         }
     }
-//
     private void doNotify() {
         Log.d("kyi123", "doNotify");
 
         String content = AlarmNotification.INSTANCE.getText();
-
-        // sub noti
-//        Intent contentIntent = new Intent(context, PaperWeightActivity.class);
-//        PendingIntent contentPendingIntent = PendingIntent.getActivity(
-//                        context,
-//                        NOTIFICATION_ID,
-//                        contentIntent,
-//                        PendingIntent.FLAG_UPDATE_CURRENT
-//        );
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(
                 context,
@@ -63,16 +49,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         builder.setSmallIcon(com.example.common.R.drawable.ic_launcher_background);
         builder.setContentTitle(context.getString(com.example.common.R.string.app_name));
         builder.setContentText(content);
-//        builder.setContentIntent(contentPendingIntent);
         builder.setAutoCancel(true);
-//        builder.setFullScreenIntent(contentPendingIntent, true);
-//        builder.setOngoing(true); // Ongoing 붙이면 wear로 noti 안감.
 
-//        builder.setStyle(R.drawable.ic_launcher_background);
-//        builder.setLargeIcon(R.drawable.ic_launcher_background);
-//        builder.addAction(R.drawable.ic_launcher_foreground,
-//                context.getString(R.string.app_name),
-//                );
         builder.setPriority(NotificationCompat.PRIORITY_MAX);
         builder.setDefaults(Notification.DEFAULT_ALL);
         Intent snoozeIntent = new Intent(context, AlarmReceiver.class);

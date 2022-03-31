@@ -59,7 +59,7 @@ class CalendarActivity : AppCompatActivity() {
         }
         mContext = this
         DataManager.getAllScheduleData("id_list")
-        DataManager.getNotice()
+//        DataManager.getNotice()
         initializeCalendar(calView)
         initializeDayListView(calView)
 
@@ -89,11 +89,11 @@ class CalendarActivity : AppCompatActivity() {
             )
         })
 
-        DataManager.notice.observe(this, androidx.lifecycle.Observer {
-            Log.i("kongyi1234", "noteice obersve / notice.value")
-            findViewById<TextView>(R.id.noticeView).setText(com.example.model.DataManager.notice.value.toString())
-        })
-
+//        DataManager.notice.observe(this, androidx.lifecycle.Observer {
+//            Log.i("kongyi1234", "noteice obersve / notice.value")
+//            findViewById<TextView>(R.id.noticeView).setText(com.example.model.DataManager.notice.value.toString())
+//        })
+//
 
 
     }

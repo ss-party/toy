@@ -1,33 +1,34 @@
 {
   "project_info": {
-    "project_number": "967890073277",
-    "project_id": "mynotepad-2d577",
-    "storage_bucket": "mynotepad-2d577.appspot.com"
+    "project_number": "97588613724",
+    "firebase_url": "https://sstoy-ec020-default-rtdb.firebaseio.com",
+    "project_id": "sstoy-ec020",
+    "storage_bucket": "sstoy-ec020.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:967890073277:android:4f90572176219d7c9b29d4",
+        "mobilesdk_app_id": "1:97588613724:android:26b870c1e7fc3c1a034c99",
         "android_client_info": {
-          "package_name": "com.example.mynotepad"
+          "package_name": "com.example.sstoy"
         }
       },
       "oauth_client": [
         {
-          "client_id": "967890073277-c7icc7287ch6a600e3jo718gshljv6b7.apps.googleusercontent.com",
+          "client_id": "97588613724-gjll4lih5sqar02aqiqpk7u6dtotbpj7.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAs_j1sfIHF1_duEB6EzTVkmFEHV6sVXaE"
+          "current_key": "AIzaSyDeaZmdg5PCjOdALwuaYzeklKSAx3Fx6dE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "967890073277-c7icc7287ch6a600e3jo718gshljv6b7.apps.googleusercontent.com",
+              "client_id": "97588613724-gjll4lih5sqar02aqiqpk7u6dtotbpj7.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

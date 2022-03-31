@@ -14,8 +14,7 @@
             android:exported="true" />
         <activity
             android:name="com.example.sstoy.AccessActivity"
-            android:exported="true"
-            android:label="Toy Project">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

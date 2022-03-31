@@ -1,5 +1,6 @@
 package com.example.sstoy
 
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,24 +9,31 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.example.model.DataManager
 import com.example.sstoy.activity.MainActivity
 import com.example.paperweight.PaperWeightActivity
-import com.example.personalcalendar.activity.PcalendarActivity
 import com.example.sharedcalendar.activity.CalendarActivity
 
 class AccessActivity : AppCompatActivity() {
     private lateinit var mPhoneNumber:String
-    var isAdmin:Boolean = false
+    var isAdmin:Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_access)
         DataManager.getNewNumberForHistory()
+        DataManager.getNotice()
+
 //        DataManager.getAllHistoryData()
         DataManager.hcnt.observe(this, androidx.lifecycle.Observer {
             Log.i("kongyi3212", "hcnt is updated.")
             init()
+        })
+
+        DataManager.notice.observe(this, androidx.lifecycle.Observer {
+            showNoticeDialog(DataManager.notice.value.toString())
         })
 
         /*  From Google's docs on Android 8.0 behavior changes:
@@ -49,6 +57,15 @@ class AccessActivity : AppCompatActivity() {
         }
     }
 
+    private fun showNoticeDialog(content:String) {
+        Log.i("kongyi1220", "showNoticeDialog()")
+         AlertDialog.Builder(this)
+            .setMessage(content)     // 제목 부분 (직접 작성)
+            .setPositiveButton("확인", DialogInterface.OnClickListener { dialogInterface, i ->
+                Toast.makeText(applicationContext, "확인 누름", Toast.LENGTH_SHORT).show()
+            }).show()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return super.onCreateOptionsMenu(menu)
@@ -66,32 +83,33 @@ class AccessActivity : AppCompatActivity() {
             findViewById<Button>(R.id.alarmNotiBtn).visibility = View.VISIBLE
             findViewById<Button>(R.id.myMemoBtn).visibility = View.VISIBLE
             findViewById<Button>(R.id.shareCalendarBtn).visibility = View.VISIBLE
-            findViewById<Button>(R.id.personalCalendarBtn).visibility = View.VISIBLE
             findViewById<Button>(R.id.historyManagerBtn).visibility = View.VISIBLE
             findViewById<Button>(R.id.paperWeightBtn).visibility = View.VISIBLE
         }
 
         findViewById<Button>(R.id.alarmNotiBtn).setOnClickListener {
+            Log.i("kongyi1220", "alarmNotiBtn clicked")
             startActivity(Intent(this, AlarmMainActivity::class.java))
             DataManager.putSingleHistory(this,"access", "alarmNoti", mPhoneNumber)
         }
         findViewById<Button>(R.id.myMemoBtn).setOnClickListener {
+            Log.i("kongyi1220", "myMemoBtn clicked")
+
             startActivity(Intent(this, MainActivity::class.java))
             DataManager.putSingleHistory(this, "access", "myMemo", mPhoneNumber)
         }
         findViewById<Button>(R.id.shareCalendarBtn).setOnClickListener {
+            Log.i("kongyi1220", "shareCalendarBtn clicked")
             startActivity(Intent(this, CalendarActivity::class.java))
             DataManager.putSingleHistory(this, "access", "sharedCalendar", mPhoneNumber)
         }
-        findViewById<Button>(R.id.personalCalendarBtn).setOnClickListener {
-            startActivity(Intent(this, PcalendarActivity::class.java))
-            DataManager.putSingleHistory(this, "access", "personalCalendar", mPhoneNumber)
-        }
         findViewById<Button>(R.id.historyManagerBtn).setOnClickListener {
+            Log.i("kongyi1220", "historyManagerBtn clicked")
             startActivity(Intent(this, HistoryActivity::class.java))
             DataManager.putSingleHistory(this, "access", "historyManager", mPhoneNumber)
         }
         findViewById<Button>(R.id.paperWeightBtn).setOnClickListener {
+            Log.i("kongyi1220", "paperWeightBtn clicked")
             startActivity(Intent(this, PaperWeightActivity::class.java))
             DataManager.putSingleHistory(this, "access", "historyManager", mPhoneNumber)
         }

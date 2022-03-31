@@ -13,7 +13,7 @@
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:text="alarm Notification Register"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
     <Button
         android:id="@+id/myMemoBtn"
@@ -27,24 +27,18 @@
         android:layout_height="50dp"
         android:text="share Calendar" />
 
-    <Button
-        android:id="@+id/personalCalendarBtn"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:text="young-in Calendar"
-        android:visibility="gone"/>
 
     <Button
         android:id="@+id/historyManagerBtn"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:text="History Manager"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
     <Button
         android:id="@+id/paperWeightBtn"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:text="PaperWeight Manager"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 </LinearLayout>

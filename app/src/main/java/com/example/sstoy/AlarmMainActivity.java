@@ -28,10 +28,10 @@ public class AlarmMainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.example.common.R.layout.alarm_activity_main);
-        et_hour = findViewById(com.example.common.R.id.et_hour);
-        et_min = findViewById(com.example.common.R.id.et_min);
-        et_sec = findViewById(com.example.common.R.id.et_second);
+        setContentView(R.layout.alarm_activity_main);
+        et_hour = findViewById(R.id.et_hour);
+        et_min = findViewById(R.id.et_min);
+        et_sec = findViewById(R.id.et_second);
 
 
         Log.d("kyi123", "here!");
@@ -43,7 +43,7 @@ public class AlarmMainActivity extends AppCompatActivity {
         if (et_hour.getText().toString().equals("") && et_min.getText().toString().equals("") && et_sec.getText().toString().equals("")) {
             Toast.makeText(this,  "Not Started!! Please input all type of time", Toast.LENGTH_LONG);
         } else {
-            EditText et = findViewById(com.example.common.R.id.notification_content);
+            EditText et = findViewById(R.id.notification_content);
             AlarmNotification.INSTANCE.setText(et.getText().toString());
 
             Intent intent = new Intent(getApplicationContext(), MyService.class);
@@ -85,7 +85,7 @@ public class AlarmMainActivity extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         // 사용자가 매일 알람을 허용했다면
 
-        EditText et = findViewById(com.example.common.R.id.edit_text_millisecond);
+        EditText et = findViewById(R.id.edit_text_millisecond);
         String text = et.getText().toString();
         Long sec = Long.parseLong(text);
 

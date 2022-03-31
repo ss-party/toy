@@ -45,13 +45,16 @@ object DataManager {
     }
 
     fun getNotice() {
+        Log.i("kongyi1220", "getNotice()")
         val query:Query = FirebaseDatabase.getInstance().reference.child("notice")
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 Log.i("kongyi1234", "changed")
                 if (snapshot.exists()) {
-                    val get = snapshot.getValue(Notice::class.java)
-                    notice.value = get?.content.toString()
+                    snapshot.getValue(Notice::class.java)?.let {
+                        Log.i("kongyi1234", "snapshot is exist : ${notice.value}")
+                        notice.value = it.content.toString()
+                    }
                 }
             }
 
@@ -62,6 +65,8 @@ object DataManager {
     }
 
     fun getNewNumberForHistory() {
+        Log.i("kongyi1220", "getNewNumberForHistory")
+
         val query:Query = FirebaseDatabase.getInstance().reference.child("history_cnt")
         Log.i("kongyi1220", "ref = ${query.ref}")
         var cnt:Long = 0
@@ -70,7 +75,7 @@ object DataManager {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val get = snapshot.value
 
-                Log.i("kyi1220", "content = [${get}]")
+                Log.i("kongyi1220", "content = [${get}]")
                 str = get.toString()
                 Log.i("kyi1220", "str = [${str}]")
                 hcnt.postValue(str!!.toLong())
@@ -83,6 +88,8 @@ object DataManager {
     }
 
     fun getAllHistoryData(context:Context) {
+        Log.i("kongyi1220", "getAllHistoryData")
+
         val historyList = ArrayList<History>()
         val sortByAge:Query = FirebaseDatabase.getInstance().reference.child("history")
         sortByAge.addValueEventListener(object : ValueEventListener {
@@ -123,53 +130,64 @@ object DataManager {
 
     private fun getOnlySubjectLineNumber(historyList: ArrayList<History>): String {
         var number:String? = "none"
-        val latestAction = historyList.get(historyList.lastIndex)
-        when (latestAction.arg2) {
-            "access" -> number = latestAction.arg4
-            "pcal-schedule-new" -> number = latestAction.arg4
-            "pcal-schedule-remove" -> number = latestAction.arg4
-            "pcal-schedule-modify" -> number = latestAction.arg5
-            "cal-schedule-new" -> number = latestAction.arg4
-            "cal-schedule-remove" -> number = latestAction.arg4
-            "cal-schedule-modify" -> number = latestAction.arg5
+        if (historyList.size == 0) return "none"
+        historyList?.get(historyList.lastIndex)?.let {
+            val latestAction = it
+
+            when (latestAction.arg2) {
+                "access" -> number = latestAction.arg4
+                "pcal-schedule-new" -> number = latestAction.arg4
+                "pcal-schedule-remove" -> number = latestAction.arg4
+                "pcal-schedule-modify" -> number = latestAction.arg5
+                "cal-schedule-new" -> number = latestAction.arg4
+                "cal-schedule-remove" -> number = latestAction.arg4
+                "cal-schedule-modify" -> number = latestAction.arg5
+            }
         }
         return number!!
     }
 
     private fun decideNotifyText(historyList: ArrayList<History>): String {
         var content = "none"
-        val latestAction = historyList.get(historyList.lastIndex)
-        when (latestAction.arg2) {
-            "access" -> {
-                content = "휴대전화번호 [${latestAction.arg4}]가 [${latestAction.arg3}]에 접근하였습니다."
-            }
-            "pcal-schedule-new" -> {
-                content = "휴대전화번호 [${latestAction.arg4}]가 [${latestAction.arg2}] 동작을 했습니다.\n" +
-                        "상세 내용 : { ${latestAction.arg3} }"
-            }
-            "pcal-schedule-remove" -> {
-                content = "휴대전화번호 [${latestAction.arg4}]가 [${latestAction.arg2}] 동작을 했습니다. \n" +
-                        "상세 내용 : { ${latestAction.arg3} }"
-            }
-            "pcal-schedule-modify" -> {
-                content = "휴대전화번호 ${latestAction.arg5}가 [${latestAction.arg2}] 동작을 했습니다. \n" +
-                        "수정 전 내용 : { ${latestAction.arg3} } \n" +
-                        "수정 후 내용 : { ${latestAction.arg4} }"
-            }
-            "cal-schedule-new" -> {
-                content = "휴대전화번호 [${latestAction.arg4}]가 [${latestAction.arg2}] 동작을 했습니다.\n" +
-                        "상세 내용 : { ${latestAction.arg3} }"
-            }
-            "cal-schedule-remove" -> {
-                content = "휴대전화번호 [${latestAction.arg4}]가 [${latestAction.arg2}] 동작을 했습니다. \n" +
-                        "상세 내용 : { ${latestAction.arg3} }"
-            }
-            "cal-schedule-modify" -> {
-                content = "휴대전화번호 ${latestAction.arg5}가 [${latestAction.arg2}] 동작을 했습니다. \n" +
-                        "수정 전 내용 : { ${latestAction.arg3} } \n" +
-                        "수정 후 내용 : { ${latestAction.arg4} }"
+        if (historyList.size == 0) {
+            return "none"
+        }
+        historyList?.get(historyList.lastIndex)?.let {
+            val latestAction = it
+
+            when (latestAction.arg2) {
+                "access" -> {
+                    content = "휴대전화번호 [${latestAction.arg4}]가 [${latestAction.arg3}]에 접근하였습니다."
+                }
+                "pcal-schedule-new" -> {
+                    content = "휴대전화번호 [${latestAction.arg4}]가 [${latestAction.arg2}] 동작을 했습니다.\n" +
+                            "상세 내용 : { ${latestAction.arg3} }"
+                }
+                "pcal-schedule-remove" -> {
+                    content = "휴대전화번호 [${latestAction.arg4}]가 [${latestAction.arg2}] 동작을 했습니다. \n" +
+                            "상세 내용 : { ${latestAction.arg3} }"
+                }
+                "pcal-schedule-modify" -> {
+                    content = "휴대전화번호 ${latestAction.arg5}가 [${latestAction.arg2}] 동작을 했습니다. \n" +
+                            "수정 전 내용 : { ${latestAction.arg3} } \n" +
+                            "수정 후 내용 : { ${latestAction.arg4} }"
+                }
+                "cal-schedule-new" -> {
+                    content = "휴대전화번호 [${latestAction.arg4}]가 [${latestAction.arg2}] 동작을 했습니다.\n" +
+                            "상세 내용 : { ${latestAction.arg3} }"
+                }
+                "cal-schedule-remove" -> {
+                    content = "휴대전화번호 [${latestAction.arg4}]가 [${latestAction.arg2}] 동작을 했습니다. \n" +
+                            "상세 내용 : { ${latestAction.arg3} }"
+                }
+                "cal-schedule-modify" -> {
+                    content = "휴대전화번호 ${latestAction.arg5}가 [${latestAction.arg2}] 동작을 했습니다. \n" +
+                            "수정 전 내용 : { ${latestAction.arg3} } \n" +
+                            "수정 후 내용 : { ${latestAction.arg4} }"
+                }
             }
         }
+
         return content
     }
 

@@ -11,7 +11,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.example.mynotepad"
+        applicationId "com.example.sstoy"
         minSdkVersion 28
         targetSdkVersion 29
         versionCode 1
