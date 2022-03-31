@@ -78,13 +78,13 @@ class AccessActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        if (isAdmin) {
-            findViewById<Button>(R.id.alarmNotiBtn).visibility = View.VISIBLE
-            findViewById<Button>(R.id.myMemoBtn).visibility = View.VISIBLE
-            findViewById<Button>(R.id.shareCalendarBtn).visibility = View.VISIBLE
-            findViewById<Button>(R.id.historyManagerBtn).visibility = View.VISIBLE
-            findViewById<Button>(R.id.paperWeightBtn).visibility = View.VISIBLE
-        }
+//        if (isAdmin) {
+//            findViewById<Button>(R.id.alarmNotiBtn).visibility = View.VISIBLE
+//            findViewById<Button>(R.id.myMemoBtn).visibility = View.VISIBLE
+//            findViewById<Button>(R.id.shareCalendarBtn).visibility = View.VISIBLE
+//            findViewById<Button>(R.id.historyManagerBtn).visibility = View.VISIBLE
+//            findViewById<Button>(R.id.paperWeightBtn).visibility = View.VISIBLE
+//        }
 
         findViewById<Button>(R.id.alarmNotiBtn).setOnClickListener {
             Log.i("kongyi1220", "alarmNotiBtn clicked")
