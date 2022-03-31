@@ -62,7 +62,6 @@ class AccessActivity : AppCompatActivity() {
          AlertDialog.Builder(this)
             .setMessage(content)     // 제목 부분 (직접 작성)
             .setPositiveButton("확인", DialogInterface.OnClickListener { dialogInterface, i ->
-                Toast.makeText(applicationContext, "확인 누름", Toast.LENGTH_SHORT).show()
             }).show()
     }
 
