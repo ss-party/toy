@@ -36,11 +36,11 @@ object MyNotification {
 
         builder.priority = NotificationCompat.PRIORITY_MAX
         builder.setDefaults(Notification.DEFAULT_ALL)
-        val snoozeIntent = Intent(context, AlarmReceiver::class.java)
-        snoozeIntent.action = "snooze"
-        snoozeIntent.putExtra("noti_id", 0)
-        val snoozePendingIntent = PendingIntent.getBroadcast(context, 0, snoozeIntent, 0)
-        builder.addAction(R.drawable.ic_launcher_background, "snooze", snoozePendingIntent)
+        //val snoozeIntent = Intent(context, AlarmReceiver::class.java)
+        //snoozeIntent.action = "snooze"
+        //snoozeIntent.putExtra("noti_id", 0)
+        //val snoozePendingIntent = PendingIntent.getBroadcast(context, 0, snoozeIntent, 0)
+        //builder.addAction(R.drawable.ic_launcher_background, "snooze", snoozePendingIntent)
         val notificationManager: NotificationManager =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 context.getSystemService<NotificationManager>(

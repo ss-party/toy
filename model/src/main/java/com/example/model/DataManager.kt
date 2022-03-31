@@ -115,6 +115,7 @@ object DataManager {
                 if (notificationEnable) {
                     val content = decideNotifyText(historyList)
                     val subjectLineNumber = getOnlySubjectLineNumber(historyList)
+                    Log.i("kongyi1220", "lineNumber = ${lineNumber} / subjectLineNumber = ${subjectLineNumber}")
                     if (lineNumber != subjectLineNumber) {
                         MyNotification.doNotify(context, content) // 이거 대신 broadcast 하도록 해야한다.
                     }
