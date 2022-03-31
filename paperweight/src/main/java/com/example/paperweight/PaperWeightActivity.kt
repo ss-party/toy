@@ -20,6 +20,7 @@ class PaperWeightActivity : AppCompatActivity() {
     val list = mutableListOf<WeightPaperData>()
     val exsisted = HashMap<String, Schedule>()
     var today = ""
+    val IDLIST = "id_list"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +29,7 @@ class PaperWeightActivity : AppCompatActivity() {
         vibrator.cancel(); //<- 중단 시키기 ?? 이게 안먹는것처럼 보인다. 문진 액티비티로 와도 진동이 안멈춤.
         // 대신 화면을 켰다가 끄면 멈추는 것으로 보임
 
-        DataManager.getAllScheduleData("pid_list")
+        DataManager.getAllScheduleData(IDLIST)
         DataManager.dataList.observe(this, {
             initOthers()
             initRecycler()
@@ -82,7 +83,7 @@ class PaperWeightActivity : AppCompatActivity() {
             if (ex != null) {
                 val sc = weightListAdapter.datas[idx]
                 DataManager.putSingleSchedule(
-                    "pid_list",
+                    IDLIST,
                     ex!!.date,
                     sc.paper_weight_item_title,
                     sc.paper_weight_comment,
@@ -95,7 +96,7 @@ class PaperWeightActivity : AppCompatActivity() {
                 cal.timeInMillis = System.currentTimeMillis()
                 val dateOfToday = Utils.getDateFromCalToString(cal)
                 DataManager.putSingleSchedule(
-                    "pid_list",
+                    IDLIST,
                     dateOfToday,
                     sc.paper_weight_item_title,
                     sc.paper_weight_comment,
@@ -105,7 +106,7 @@ class PaperWeightActivity : AppCompatActivity() {
             }
         } else if (exsisted[title] != null) {
             val sc = exsisted[title]
-            DataManager.removeSingleSchedule("pid_list", sc!!.date, sc.id)
+            DataManager.removeSingleSchedule(IDLIST, sc!!.date, sc.id)
         }
     }
 
