@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.example.customviewpalette.CustomViewActivity
 import com.example.model.DataManager
 import com.example.sstoy.activity.MainActivity
 import com.example.paperweight.PaperWeightActivity
@@ -112,6 +113,10 @@ class AccessActivity : AppCompatActivity() {
         findViewById<Button>(R.id.paperWeightBtn).setOnClickListener {
             Log.i("kongyi1220", "paperWeightBtn clicked")
             startActivity(Intent(this, PaperWeightActivity::class.java))
+            DataManager.putSingleHistory(this, "access", "historyManager", mPhoneNumber)
+        }
+        findViewById<Button>(R.id.customViewBtn).setOnClickListener {
+            startActivity(Intent(this, CustomViewActivity::class.java))
             DataManager.putSingleHistory(this, "access", "historyManager", mPhoneNumber)
         }
     }

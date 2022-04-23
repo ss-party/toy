@@ -41,4 +41,12 @@
         android:layout_height="50dp"
         android:text="PaperWeight Manager"
         android:visibility="visible"/>
+
+    <Button
+        android:id="@+id/customViewBtn"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:text="Custom View Palette"
+        android:visibility="visible"/>
+
 </LinearLayout>

@@ -45,6 +45,7 @@ dependencies {
     implementation project(path: ':mynotepad')
     implementation project(path: ':sharedcalendar')
     implementation project(path: ':paperweight')
+    implementation project(path: ':customviewpalette')
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
