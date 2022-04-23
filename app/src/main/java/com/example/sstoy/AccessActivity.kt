@@ -16,6 +16,8 @@ import com.example.sstoy.activity.MainActivity
 import com.example.paperweight.PaperWeightActivity
 import com.example.sharedcalendar.activity.CalendarActivity
 
+// Hello Project!
+
 class AccessActivity : AppCompatActivity() {
     private lateinit var mPhoneNumber:String
     var isAdmin:Boolean = true
