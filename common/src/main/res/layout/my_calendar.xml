@@ -20,21 +20,31 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
+                android:id="@+id/calendar_previous"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:gravity="center"
                 android:text="◀"
                 android:textSize="14dp" />
 
-            <TextView
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="4월 2022"
-                android:textSize="14dp" />
+                android:layout_weight="1">
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/calendar_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+                <TextView
+                    android:background="@null"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="true"
+                    android:focusable="true"/>
+            </FrameLayout>
 
             <TextView
+                android:id="@+id/calendar_next"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:gravity="center"

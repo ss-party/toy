@@ -13,13 +13,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import java.util.*
 
-// reference
-// https://doitddo.tistory.com/99
 
 class MyCalendarView @JvmOverloads constructor(
     context: Context, attrs:AttributeSet? = null, defStyle: Int = 0
@@ -31,34 +26,72 @@ class MyCalendarView @JvmOverloads constructor(
     init {
         inflate(context, R.layout.my_calendar, this)
         initializeDragAndDropView()
+        val titlePager = findViewById<ViewPager2>(R.id.calendar_title)
         val calendarPager = findViewById<ViewPager2>(R.id.calendar_vpPager)
-        val items: ArrayList<ArrayList<String>> = ArrayList()
-        items.add(arrayListOf("일", "월", "화", "수", "목", "금", "토", "", "", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""))
-        items.add(arrayListOf("일", "월", "화", "수", "목", "금", "토", "", "", "", "", "", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""))
-        items.add(arrayListOf("일", "월", "화", "수", "목", "금", "토", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""))
-        items.add(arrayListOf("일", "월", "화", "수", "목", "금", "토", "", "", "", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""))
-        items.add(arrayListOf("일", "월", "화", "수", "목", "금", "토", "", "", "", "", "", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""))
-        items.add(arrayListOf("일", "월", "화", "수", "목", "금", "토", "", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""))
-
-        CoroutineScope(Dispatchers.Main).launch {
-            CoroutineScope(Dispatchers.Main).launch {
-                calendarPager.adapter = RecyclerViewAdapter(context, items)
-                calendarPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-//        viewPager.adapter = FragmentStateAdapter()
+        val calendarData: ArrayList<ArrayList<String>> = ArrayList()
+        val titleData: ArrayList<String> = ArrayList()
+        for (year in 2022..2023) {
+            for (month in 1..12) {
+                val monthForCalendarLib = month-1
+                calendarData.add(getMonthData(year, monthForCalendarLib))
+                titleData.add("${month}월 $year")
             }
-            delay(100)
-            //val item = array.valueAt(0) as ConstraintLayout // 최초 순서에 있는 값 get
-//            val item = array.get(10) as ConstraintLayout // 키 값에 대응되는 곳에 있는 값 get
-//            val textView = item.getChildAt(0) as TextView
-//            textView.text = "hi!"
         }
 
-//        calendarPager?.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-//            override fun onPageSelected(position: Int) {
-//                super.onPageSelected(position)
-//
-//            }
-//        })
+        val onPageChangeCallbackForCalendar = object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                titlePager.setCurrentItem(position, true)
+            }
+        }
+
+        calendarPager.adapter = RecyclerViewAdapter(context, calendarData)
+        calendarPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        calendarPager.registerOnPageChangeCallback(onPageChangeCallbackForCalendar)
+
+        titlePager.adapter = RecyclerViewAdapterForTitle(titleData)
+        titlePager.orientation = ViewPager2.ORIENTATION_VERTICAL
+
+
+        findViewById<TextView>(R.id.calendar_previous).setOnClickListener {
+            val current = calendarPager.currentItem
+            if (current > 0) {
+                calendarPager.setCurrentItem(current-1, true)
+            }
+        }
+        findViewById<TextView>(R.id.calendar_next).setOnClickListener {
+            val current = calendarPager.currentItem
+            if (current < calendarData.size) {
+                calendarPager.setCurrentItem(current+1, true)
+            }
+        }
+    }
+
+
+
+    private fun getMonthData(year:Int, month:Int): ArrayList<String> {
+        val cal = Calendar.getInstance()
+        cal.set(year, month, 1)
+        val dayOfWeek = cal.get(Calendar.DAY_OF_WEEK)
+        val dayOfMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
+        val dates = arrayListOf("일", "월", "화", "수", "목", "금", "토")
+
+        Log.i("kongyi0428", "dayOfWeek = $dayOfWeek")
+        Log.i("kongyi0428", "dayOfMonth = $dayOfMonth")
+
+        for (i in 1 until dayOfWeek) {
+            dates.add("")
+        }
+        var cnt = 0
+        for (i in 1..dayOfMonth) {
+            cnt++
+            dates.add(cnt.toString())
+        }
+        for (i in 0..30) {
+            dates.add("")
+        }
+
+        return dates
     }
 
     private fun initializeDragAndDropView() {
@@ -152,18 +185,10 @@ class MyCalendarView @JvmOverloads constructor(
                         //item.background = getDrawable(mContext, R.drawable.ic_launcher_background)
                         val textView = item.getChildAt(0) as TextView
                         textView.text = "${arr[cnt]}"
-                        if (cnt > 6 && cnt % 7 == 6) textView.setTextColor(
-                            ContextCompat.getColor(
-                                mContext,
-                                R.color.teal_200
-                            )
-                        )
-                        if (cnt > 6 && cnt % 7 == 0) textView.setTextColor(
-                            ContextCompat.getColor(
-                                mContext,
-                                R.color.purple_200
-                            )
-                        )
+                        if (cnt > 6 && cnt % 7 == 6)
+                            textView.setTextColor(ContextCompat.getColor(mContext, R.color.blue))
+                        if (cnt > 6 && cnt % 7 == 0)
+                            textView.setTextColor(ContextCompat.getColor(mContext, R.color.red))
                         cnt ++
                         textView.visibility = View.VISIBLE
                     }
@@ -171,5 +196,23 @@ class MyCalendarView @JvmOverloads constructor(
                 //itemView.findViewById<TextView>(R.id.text).text = item
             }
         }
+    }
+
+    class RecyclerViewAdapterForTitle(private var items: ArrayList<String>) : RecyclerView.Adapter<RecyclerViewAdapterForTitle.ViewHolder>() {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewAdapterForTitle.ViewHolder {
+            return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.calendar_title, parent, false))
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            holder.setData(items[position])
+        }
+        override fun getItemCount(): Int = items.size
+
+        inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            fun setData(title: String) {
+                (itemView as TextView).text = title
+            }
+        }
+
     }
 }
