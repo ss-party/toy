@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".CustomViewActivity">
 
-    <com.example.common.MyCalendarView
+    <com.example.mychartviewlibrary.calendar.MyCalendarView
         android:id="@+id/myCalendarView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

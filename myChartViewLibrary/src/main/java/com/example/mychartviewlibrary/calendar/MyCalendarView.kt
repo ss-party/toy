@@ -1,4 +1,4 @@
-package com.example.common
+package com.example.mychartviewlibrary.calendar
 
 import android.content.Context
 import android.os.Build
@@ -13,6 +13,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.example.mychartviewlibrary.R
+import com.example.mychartviewlibrary.calendar.list.DayListAdapter
 import java.util.*
 
 
@@ -22,6 +24,9 @@ class MyCalendarView @JvmOverloads constructor(
 
     private lateinit var mImg: ImageView
     private val IMAGEVIEW_TAG = "드래그 이미지"
+
+    private var rvAdapter: DayListAdapter? = null
+    private lateinit var mRecyclerView: RecyclerView
 
     init {
         inflate(context, R.layout.my_calendar, this)
@@ -65,9 +70,16 @@ class MyCalendarView @JvmOverloads constructor(
                 calendarPager.setCurrentItem(current+1, true)
             }
         }
+
+        mRecyclerView = findViewById(R.id.calendar_recyclerView)
+
+//        rvAdapter = DayListAdapter(
+//            mScheduleList!!,
+//            date.year.toString() + "~" + date.month.toString() + "~" + date.day.toString()
+//        )
+//        mRecyclerView.layoutManager = manager
+        mRecyclerView.adapter = rvAdapter
     }
-
-
 
     private fun getMonthData(year:Int, month:Int): ArrayList<String> {
         val cal = Calendar.getInstance()
@@ -199,7 +211,7 @@ class MyCalendarView @JvmOverloads constructor(
     }
 
     class RecyclerViewAdapterForTitle(private var items: ArrayList<String>) : RecyclerView.Adapter<RecyclerViewAdapterForTitle.ViewHolder>() {
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewAdapterForTitle.ViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.calendar_title, parent, false))
         }
 
