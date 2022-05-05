@@ -15,8 +15,9 @@ class DayListAdapter(scheduleList: ArrayList<Schedule>, date:String) : RecyclerV
     init {
         mDayScheduleList.clear()
         for (schedule in scheduleList) {
+            Log.i("kongyi0505", "date = [${date}] / schedule.date = [${schedule.date}]")
             if (date.compareTo(schedule.date) == 0) {
-                Log.i("kongyi1220", "in adapter = " + schedule.title + " " + schedule.content)
+                Log.i("kongyi0505", "in adapter = " + schedule.title + " " + schedule.content)
                 mDayScheduleList.add(schedule)
             }
         }

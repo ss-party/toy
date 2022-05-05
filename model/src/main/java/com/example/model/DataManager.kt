@@ -199,6 +199,8 @@ object DataManager {
             override fun onDataChange(snapshot: DataSnapshot) {
                 Log.i("kongyi1220", "onchanged")
                 scheduleList.clear()
+                Log.i("kongyi0504", "scheduleList right after clear= {$scheduleList}")
+
                 for(postSnapshot in snapshot.children) {
                     if (!postSnapshot.exists()) {
                         continue
@@ -206,15 +208,13 @@ object DataManager {
                     for (postPostSnapshot in postSnapshot.children) {
                         Log.i("kongyi1220", "key = " + postPostSnapshot.key.toString())
                         val get = postPostSnapshot.getValue(FirebasePost::class.java)
-                        Log.i(
-                            "kongyi1220",
-                            "title = ${get?.title}, content = ${get?.content}, id = ${get?.id}"
-                        )
+                        Log.i("kongyi0504","title = ${get?.title}, content = ${get?.content}, id = ${get?.id}")
                         get?.id?.let {
                             scheduleList.add(Schedule(get.id, get.date, get.title, get.content, get.color))
                         }
                     }
                 }
+                Log.i("kongyi0504", "scheduleList after adding = {$scheduleList}")
                 dataList.value = scheduleList
             }
 

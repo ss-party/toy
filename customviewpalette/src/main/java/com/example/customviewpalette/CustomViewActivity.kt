@@ -1,16 +1,40 @@
 package com.example.customviewpalette
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import androidx.annotation.RequiresApi
+import com.example.model.DataManager
 import com.example.mychartviewlibrary.calendar.MyCalendarView
+
+
 
 class CustomViewActivity : AppCompatActivity() {
 
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_custom_view)
         val calendarView = findViewById<MyCalendarView>(R.id.myCalendarView)
 //        initializeCalendar(calendarView)
+        Log.i("kongyi0503", "onCreate()")
+        DataManager.getAllScheduleData("id_list")
+        Log.i("kongyi0503", "calendarView = ${calendarView}")
+        DataManager.dataList.observe(this, androidx.lifecycle.Observer {
+//            mScheduleList = it
+//            putDataOnCalendar()
+            Log.i("kongyi0504", "observe dataList it = ${it}")
+            // 클릭 리스너를 함께 등록해줘야 할 듯
+            calendarView.setOnItemClickListener(it)
+            calendarView.setSchedules(it)
+
+//            calView.addDecorators(
+//                SundayDecorator(),
+//                SaturdayDecorator(),
+//                TodayDecorator()
+//            )
+        })
     }
 
 //    private fun initializeCalendar(calView: MyCalendarView) {
