@@ -31,7 +31,7 @@ class DayListAdapter(scheduleList: ArrayList<Schedule>, date:String) : RecyclerV
         val context = parent.context
         val inflater =
             context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val view: View = inflater.inflate(R.layout.list_item, parent, false)
+        val view: View = inflater.inflate(R.layout.calendar_schedule_list_item, parent, false)
         return ViewHolder(view)
     }
 

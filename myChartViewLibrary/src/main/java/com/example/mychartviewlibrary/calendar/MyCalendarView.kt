@@ -1,6 +1,7 @@
 package com.example.mychartviewlibrary.calendar
 
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
@@ -97,8 +98,20 @@ class MyCalendarView : FrameLayout {
             }
         }
 
+        findViewById<Button>(R.id.calendar_deleteAllBtn).setOnClickListener {
+//            showDialog(date)
+        }
+
+//        findViewById<Button>(R.id.calendar_addScheduleBtn).setOnClickListener(addScheduleBtnListener)
+//            // 새로 입력 하는 것으로 수정 필요
+//            val intent = Intent(this, DayActivity::class.java)
+//            val day: CalendarDay = CalendarDay.from(date.year, date.month, date.day)
+//            val schedule = Schedule("no_id","${date.year}~${date.month}~${date.day}", "", "", "")
+//            intent.putExtra("info", schedule)
+//            startActivity(intent);
 
     }
+
 
     fun setOnItemClickListener(mScheduleList: ArrayList<Schedule>?) {
         // listener: OnDateItemClickListener
