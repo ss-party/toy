@@ -1,5 +1,6 @@
 package com.example.mychartviewlibrary.calendar
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.common.ContextHolder
+import com.example.model.DataManager
 import com.example.model.data.Schedule
 import com.example.mychartviewlibrary.R
 import com.example.mychartviewlibrary.calendar.data.DateItem
@@ -53,17 +55,30 @@ class MyCalendarView : FrameLayout {
         initializeCalendar()
 
         findViewById<Button>(R.id.calendar_deleteAllBtn).setOnClickListener {
-//            showDialog(date)
+            mCurrentDate?.let {
+                showDialog(it)
+            }
         }
+    }
 
-//        findViewById<Button>(R.id.calendar_addScheduleBtn).setOnClickListener(addScheduleBtnListener)
-//            // 새로 입력 하는 것으로 수정 필요
-//            val intent = Intent(this, DayActivity::class.java)
-//            val day: CalendarDay = CalendarDay.from(date.year, date.month, date.day)
-//            val schedule = Schedule("no_id","${date.year}~${date.month}~${date.day}", "", "", "")
-//            intent.putExtra("info", schedule)
-//            startActivity(intent);
+    fun setAddScheduleBtn(listener: OnAddBtnClickListener) {
+        findViewById<Button>(R.id.calendar_addScheduleBtn).setOnClickListener(OnClickListener {
+            mCurrentDate?.let {
+                listener.onItemClick(mCurrentDate!!)
+            }
+        })
+    }
 
+    private fun showDialog(date:String) {
+        val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+        builder.setTitle("※ 경고 ※")
+        builder.setMessage("정말로 다 지우겠습니까?")
+        builder.setPositiveButton("예") { dialog, which ->
+                DataManager.removeDayAllSchedule("id_list", date)
+                initializeCalendar()
+            }
+        builder.setNegativeButton("아니오") { dialog, which ->}
+        builder.show()
     }
 
     fun initializeCalendar() {

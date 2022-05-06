@@ -6,24 +6,23 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.example.common.ContextHolder
 import com.example.model.DataManager
 import com.example.model.data.Schedule
 import com.example.mychartviewlibrary.calendar.MyCalendarView
+import com.example.mychartviewlibrary.calendar.OnAddBtnClickListener
 import com.example.mychartviewlibrary.calendar.list.OnScheduleItemClickListener
 import com.example.sharedcalendar.activity.DayActivity
 
 
 class CustomViewActivity : AppCompatActivity() {
-
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_custom_view)
         val calendarView = findViewById<MyCalendarView>(R.id.myCalendarView)
         DataManager.getAllScheduleData("id_list")
-        DataManager.dataList.observe(this, androidx.lifecycle.Observer {
-            val listener = object : OnScheduleItemClickListener {
+        DataManager.dataList.observe(this, androidx.lifecycle.Observer { scheduleList ->
+            val scheduleItemClickListener = object : OnScheduleItemClickListener {
                 override fun onItemClick(schedule: Schedule) {
                     val intent = Intent(this@CustomViewActivity, DayActivity::class.java)
                     Log.i("kongyi0505", "schedule = $schedule");
@@ -31,12 +30,23 @@ class CustomViewActivity : AppCompatActivity() {
                     startActivity(intent);
                 }
             }
+            // todo : it should be optimized in sometime
             calendarView.initializeCalendar()
-            calendarView.setOnItemClickListener(it, listener)
-            calendarView.setSchedules(it)
-            if (calendarView.mCurrentDate != null) {
-                calendarView.loadDataAtList(it, calendarView.mCurrentDate!!, listener)
+            calendarView.setOnItemClickListener(scheduleList, scheduleItemClickListener)
+            calendarView.setSchedules(scheduleList)
+            calendarView.mCurrentDate?.let {
+                calendarView.loadDataAtList(scheduleList, calendarView.mCurrentDate!!, scheduleItemClickListener)
             }
+            val addBtnListener = object : OnAddBtnClickListener {
+                override fun onItemClick(date: String) {
+                    Log.i("kongyi0506", "date = $date")
+                    val intent = Intent(this@CustomViewActivity, DayActivity::class.java)
+                    val schedule = Schedule("no_id", date, "", "", "")
+                    intent.putExtra("info", schedule)
+                    startActivity(intent);
+                }
+            }
+            calendarView.setAddScheduleBtn(addBtnListener)
         })
     }
 }
