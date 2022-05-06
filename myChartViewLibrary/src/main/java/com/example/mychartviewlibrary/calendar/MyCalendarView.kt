@@ -45,11 +45,11 @@ class MyCalendarView : FrameLayout {
     var mCurrentDate:String? = null
     lateinit var mTitlePager: ViewPager2
     lateinit var mCalendarPager: ViewPager2
+    var mCurrentPosition:Int? = null
 
     init {
         ContextHolder.setContext(this.context)
         inflate(context, R.layout.my_calendar, this)
-        //initializeDragAndDropView()
         mTitlePager = findViewById(R.id.calendar_title)
         mCalendarPager = findViewById(R.id.calendar_vpPager)
         initializeCalendar()
@@ -100,6 +100,9 @@ class MyCalendarView : FrameLayout {
                 calendarData.add(getMonthData(year, monthForCalendarLib))
                 titleData.add("${month}월 $year")
             }
+        }
+        if (mCurrentPosition != null) {
+            todayPosition = mCurrentPosition!!
         }
 
         val onPageChangeCallbackForCalendar = object : ViewPager2.OnPageChangeCallback() {
@@ -216,65 +219,4 @@ class MyCalendarView : FrameLayout {
         return dates
     }
 
-
-
-
-    private fun initializeDragAndDropView() {
-        mImg = findViewById(R.id.image)
-        mImg.tag = IMAGEVIEW_TAG
-
-        mImg.setOnLongClickListener {
-            // 태그 생성
-            Log.i("kongyi0424", "setOnLongClickListener")
-
-            val shadowBuilder = DragShadowBuilder(it)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                it.startDragAndDrop(null, shadowBuilder, it, 0)
-            }
-
-            it.visibility = INVISIBLE
-            true
-        }
-
-        findViewById<LinearLayout>(R.id.view1).setOnDragListener(DragListener())
-        findViewById<LinearLayout>(R.id.view2).setOnDragListener(DragListener())
-        findViewById<LinearLayout>(R.id.view3).setOnDragListener(DragListener())
-    }
-
-    inner class DragListener : OnDragListener {
-        override fun onDrag(v: View, event: DragEvent): Boolean {
-            // 이벤트 시작
-            when (event.action) {
-                DragEvent.ACTION_DRAG_STARTED -> { // 각 리스너의 드래그 앤 드롭 시작 상태 (3번 call됨)
-                    Log.i("kongyi0424", "ACTION_DRAG_STARTED")
-                }
-                DragEvent.ACTION_DRAG_ENTERED -> { // 이미지가 들어옴
-                    Log.i("kongyi0424", "ACTION_DRAG_ENTERED")
-                }
-                DragEvent.ACTION_DRAG_EXITED -> { // 이미지가 나감
-                    Log.i("kongyi0424", "ACTION_DRAG_EXITED")
-                }
-                DragEvent.ACTION_DROP -> {
-                    Log.i("kongyi0424", "ACTION_DROP")
-                    if (v === findViewById<View>(R.id.view1) ||
-                        v === findViewById<View>(R.id.view2) ||
-                        v === findViewById<View>(R.id.view3)) {
-                        val view = event.localState as View
-                        (view.parent as ViewGroup).removeView(view)
-
-                        val containView = v as LinearLayout
-                        containView.addView(view)
-                    }
-                }
-                DragEvent.ACTION_DRAG_ENDED -> { // 각 리스너의 드래그 앤 드롭 종료 상태 (3번 call됨)
-                    Log.i("kongyi0424", "ACTION_DRAG_ENDED")
-                    val view = event.localState as View
-                    view.visibility = VISIBLE
-                }
-                else -> {
-                }
-            }
-            return true
-        }
-    }
 }

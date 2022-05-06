@@ -179,11 +179,6 @@ class RecyclerViewAdapterForCalendar(private val context: Context,
 
                     (itemViewFromList.parent as ViewGroup).removeView(itemViewFromList) // from
                     val targetDateView = v as ConstraintLayout
-//                    Log.i("kongyi0506", "color = ${color}")
-//                    val img = ImageView(context)
-//                    img.background = context.getDrawable(R.drawable.circle_black)
-//                    img.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.green))
-//                    img.layoutParams = LinearLayout.LayoutParams(Utils.convertDPtoPX(context, 5), Utils.convertDPtoPX(context, 5))
                     Log.i("kongyi0506", "green color = ${ContextCompat.getColor(context, R.color.green)}")
                     val img = ImageView(context)
                     img.background = context.getDrawable(R.drawable.circle_black)
