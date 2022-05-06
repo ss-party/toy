@@ -18,7 +18,7 @@ object Utils {
         return "${dateItem.year}~${dateItem.month}~${dateItem.date}"
     }
 
-    fun getMyDateFromStringToCal(str:String): DateItem? {
+    fun getMyDateFromStringToDateItem(str:String): DateItem? {
         if (str.indexOf("~") != -1) {
             val dayOfMonth = str.substring(str.lastIndexOf("~")+1)
             val year = str.substring(0, str.indexOf("~"))

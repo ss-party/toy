@@ -3,6 +3,7 @@ package com.example.mychartviewlibrary.calendar
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.Log
 import android.util.SparseArray
@@ -154,8 +155,24 @@ class RecyclerViewAdapterForCalendar(private val context: Context,
 
     inner class DragListener(private val targetDateItem: DateItem) : View.OnDragListener {
         @SuppressLint("UseCompatLoadingForDrawables")
+        private var mPreviousBackground: Drawable? = null
         override fun onDrag(v: View, event: DragEvent): Boolean {
             // 이벤트 시작
+            val itemViewFromList = event.localState as View
+            val itemId = itemViewFromList.findViewById<TextView>(R.id.item_id).text.toString()
+            val itemDate = itemViewFromList.findViewById<TextView>(R.id.item_date).text.toString()
+            val itemTitle = itemViewFromList.findViewById<TextView>(R.id.item_title).text.toString()
+            val itemContent = itemViewFromList.findViewById<TextView>(R.id.item_content).text.toString()
+            val itemColor = itemViewFromList.findViewById<TextView>(R.id.item_color).text.toString()
+            val schedule = Schedule(itemId, itemDate, itemTitle, itemContent, itemColor)
+
+            Utils.getMyDateFromStringToDateItem(itemDate)?. let { fromDate ->
+                if (targetDateItem.year == fromDate.year &&
+                        targetDateItem.month == fromDate.month &&
+                        targetDateItem.date == fromDate.date) {
+                    return true
+                }
+            }
             when (event.action) {
                 DragEvent.ACTION_DRAG_STARTED -> { // 각 리스너의 드래그 앤 드롭 시작 상태 (3번 call됨)
                     Log.i("kongyi0424", "ACTION_DRAG_STARTED")
@@ -169,7 +186,11 @@ class RecyclerViewAdapterForCalendar(private val context: Context,
                 DragEvent.ACTION_DRAG_EXITED -> { // 이미지가 나감
                     Log.i("kongyi0424", "ACTION_DRAG_EXITED")
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        v.setBackgroundColor(0)
+                        if (mPreviousBackground != null) {
+                            v.background = mPreviousBackground!!
+                        } else {
+                            v.setBackgroundColor(0)
+                        }
                     }
                 }
                 DragEvent.ACTION_DROP -> {
@@ -185,16 +206,9 @@ class RecyclerViewAdapterForCalendar(private val context: Context,
                     img.backgroundTintList = color
                     img.layoutParams = LinearLayout.LayoutParams(Utils.convertDPtoPX(context, 5), Utils.convertDPtoPX(context, 5))
                     (targetDateView.getChildAt(1) as LinearLayout).addView(img)
-
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         v.setBackgroundColor(0)
                     }
-                    val itemId = itemViewFromList.findViewById<TextView>(R.id.item_id).text.toString()
-                    val itemDate = itemViewFromList.findViewById<TextView>(R.id.item_date).text.toString()
-                    val itemTitle = itemViewFromList.findViewById<TextView>(R.id.item_title).text.toString()
-                    val itemContent = itemViewFromList.findViewById<TextView>(R.id.item_content).text.toString()
-                    val itemColor = itemViewFromList.findViewById<TextView>(R.id.item_color).text.toString()
-                    val schedule = Schedule(itemId, itemDate, itemTitle, itemContent, itemColor)
                     moveSchedule(schedule, Utils.getDateFromYearMonthDay(targetDateItem))
                 }
                 DragEvent.ACTION_DRAG_ENDED -> { // 각 리스너의 드래그 앤 드롭 종료 상태 (3번 call됨)

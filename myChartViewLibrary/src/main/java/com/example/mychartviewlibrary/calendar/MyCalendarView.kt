@@ -6,9 +6,7 @@ import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
 import android.util.SparseArray
-import android.view.DragEvent
 import android.view.View
-import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -170,7 +168,7 @@ class MyCalendarView : FrameLayout {
             for (schedule in mScheduleList) {
                 Log.i("kongyi0504", "schedule.title = ${schedule.title}")
 
-                val day = Utils.getMyDateFromStringToCal(schedule.date)
+                val day = Utils.getMyDateFromStringToDateItem(schedule.date)
                 if (day != null) {
                     if (mMap[day.getKey()] == null) {
                         val list = ArrayList<Schedule>(1)
