@@ -1,7 +1,6 @@
 package com.example.mychartviewlibrary.calendar
 
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
@@ -19,6 +18,7 @@ import com.example.model.data.Schedule
 import com.example.mychartviewlibrary.R
 import com.example.mychartviewlibrary.calendar.data.DateItem
 import com.example.mychartviewlibrary.calendar.list.DayListAdapter
+import com.example.mychartviewlibrary.calendar.list.OnScheduleItemClickListener
 import java.util.*
 
 // 뷰를 두번 열면 점의 개수가 두배가 됨.
@@ -40,63 +40,17 @@ class MyCalendarView : FrameLayout {
     private val mMap = SparseArray<ArrayList<Schedule>>()
 
     private lateinit var mCalendarAdapter: RecyclerViewAdapterForCalendar
+    var mCurrentDate:String? = null
+    lateinit var mTitlePager: ViewPager2
+    lateinit var mCalendarPager: ViewPager2
 
     init {
         ContextHolder.setContext(this.context)
         inflate(context, R.layout.my_calendar, this)
-        initializeDragAndDropView()
-        val titlePager = findViewById<ViewPager2>(R.id.calendar_title)
-        val calendarPager = findViewById<ViewPager2>(R.id.calendar_vpPager)
-        val calendarData: ArrayList<ArrayList<DateItem>> = ArrayList()
-        val titleData: ArrayList<String> = ArrayList()
-        var todayPosition = 0
-        var weight = 1
-        val cal = Calendar.getInstance()
-        cal.timeInMillis = System.currentTimeMillis()
-
-        for (year in 2022..2023) {
-            for (month in 1..12) {
-                todayPosition += weight
-                if (cal.get(Calendar.YEAR) == year &&
-                    cal.get(Calendar.MONTH) == month) {
-                    weight = 0
-                }
-                val monthForCalendarLib = month-1
-                calendarData.add(getMonthData(year, monthForCalendarLib))
-                titleData.add("${month}월 $year")
-            }
-        }
-
-        val onPageChangeCallbackForCalendar = object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                titlePager.setCurrentItem(position, true)
-            }
-        }
-
-        mCalendarAdapter = RecyclerViewAdapterForCalendar(context, calendarData, mMap)
-        calendarPager.adapter = mCalendarAdapter
-        calendarPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        calendarPager.registerOnPageChangeCallback(onPageChangeCallbackForCalendar)
-        Log.i("kongyi0505", "mTodayPosition = ${todayPosition}")
-        calendarPager.setCurrentItem(todayPosition, false)
-
-        titlePager.adapter = RecyclerViewAdapterForTitle(titleData)
-        titlePager.orientation = ViewPager2.ORIENTATION_VERTICAL
-        titlePager.setCurrentItem(todayPosition, false)
-
-        findViewById<TextView>(R.id.calendar_previous).setOnClickListener {
-            val current = calendarPager.currentItem
-            if (current > 0) {
-                calendarPager.setCurrentItem(current-1, true)
-            }
-        }
-        findViewById<TextView>(R.id.calendar_next).setOnClickListener {
-            val current = calendarPager.currentItem
-            if (current < calendarData.size) {
-                calendarPager.setCurrentItem(current+1, true)
-            }
-        }
+        //initializeDragAndDropView()
+        mTitlePager = findViewById(R.id.calendar_title)
+        mCalendarPager = findViewById(R.id.calendar_vpPager)
+        initializeCalendar()
 
         findViewById<Button>(R.id.calendar_deleteAllBtn).setOnClickListener {
 //            showDialog(date)
@@ -112,8 +66,61 @@ class MyCalendarView : FrameLayout {
 
     }
 
+    fun initializeCalendar() {
+        val calendarData: ArrayList<ArrayList<DateItem>> = ArrayList()
+        val titleData: ArrayList<String> = ArrayList()
+        var todayPosition = 0
+        var weight = 1
+        val cal = Calendar.getInstance()
+        cal.timeInMillis = System.currentTimeMillis()
+        for (year in 2022..2023) {
+            for (month in 1..12) {
+                todayPosition += weight
+                if (cal.get(Calendar.YEAR) == year &&
+                    cal.get(Calendar.MONTH) == month
+                ) {
+                    weight = 0
+                }
+                val monthForCalendarLib = month - 1
+                calendarData.add(getMonthData(year, monthForCalendarLib))
+                titleData.add("${month}월 $year")
+            }
+        }
 
-    fun setOnItemClickListener(mScheduleList: ArrayList<Schedule>?) {
+        val onPageChangeCallbackForCalendar = object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                mTitlePager.setCurrentItem(position, true)
+            }
+        }
+
+        mCalendarAdapter = RecyclerViewAdapterForCalendar(context, calendarData, mMap)
+        mCalendarPager.adapter = mCalendarAdapter
+        mCalendarPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        mCalendarPager.registerOnPageChangeCallback(onPageChangeCallbackForCalendar)
+        Log.i("kongyi0505", "mTodayPosition = ${todayPosition}")
+        mCalendarPager.setCurrentItem(todayPosition, false)
+
+        mTitlePager.adapter = RecyclerViewAdapterForTitle(titleData)
+        mTitlePager.orientation = ViewPager2.ORIENTATION_VERTICAL
+        mTitlePager.setCurrentItem(todayPosition, false)
+
+        findViewById<TextView>(R.id.calendar_previous).setOnClickListener {
+            val current = mCalendarPager.currentItem
+            if (current > 0) {
+                mCalendarPager.setCurrentItem(current - 1, true)
+            }
+        }
+        findViewById<TextView>(R.id.calendar_next).setOnClickListener {
+            val current = mCalendarPager.currentItem
+            if (current < calendarData.size) {
+                mCalendarPager.setCurrentItem(current + 1, true)
+            }
+        }
+    }
+
+
+    fun setOnItemClickListener(mScheduleList: ArrayList<Schedule>?, listener: OnScheduleItemClickListener) {
         // listener: OnDateItemClickListener
         mCalendarAdapter.listener = object : OnDateItemClickListener {
             override fun onItemClick(
@@ -124,17 +131,18 @@ class MyCalendarView : FrameLayout {
             ) {
                 Log.i("kongyi0505", "here clicked.")
                 val selectedDate = dateItem.year.toString() + "~" + dateItem.month.toString() + "~" + dateItem.date.toString()
-                loadDataAtList(mScheduleList, selectedDate)
+                mCurrentDate = selectedDate
+                loadDataAtList(mScheduleList, selectedDate, listener)
             }
         }
     }
 
-    fun loadDataAtList(mScheduleList: ArrayList<Schedule>?, selectedDate:String) {
-        Log.i("kongyi0503", "loadDataAtList()")
+    fun loadDataAtList(mScheduleList: ArrayList<Schedule>?, selectedDate:String, listener:OnScheduleItemClickListener) {
+        Log.i("kongyi0506", "loadDataAtList()")
         val manager = LinearLayoutManager(ContextHolder.getContext(), LinearLayoutManager.VERTICAL, false)
         mRecyclerView = findViewById(R.id.calendar_recyclerView)
         mRecyclerView.layoutManager = manager
-        mRecyclerView.adapter = DayListAdapter(mScheduleList!!, selectedDate)
+        mRecyclerView.adapter = DayListAdapter(mScheduleList!!, selectedDate, listener)
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
