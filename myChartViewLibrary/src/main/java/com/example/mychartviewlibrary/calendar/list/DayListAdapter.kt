@@ -1,10 +1,12 @@
 package com.example.mychartviewlibrary.calendar.list
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.model.data.Schedule
 import com.example.mychartviewlibrary.R
@@ -14,7 +16,7 @@ import com.example.mychartviewlibrary.calendar.data.DateItem
 
 class DayListAdapter(scheduleList: ArrayList<Schedule>, date:String, private val listener: OnScheduleItemClickListener) : RecyclerView.Adapter<ViewHolder>() {
     private val mDayScheduleList = ArrayList<Schedule>()
-
+    private var mContext: Context? = null
     init {
         mDayScheduleList.clear()
         for (schedule in scheduleList) {
@@ -32,6 +34,7 @@ class DayListAdapter(scheduleList: ArrayList<Schedule>, date:String, private val
         viewType: Int
     ): ViewHolder {
         val context = parent.context
+        mContext = context
         val inflater =
             context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view: View = inflater.inflate(R.layout.calendar_schedule_list_item, parent, false)
@@ -44,13 +47,16 @@ class DayListAdapter(scheduleList: ArrayList<Schedule>, date:String, private val
         holder.date.text = mDayScheduleList[position].date
         holder.id.text = mDayScheduleList[position].id
         holder.color.text = mDayScheduleList[position].color
-        when (holder.color.text) {
-            "red" -> holder.colorCircle.setBackgroundResource(R.drawable.circle_red)
-            "orange" -> holder.colorCircle.setBackgroundResource(R.drawable.circle_orange)
-            "yellow" -> holder.colorCircle.setBackgroundResource(R.drawable.circle_yellow)
-            "green" -> holder.colorCircle.setBackgroundResource(R.drawable.circle_green)
-            "blue" -> holder.colorCircle.setBackgroundResource(R.drawable.circle_blue)
-            "purple" -> holder.colorCircle.setBackgroundResource(R.drawable.circle_purple)
+        holder.colorCircle.setBackgroundResource(R.drawable.circle_black)
+        mContext?.let {
+            when (holder.color.text) {
+                "red" -> holder.colorCircle.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(mContext!!, R.color.red))
+                "orange" -> holder.colorCircle.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(mContext!!, R.color.orange))
+                "yellow" -> holder.colorCircle.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(mContext!!, R.color.yellow))
+                "green" -> holder.colorCircle.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(mContext!!, R.color.green))
+                "blue" -> holder.colorCircle.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(mContext!!, R.color.blue))
+                "purple" -> holder.colorCircle.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(mContext!!, R.color.purple))
+            }
         }
     }
 

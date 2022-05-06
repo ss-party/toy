@@ -14,6 +14,10 @@ object Utils {
         return "$year~$month~$day"
     }
 
+    fun getDateFromYearMonthDay(dateItem: DateItem):String {
+        return "${dateItem.year}~${dateItem.month}~${dateItem.date}"
+    }
+
     fun getMyDateFromStringToCal(str:String): DateItem? {
         if (str.indexOf("~") != -1) {
             val dayOfMonth = str.substring(str.lastIndexOf("~")+1)

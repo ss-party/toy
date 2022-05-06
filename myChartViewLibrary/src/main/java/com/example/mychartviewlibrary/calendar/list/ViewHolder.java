@@ -1,6 +1,6 @@
 package com.example.mychartviewlibrary.calendar.list;
 
-import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,6 +30,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         id = itemView.findViewById(R.id.item_id);
         color = itemView.findViewById(R.id.item_color);
         colorCircle = itemView.findViewById(R.id.color_circle);
+
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -37,12 +38,20 @@ public class ViewHolder extends RecyclerView.ViewHolder {
                 listener.onItemClick(schedule);
             }
         });
-//        itemView.setOnClickListener(v -> {
-//            Intent intent = new Intent(v.getContext(), DayActivity.class);
-//            Log.i("kongyi123A", "id = " + id.getText().toString() + " / content = " + content.getText().toString());
-//            Schedule schedule = new Schedule(id.getText().toString(), date.getText().toString(), title.getText().toString(), content.getText().toString(), color.getText().toString());
-//            intent.putExtra("info", schedule);
-//            v.getContext().startActivity(intent);
-//        });
+
+        initializeDragAndDropView(itemView);
+    }
+
+    void initializeDragAndDropView(@NonNull View itemView) {
+        itemView.setOnLongClickListener(view -> {
+            Log.i("kongyi0424", "setOnLongClickListener");
+            View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                view.startDragAndDrop(null, shadowBuilder, view, 0);
+            }
+
+            view.setVisibility(View.INVISIBLE);
+            return true;
+        });
     }
 }

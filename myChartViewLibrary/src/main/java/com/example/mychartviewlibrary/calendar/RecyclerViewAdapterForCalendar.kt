@@ -2,19 +2,17 @@ package com.example.mychartviewlibrary.calendar
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Build
 import android.util.Log
 import android.util.SparseArray
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.view.*
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.common.ContextHolder
+import com.example.model.DataManager
 import com.example.model.data.Schedule
 import com.example.mychartviewlibrary.R
 import com.example.mychartviewlibrary.calendar.data.DateItem
@@ -94,12 +92,16 @@ class RecyclerViewAdapterForCalendar(private val context: Context,
                             }
                             it.background = mContext.getDrawable(R.drawable.circle_light_yellow)
                         }
+                        val dragListener = DragListener(value)
+                        item.getChildAt(0).setOnDragListener(dragListener)
                     }
                     cnt ++
                 }
             }
             //itemView.findViewById<TextView>(R.id.text).text = item
         }
+
+
     }
 
     private fun markToday(arr: ArrayList<DateItem>,
@@ -131,51 +133,106 @@ class RecyclerViewAdapterForCalendar(private val context: Context,
             linearLayout.removeAllViews()
             Log.i("kongyi0504", "list = {$list}")
             for (schedule in list) {
+                val img = ImageView(context)
+                img.background = context.getDrawable(R.drawable.circle_black)
+                img.layoutParams = LinearLayout.LayoutParams(Utils.convertDPtoPX(context, 5), Utils.convertDPtoPX(context, 5))
                 when {
-                    schedule.color == "blue" -> {
-                        val img = ImageView(context)
-                        img.background = context.getDrawable(R.drawable.circle_blue)
-                        img.layoutParams = LinearLayout.LayoutParams(Utils.convertDPtoPX(context, 5), Utils.convertDPtoPX(context, 5))
-                        linearLayout.addView(img)
-                    }
-                    schedule.color == "purple" -> {
-                        val img = ImageView(context)
-                        img.background = context.getDrawable(R.drawable.circle_purple)
-                        img.layoutParams = LinearLayout.LayoutParams(Utils.convertDPtoPX(context, 5), Utils.convertDPtoPX(context, 5))
-                        linearLayout.addView(img)
-                    }
-                    schedule.color == "green" -> {
-                        val img = ImageView(context)
-                        img.background = context.getDrawable(R.drawable.circle_green)
-                        img.layoutParams = LinearLayout.LayoutParams(Utils.convertDPtoPX(context, 5), Utils.convertDPtoPX(context, 5))
-                        linearLayout.addView(img)
-                    }
-                    schedule.color == "black" -> {
-                        val img = ImageView(context)
-                        img.background = context.getDrawable(R.drawable.circle_black)
-                        img.layoutParams = LinearLayout.LayoutParams(Utils.convertDPtoPX(context, 5), Utils.convertDPtoPX(context, 5))
-                        linearLayout.addView(img)
-                    }
-                    schedule.color == "orange" -> {
-                        val img = ImageView(context)
-                        img.background = context.getDrawable(R.drawable.circle_orange)
-                        img.layoutParams = LinearLayout.LayoutParams(Utils.convertDPtoPX(context, 5), Utils.convertDPtoPX(context, 5))
-                        linearLayout.addView(img)
-                    }
-                    schedule.color == "yellow" -> {
-                        val img = ImageView(context)
-                        img.background = context.getDrawable(R.drawable.circle_yellow)
-                        img.layoutParams = LinearLayout.LayoutParams(Utils.convertDPtoPX(context, 5), Utils.convertDPtoPX(context, 5))
-                        linearLayout.addView(img)
-                    }
-                    schedule.color == "red" -> {
-                        val img = ImageView(context)
-                        img.background = context.getDrawable(R.drawable.circle_red)
-                        img.layoutParams = LinearLayout.LayoutParams(Utils.convertDPtoPX(context, 5), Utils.convertDPtoPX(context, 5))
-                        linearLayout.addView(img)
+                    schedule.color == "blue" -> img.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.blue))
+                    schedule.color == "purple" -> img.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.purple))
+                    schedule.color == "green" -> img.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.green))
+                    schedule.color == "black" -> img.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.black))
+                    schedule.color == "orange" -> img.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.orange))
+                    schedule.color == "yellow" -> img.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.yellow))
+                    schedule.color == "red" -> img.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.red))
+                }
+                linearLayout.addView(img)
+            }
+        }
+    }
+
+
+
+    inner class DragListener(private val targetDateItem: DateItem) : View.OnDragListener {
+        @SuppressLint("UseCompatLoadingForDrawables")
+        override fun onDrag(v: View, event: DragEvent): Boolean {
+            // 이벤트 시작
+            when (event.action) {
+                DragEvent.ACTION_DRAG_STARTED -> { // 각 리스너의 드래그 앤 드롭 시작 상태 (3번 call됨)
+                    Log.i("kongyi0424", "ACTION_DRAG_STARTED")
+                }
+                DragEvent.ACTION_DRAG_ENTERED -> { // 이미지가 들어옴
+                    Log.i("kongyi0424", "ACTION_DRAG_ENTERED")
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        v.setBackgroundColor(context.getColor(R.color.colorAccent))
                     }
                 }
+                DragEvent.ACTION_DRAG_EXITED -> { // 이미지가 나감
+                    Log.i("kongyi0424", "ACTION_DRAG_EXITED")
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        v.setBackgroundColor(0)
+                    }
+                }
+                DragEvent.ACTION_DROP -> {
+                    Log.i("kongyi0424", "ACTION_DROP")
+                    val itemViewFromList = event.localState as View
+                    val color = itemViewFromList.findViewById<ImageView>(R.id.color_circle).backgroundTintList
+
+                    (itemViewFromList.parent as ViewGroup).removeView(itemViewFromList) // from
+                    val targetDateView = v as ConstraintLayout
+//                    Log.i("kongyi0506", "color = ${color}")
+//                    val img = ImageView(context)
+//                    img.background = context.getDrawable(R.drawable.circle_black)
+//                    img.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.green))
+//                    img.layoutParams = LinearLayout.LayoutParams(Utils.convertDPtoPX(context, 5), Utils.convertDPtoPX(context, 5))
+                    Log.i("kongyi0506", "green color = ${ContextCompat.getColor(context, R.color.green)}")
+                    val img = ImageView(context)
+                    img.background = context.getDrawable(R.drawable.circle_black)
+                    img.backgroundTintList = color
+                    img.layoutParams = LinearLayout.LayoutParams(Utils.convertDPtoPX(context, 5), Utils.convertDPtoPX(context, 5))
+                    (targetDateView.getChildAt(1) as LinearLayout).addView(img)
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        v.setBackgroundColor(0)
+                    }
+                    val itemId = itemViewFromList.findViewById<TextView>(R.id.item_id).text.toString()
+                    val itemDate = itemViewFromList.findViewById<TextView>(R.id.item_date).text.toString()
+                    val itemTitle = itemViewFromList.findViewById<TextView>(R.id.item_title).text.toString()
+                    val itemContent = itemViewFromList.findViewById<TextView>(R.id.item_content).text.toString()
+                    val itemColor = itemViewFromList.findViewById<TextView>(R.id.item_color).text.toString()
+                    val schedule = Schedule(itemId, itemDate, itemTitle, itemContent, itemColor)
+                    moveSchedule(schedule, Utils.getDateFromYearMonthDay(targetDateItem))
+                }
+                DragEvent.ACTION_DRAG_ENDED -> { // 각 리스너의 드래그 앤 드롭 종료 상태 (3번 call됨)
+                    Log.i("kongyi0424", "ACTION_DRAG_ENDED")
+                    val view = event.localState as View
+                    view.visibility = FrameLayout.VISIBLE
+                }
+                else -> {
+                }
             }
+            return true
+        }
+
+        private fun moveSchedule(fromSchedule:Schedule, toDate:String) {
+            DataManager.removeSingleSchedule(
+                "id_list", fromSchedule.date, fromSchedule.id)
+            DataManager.putSingleSchedule(
+                "id_list", toDate,
+                fromSchedule.title,
+                fromSchedule.content,
+                fromSchedule.color,
+                fromSchedule.id
+            )
+            val from_str = "${fromSchedule.date}, ${fromSchedule.title}, ${fromSchedule.content}, ${fromSchedule.color}, ${fromSchedule.id}"
+            val to_str = "${toDate}, ${fromSchedule.title}, ${fromSchedule.content}, ${fromSchedule.color}, ${fromSchedule.id}"
+
+            DataManager.putSingleHistory(
+                context,
+                "cal-schedule-modify",
+                "from: $from_str",
+                "to: $to_str",
+                ContextHolder.getPhoneNumber()
+            )
         }
     }
 }

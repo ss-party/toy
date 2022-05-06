@@ -129,37 +129,43 @@
                             android:layout_width="33dp"
                             android:layout_height="33dp"
                             android:layout_margin="10dp"
-                            android:background="@drawable/circle_red" />
+                            android:backgroundTint="@color/red"
+                            android:background="@drawable/circle_black" />
                         <RadioButton
                             android:id="@+id/radio_button_orange"
                             android:layout_width="33dp"
                             android:layout_height="33dp"
                             android:layout_margin="10dp"
-                            android:background="@drawable/circle_orange" />
+                            android:backgroundTint="@color/orange"
+                            android:background="@drawable/circle_black" />
                         <RadioButton
                             android:id="@+id/radio_button_yellow"
                             android:layout_width="33dp"
                             android:layout_height="33dp"
                             android:layout_margin="10dp"
-                            android:background="@drawable/circle_yellow" />
+                            android:backgroundTint="@color/yellow"
+                            android:background="@drawable/circle_black" />
                         <RadioButton
                             android:id="@+id/radio_button_green"
                             android:layout_width="33dp"
                             android:layout_height="33dp"
                             android:layout_margin="10dp"
-                            android:background="@drawable/circle_green" />
+                            android:backgroundTint="@color/green"
+                            android:background="@drawable/circle_black" />
                         <RadioButton
                             android:id="@+id/radio_button_blue"
                             android:layout_width="33dp"
                             android:layout_height="33dp"
                             android:layout_margin="10dp"
-                            android:background="@drawable/circle_blue" />
+                            android:backgroundTint="@color/blue"
+                            android:background="@drawable/circle_black" />
                         <RadioButton
                             android:id="@+id/radio_button_purple"
                             android:layout_width="33dp"
                             android:layout_height="33dp"
                             android:layout_margin="10dp"
-                            android:background="@drawable/circle_purple" />
+                            android:backgroundTint="@color/purple"
+                            android:background="@drawable/circle_black" />
                     </RadioGroup>
                 </LinearLayout>
             </LinearLayout>
