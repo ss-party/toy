@@ -15,13 +15,14 @@ import com.example.sharedcalendar.activity.DayActivity
 
 
 class CustomViewActivity : AppCompatActivity() {
+    val TAG = "CustomViewActivity"
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_custom_view)
         val calendarView = findViewById<MyCalendarView>(R.id.myCalendarView)
-        DataManager.getAllScheduleData("id_list")
         DataManager.dataList.observe(this, androidx.lifecycle.Observer { scheduleList ->
+            Log.i(TAG, "dataList observe")
             val scheduleItemClickListener = object : OnScheduleItemClickListener {
                 override fun onItemClick(schedule: Schedule) {
                     val intent = Intent(this@CustomViewActivity, DayActivity::class.java)
@@ -31,9 +32,9 @@ class CustomViewActivity : AppCompatActivity() {
                 }
             }
             // todo : it should be optimized in sometime
-            calendarView.initializeCalendar()
             calendarView.setOnItemClickListener(scheduleList, scheduleItemClickListener)
             calendarView.setSchedules(scheduleList)
+            calendarView.refresh() // it is needed
             calendarView.mCurrentDate?.let {
                 calendarView.loadDataAtList(scheduleList, calendarView.mCurrentDate!!, scheduleItemClickListener)
             }
@@ -47,6 +48,7 @@ class CustomViewActivity : AppCompatActivity() {
                 }
             }
             calendarView.setAddScheduleBtn(addBtnListener)
+            Log.i("kongyi0507", "observe complete time = ${System.currentTimeMillis()}")
         })
     }
 }

@@ -29,6 +29,7 @@ class AccessActivity : AppCompatActivity() {
         setContentView(R.layout.activity_access)
         DataManager.getNewNumberForHistory()
         DataManager.getNotice()
+        DataManager.getAllScheduleData("id_list")
 
 //        DataManager.getAllHistoryData()
         DataManager.hcnt.observe(this, androidx.lifecycle.Observer {
