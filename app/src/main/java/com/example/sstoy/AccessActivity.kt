@@ -11,6 +11,8 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.example.common.ContextHolder
+import com.example.customviewpalette.CustomViewActivity
 import com.example.model.DataManager
 import com.example.sstoy.activity.MainActivity
 import com.example.paperweight.PaperWeightActivity
@@ -27,6 +29,7 @@ class AccessActivity : AppCompatActivity() {
         setContentView(R.layout.activity_access)
         DataManager.getNewNumberForHistory()
         DataManager.getNotice()
+        DataManager.getAllScheduleData("id_list")
 
 //        DataManager.getAllHistoryData()
         DataManager.hcnt.observe(this, androidx.lifecycle.Observer {
@@ -52,6 +55,7 @@ class AccessActivity : AppCompatActivity() {
         }
 
         mPhoneNumber = DataManager.getLineNumber(this, this) // context 정보가 null이 아니려면 onCreate 에서 this를 넣어줘야.
+        ContextHolder.setPhoneNumber(mPhoneNumber)
         // onCreate 이전에는 null이다.
         if (mPhoneNumber == "+821027740931"
             || mPhoneNumber == "+821040052032") {
@@ -112,6 +116,10 @@ class AccessActivity : AppCompatActivity() {
         findViewById<Button>(R.id.paperWeightBtn).setOnClickListener {
             Log.i("kongyi1220", "paperWeightBtn clicked")
             startActivity(Intent(this, PaperWeightActivity::class.java))
+            DataManager.putSingleHistory(this, "access", "historyManager", mPhoneNumber)
+        }
+        findViewById<Button>(R.id.customViewBtn).setOnClickListener {
+            startActivity(Intent(this, CustomViewActivity::class.java))
             DataManager.putSingleHistory(this, "access", "historyManager", mPhoneNumber)
         }
     }
